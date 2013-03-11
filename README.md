@@ -25,3 +25,6 @@ Also while the script is running it will monitor the ```.lua``` file for changes
 - **OSX:** [TextWrangler](http://www.barebones.com/products/textwrangler/)
 - **Linux:** Most distributions already include a suitable text editor (such as Gedit), or can install one through apt-get.
 
+## Documentation
+
+[Reference pages](http://grrrwaaa.github.com/gct753/docs/reference.html)
