@@ -15,11 +15,11 @@ The code and pre-compiled binaries are in the github repository at the links bel
 ## Running
 
 - **Windows:** drag a ```.lua``` file onto the ```av.exe``` application.
-- **OSX / Linux:** open a terminal window, ```cd ``` to the downloaded folder, then run ```av <filename``` where <filename> is the ```.lua``` file to run (e.g. ```draw.lua```).
+- **OSX / Linux:** open a terminal window, ```cd ``` to the downloaded folder, then run ```av <filename>``` where <filename> is the ```.lua``` file to run (e.g. ```draw.lua```).
 
-While running, the **Esc** key will toggle full-screen mode, and the **Space** key will toggle the ```update``` function on and off. Also while the script is running it will monitor the ```.lua``` file for changes, and reload the script automatically if this file is updated on disk.
+While running, the **Esc** key will toggle full-screen mode, and the **Space** key will toggle the ```update``` function on and off. 
 
-To edit ```.lua``` files, any text editor will do. Freely available editors with Lua syntax highlighting include:
+Also while the script is running it will monitor the ```.lua``` file for changes, and reload the script automatically if this file is updated on disk. To edit ```.lua``` files, any text editor will do. Freely available editors with Lua syntax highlighting include:
 
 - **Windows:** [Notepad++](http://notepad-plus-plus.org/download/v6.3.html)
 - **OSX:** [TextWrangler](http://www.barebones.com/products/textwrangler/)

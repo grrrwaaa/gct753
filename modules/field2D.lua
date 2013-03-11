@@ -1,3 +1,5 @@
+--- Field2D: an object representing a 2D densely packed array.
+
 local ffi = require "ffi"
 local gl = require "gl"
 local sketch = gl.sketch
@@ -7,6 +9,47 @@ local floor = math.floor
 local field2D = {}
 field2D.__index = field2D
 
+function field2D:reduce(func, result)
+	for y = 0, self.height-1 do
+		for x = 0, self.width-1 do
+			result = func(result, self.data[self:index_raw(x, y)], x, y)
+		end
+	end
+	return result
+end
+
+-- e.g.:
+function field2D:sum()
+	return self:reduce(function(total, cell)
+		return total + cell
+	end, 0)
+end
+
+-- field:find(predicate), to return a list of coordinates usable by a range map?
+-- gets closer to a jquery style of select -> apply (find -> map)
+
+-- field:map(func)
+-- field:map(func, 10, 10)
+-- does it mean range 2..4 or only use indices 2,4 ? 
+-- field:map(func, { 2, 4 }, { 4, 6 })
+-- field:map(func, iterator)
+--[[
+function field2D:map(range, func)
+	if func == nil then
+		-- no range given, apply to whole field:
+		return self:map(self, range)
+	
+	if type(range) == "function" then
+		-- keep calling range() until nil:
+		for x, y in range() do
+			self:set(f(x, y), x, y)
+		end
+	else
+		-- assume object:
+		
+	end
+end
+--]]
 function field2D:index(x, y)
 	x = floor(x and (x % self.width) or 0)
 	y = floor(y and (y % self.height) or 0)
@@ -17,9 +60,36 @@ function field2D:index_raw(x, y)
 	return y*self.width + x
 end
 
-function field2D:set(v, x, y)
-	local idx = self:index(x, y)
-	self.data[idx] = v or 0
+--- set the value of a cell, or of all cells.
+-- If the x,y coordinate is not specified, it will apply the value for all cells.
+-- If the value to set is a function, this function is called (passing the x, y coordinates as arguments). If the function returns a value, the cell is set to this value; otherwise the cell is left unchanged.
+-- @tparam number|function value to set
+-- @tparam ?int x coordinate (row) to set a single cell
+-- @tparam ?int y coordinate (column) to set a single cell
+function field2D:set(value, x, y)
+	if x then
+		local idx = self:index(x, y or 0)
+		self.data[idx] = (type(value) == "function" and value(x, y)) or (value and tonumber(value)) or 0
+		return self
+	elseif type(value) == "function" then
+		for y = 0, self.height-1 do
+			for x = 0, self.width-1 do
+				local idx = self:index_raw(x, y)
+				local result = value(x, y)
+				if result then
+					self.data[idx] = result
+				end	
+			end
+		end
+	else
+		value = value and tonumber(value) or 0
+		for y = 0, self.height-1 do
+			for x = 0, self.width-1 do
+				local idx = self:index_raw(x, y)
+				self.data[idx] = value
+			end
+		end
+	end
 	return self
 end
 
@@ -31,12 +101,12 @@ function field2D:clear()
 	ffi.fill(self.data, self.size)
 end
 
-function field2D:apply(func)
+function field2D:map(func)
 	for y = 0, self.height-1 do
 		for x = 0, self.width-1 do
-			local v = func(x, y)
+			local idx = self:index_raw(x, y)
+			local v = func(self.data[idx], x, y)
 			if v then
-				local idx = self:index_raw(x, y)
 				self.data[idx] = v
 				--print(x, y, idx, self.data[idx])
 			end	
