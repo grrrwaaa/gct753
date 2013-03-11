@@ -39,6 +39,9 @@ local field = field2D.new(64, 48)
 Objects usually have internal state, and methods to read and modify that state or perform other behaviors. For example, we can set data in the field using the *:set* method:
 
 ```lua
+-- set all cells to the value 0.2:
+field:set(0.2)
+
 -- set the cell at position (10,10) to the value 0.5:
 field:set(0.5, 10, 10)
 ```
@@ -98,14 +101,13 @@ function update(dt)
 end
 ```
 
-Another useful method of *field2D* is *:apply*. It takes a function as its argument, and calls this function for each cell in the field. Whatever value this function returns is set in the field. The function receives as arguments the x and y position of the cell, so for example, this code initializes the field with a horizontal gradient:
+Another useful feature of *field2D:set* is that it can take a function as its argument, instead of a value. It calls this function to derive a new value for each cell in the field. The function receives as arguments the x and y position of the cell, so for example, this code initializes the field with a horizontal gradient:
 
 ```lua
-field:apply(function(x, y)
+field:set(function(x, y)
 	return x / field.width
 end)
 ```
-
 
 
 We've learned almost enough now to implement Conway's *Game of Life*.
@@ -136,7 +138,7 @@ end
 
 -- use this to initialize the field with random values:
 -- (applies 'coin' to each cell of the field)
-field:apply(coin)
+field:set(coin)
 
 -- how to render the scene (toggle fullscreen with the Esc key):
 function draw()	
@@ -190,7 +192,7 @@ function update(dt)
 	field, field_old = field_old, field
 	
 	-- apply the game_of_life function to each cell of the field: 
-	field:apply(game_of_life)
+	field:set(game_of_life)
 end
 
 -- handle keypress events:
@@ -200,7 +202,7 @@ function keydown(k)
 		field:clear()
 	elseif k == "r" then
 		-- apply the coin rule to all cells of the field (randomizes)
-		field:apply(coin)
+		field:set(coin)
 	end
 end
 

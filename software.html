@@ -51,7 +51,10 @@
 <span class="comment">-- allocate a field that is 64 cells wide and 48 cells high:</span>
 <span class="keyword">local</span> field = field2D.new(<span class="number">64</span>, <span class="number">48</span>)</code></pre>
 <p>Objects usually have internal state, and methods to read and modify that state or perform other behaviors. For example, we can set data in the field using the <em>:set</em> method:</p>
-<pre><code class="lang-lua"><span class="comment">-- set the cell at position (10,10) to the value 0.5:</span>
+<pre><code class="lang-lua"><span class="comment">-- set all cells to the value 0.2:</span>
+field:set(<span class="number">0.2</span>)
+
+<span class="comment">-- set the cell at position (10,10) to the value 0.5:</span>
 field:set(<span class="number">0.5</span>, <span class="number">10</span>, <span class="number">10</span>)</code></pre>
 <p>The <em>av</em> application looks at the script for specially named functions in order to know how to render the screen or handle mouse and keyboard input. For example, all graphical drawing should be put inside the global <em>draw</em> function. We can use another method of the <em>field2D</em> type object here:</p>
 <pre><code class="lang-lua"><span class="comment">-- the global function for rendering</span>
@@ -95,8 +98,8 @@ field:set(<span class="number">0.5</span>, <span class="number">10</span>, <span
     <span class="comment">-- set this cell to the value of the first:</span>
     field:set(value, x, y)
 <span class="keyword">end</span></code></pre>
-<p>Another useful method of <em>field2D</em> is <em>:apply</em>. It takes a function as its argument, and calls this function for each cell in the field. Whatever value this function returns is set in the field. The function receives as arguments the x and y position of the cell, so for example, this code initializes the field with a horizontal gradient:</p>
-<pre><code class="lang-lua">field:apply(function(x, y)
+<p>Another useful feature of <em>field2D:set</em> is that it can take a function as its argument, instead of a value. It calls this function to derive a new value for each cell in the field. The function receives as arguments the x and y position of the cell, so for example, this code initializes the field with a horizontal gradient:</p>
+<pre><code class="lang-lua">field:set(function(x, y)
     <span class="keyword">return</span> x / field.width
 <span class="keyword">end</span>)</code></pre>
 <p>We&#39;ve learned almost enough now to implement Conway&#39;s <em>Game of Life</em>.</p>
@@ -125,7 +128,7 @@ field:set(<span class="number">0.5</span>, <span class="number">10</span>, <span
 
 <span class="comment">-- use this to initialize the field with random values:</span>
 <span class="comment">-- (applies 'coin' to each cell of the field)</span>
-field:apply(coin)
+field:set(coin)
 
 <span class="comment">-- how to render the scene (toggle fullscreen with the Esc key):</span>
 <span class="function"><span class="keyword">function</span> <span class="title">draw</span><span class="params">()</span></span>    
@@ -179,7 +182,7 @@ field:apply(coin)
     field, field_old = field_old, field
 
     <span class="comment">-- apply the game_of_life function to each cell of the field: </span>
-    field:apply(game_of_life)
+    field:set(game_of_life)
 <span class="keyword">end</span>
 
 <span class="comment">-- handle keypress events:</span>
@@ -189,7 +192,7 @@ field:apply(coin)
         field:clear()
     <span class="keyword">elseif</span> k == <span class="string">"r"</span> <span class="keyword">then</span>
         <span class="comment">-- apply the coin rule to all cells of the field (randomizes)</span>
-        field:apply(coin)
+        field:set(coin)
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 

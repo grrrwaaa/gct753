@@ -1,0 +1,3 @@
+[submodule "sitegen"]
+	path = sitegen
+	url = git@github.com:grrrwaaa/sitegen.git
