@@ -22,7 +22,7 @@ Most of the available functions and modules (both from Lua and AV) are [document
 
 See [Lua 5.1 quick tutorial](lua.html) for a quick introduction to the Lua language itself. 
 
-Run the *av* executable (*av.exe* on Windows), and open up the *start.lua* file in a text editor. Any time you edit this file, and save it, *av* will reload it and run it.
+Run the *av* executable (*av.exe* on Windows, *av_osx* on OSX, *av_linux* on Linux), and open up the *start.lua* file in a text editor. Any time you edit this file, and save it, *av* will reload it and run it.
 
 Most scripts start with a bunch of ```require``` statements, which pull in needed functionality from external library *modules*. For example:
 
