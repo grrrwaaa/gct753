@@ -14,6 +14,10 @@ The code and pre-compiled binaries are in the github repository at the links bel
 - [Clone from](https://github.com/grrrwaaa/gct753) **Github**
 - [Fork from](https://github.com/grrrwaaa/gct753/fork_select) **Github**
 
+## Reference
+
+Most of the available functions and modules (both from Lua and AV) are [documented in the reference pages](docs/reference.html).
+
 ## Tutorial
 
 See [Lua 5.1 quick tutorial](lua.html) for a quick introduction to the Lua language itself. 
