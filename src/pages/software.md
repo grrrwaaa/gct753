@@ -31,7 +31,7 @@ Also while the script is running it will monitor the ```.lua``` file for changes
 
 Most of the available functions and modules (both from Lua and AV) are [documented in the reference pages](docs/reference.html).
 
-## Tutorial
+## Tutorial: Drawing with fields
 
 See [Lua 5.1 quick tutorial](lua.html) for a quick introduction to the Lua language itself. 
 
