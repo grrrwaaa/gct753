@@ -39,11 +39,22 @@
 <li><a href="https://github.com/grrrwaaa/gct753">Clone from</a> <strong>Github</strong></li>
 <li><a href="https://github.com/grrrwaaa/gct753/fork_select">Fork from</a> <strong>Github</strong></li>
 </ul>
+<h2>Running</h2>
+<ul>
+<li><strong>Windows:</strong> drag a <code>.lua</code> file onto the <code>av.exe</code> application.</li>
+<li><strong>OSX / Linux:</strong> open a terminal window, <code>cd</code> to the downloaded folder, then run <code>av_osx &lt;filename&gt;</code> or <code>av_linux &lt;filename&gt;</code> where <filename> is the <code>.lua</code> file to run (e.g. <code>draw.lua</code>).</li>
+</ul>
+<p>While running, the <strong>Esc</strong> key will toggle full-screen mode, and the <strong>Space</strong> key will toggle the <code>update</code> function on and off. </p>
+<p>Also while the script is running it will monitor the <code>.lua</code> file for changes, and reload the script automatically if this file is updated on disk. To edit <code>.lua</code> files, any text editor will do. Freely available editors with Lua syntax highlighting include:</p>
+<ul>
+<li><strong>Windows:</strong> <a href="http://notepad-plus-plus.org/download/v6.3.html">Notepad++</a></li>
+<li><strong>OSX:</strong> <a href="http://www.barebones.com/products/textwrangler/">TextWrangler</a></li>
+<li><strong>Linux:</strong> Most distributions already include a suitable text editor (such as Gedit), or can install one through apt-get.</li>
+</ul>
 <h2>Reference</h2>
 <p>Most of the available functions and modules (both from Lua and AV) are <a href="docs/reference.html">documented in the reference pages</a>.</p>
 <h2>Tutorial</h2>
 <p>See <a href="lua.html">Lua 5.1 quick tutorial</a> for a quick introduction to the Lua language itself. </p>
-<p>Run the <em>av</em> executable (<em>av.exe</em> on Windows, <em>av_osx</em> on OSX, <em>av_linux</em> on Linux), and open up the <em>start.lua</em> file in a text editor. Any time you edit this file, and save it, <em>av</em> will reload it and run it.</p>
 <p>Most scripts start with a bunch of <code>require</code> statements, which pull in needed functionality from external library <em>modules</em>. For example:</p>
 <pre><code class="lang-lua"><span class="keyword">local</span> field2D = <span class="built_in">require</span> <span class="string">"field2D"</span></code></pre>
 <p>This code loads the <em>field2D</em> module (from /modules/field2D.lua), which gives us a bunch of utilities for working with 2D dense arrays. These could be useful for making cellular automata, for example. Modules usually return a table of functions. For example, the <em>field2D</em> module contains a function called <em>new</em>, which we can use to create a new field <em>object</em>:</p>

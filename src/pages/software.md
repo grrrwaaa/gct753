@@ -14,6 +14,19 @@ The code and pre-compiled binaries are in the github repository at the links bel
 - [Clone from](https://github.com/grrrwaaa/gct753) **Github**
 - [Fork from](https://github.com/grrrwaaa/gct753/fork_select) **Github**
 
+## Running
+
+- **Windows:** drag a ```.lua``` file onto the ```av.exe``` application.
+- **OSX / Linux:** open a terminal window, ```cd ``` to the downloaded folder, then run ```av_osx <filename>``` or ```av_linux <filename>``` where <filename> is the ```.lua``` file to run (e.g. ```draw.lua```).
+
+While running, the **Esc** key will toggle full-screen mode, and the **Space** key will toggle the ```update``` function on and off. 
+
+Also while the script is running it will monitor the ```.lua``` file for changes, and reload the script automatically if this file is updated on disk. To edit ```.lua``` files, any text editor will do. Freely available editors with Lua syntax highlighting include:
+
+- **Windows:** [Notepad++](http://notepad-plus-plus.org/download/v6.3.html)
+- **OSX:** [TextWrangler](http://www.barebones.com/products/textwrangler/)
+- **Linux:** Most distributions already include a suitable text editor (such as Gedit), or can install one through apt-get.
+
 ## Reference
 
 Most of the available functions and modules (both from Lua and AV) are [documented in the reference pages](docs/reference.html).
@@ -21,8 +34,6 @@ Most of the available functions and modules (both from Lua and AV) are [document
 ## Tutorial
 
 See [Lua 5.1 quick tutorial](lua.html) for a quick introduction to the Lua language itself. 
-
-Run the *av* executable (*av.exe* on Windows, *av_osx* on OSX, *av_linux* on Linux), and open up the *start.lua* file in a text editor. Any time you edit this file, and save it, *av* will reload it and run it.
 
 Most scripts start with a bunch of ```require``` statements, which pull in needed functionality from external library *modules*. For example:
 
