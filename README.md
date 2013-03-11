@@ -15,7 +15,7 @@ The code and pre-compiled binaries are in the github repository at the links bel
 ## Running
 
 - **Windows:** drag a ```.lua``` file onto the ```av.exe``` application.
-- **OSX / Linux:** open a terminal window, ```cd ``` to the downloaded folder, then run ```av <filename>``` where <filename> is the ```.lua``` file to run (e.g. ```draw.lua```).
+- **OSX / Linux:** open a terminal window, ```cd ``` to the downloaded folder, then run ```av_osx <filename>``` or ```av_linux <filename>``` where <filename> is the ```.lua``` file to run (e.g. ```draw.lua```).
 
 While running, the **Esc** key will toggle full-screen mode, and the **Space** key will toggle the ```update``` function on and off. 
 
