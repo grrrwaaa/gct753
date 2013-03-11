@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Artificial Life</title>
+    
+<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
+  
+<script src="js/jquery.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/main.js" type="text/javascript"></script>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+<body>
+<div id="wrapper">
+	
+	<div class="header">
+		<h1>GCT 753</h1>
+		<a href="index.html">Overview</a><br/>
+		<a href="software.html">Software</a><br/>
+		<a href="lua.html">Lua</a><br/>
+		<br>
+		<a href="introduction.html">Themes</a><br/>
+		<a href="artificial_life.html">Artificial Life</a><br/>
+		<!--
+		<a href="generative_art.html">Generative Art & Design</a><br/>
+		-->
+		
+	</div>
+	<div class="section"><h1>Artificial Life</h1>
+<p>Named by Christopher Langton in 1986, but can trace examples from the dawn of computing. In a sense, it also reformulates an age-old motivation to create life from artifice, such as the Golem, early automatons, and <em>anima</em>tion. The earliest computer scientists and cyberneticians (Turing, von Neumann, Wiener, Ashby) also investigated artificial approaches to biological phenomena.</p>
+<p>A major hypothesis is that life is not a property of the specific matter we know, but rather a more general property of particular organizations and behaviors. Computing pioneer John von Neumann claimed that &quot;life is a process which can be abstracted away from any particular medium&quot;. If so, there is no reason to suppose that life cannot occur in systems that are not part of our natural evolution, including digital media. As a science, ALife thus studies not &quot;life as we know it&quot; but &quot;life as it could be&quot;. </p>
+<p>The core strategy differs from traditional sciences, which focus on a particular system is to capture the principal parameters, and instead investigate the principles of life through the capacity of simple rules to generate complex behaviors. This is known as the <em>bottom-up</em> approach. (At the birth of ALife this was a sharp departure from <em>top-down</em> symbolic AI, but today this is no longer a reliable distinction.)</p>
+<p>Hence the core method of research is simulation, which is broadly categorized according to the media used:</p>
+<ul>
+<li><em>Soft</em>: digital simulation</li>
+<li><em>Hard</em>: physical robotic</li>
+<li><em>Wet</em>: biochemical manipuation</li>
+</ul>
+<p>ALife is inherently trans-disciplinary. This is expected; it blends things that were previously distinct (born vs. made, nature vs. artifice). But it doesn&#39;t mean that related fields become merged. Indiviual simulations may differ signifiantly in their principal motivations and modes of evaluation, as elucidated in <a href="http://www.mitpressjournals.org/doi/abs/10.1162/002409402760105271">&quot;Artificial Evolution and Lifelike Creativity&quot;</a>:</p>
+<ul>
+<li>Scientific models: as analytical tools to propose and evaluate theories with respect to actual life phenomena, </li>
+<li>Engineering/design tools: a problem solving-strategy evaluated according to fit, efficiency, accuracy etc.,</li>
+<li>New ontologies and instantiations: evaluated for other criteria involving &#39;lifelikeness&#39;; including generative arts.</li>
+</ul>
+<p>ALife has been significant for philosophy: &quot;Artiﬁcial life’s computational methodology is a direct and natural extension of philosophy’s traditional methodology of a priori thought experiment.&quot; <a href="http://authors.library.caltech.edu/13564/1/BEDal00.pdf">Bedau, M. Open Problems in Artifical Life</a></p>
+<p>From the earliest papers in the Artificial Life conference proceedings and journals, examples of all three perspectives are present, along with acknowledgement of the difficult philosophical questions, and example projects demonstrating remarkable capacity for adaptation and emergent complexity despite their inherent simplicity.</p>
+<h2>Notable contributions</h2>
+<ul>
+<li>Cellular automata among the oldest contributions, still widely used today. Read: <a href="http://www.stephenwolfram.com/publications/articles/ca/">Wolfram</a>.</li>
+<li>Evolutionary algorithms (genetic algorithm, evoluationary programming, swarm intelligence, ant colony optimization, ...): wide applicability in engineering/design optimization. Read: Holland, Koza. </li>
+<li>Artificial chemistry: abstract chemical reactions to simulate the emergence of life. Read: Fontana.</li>
+<li>Agent-based systems: from scientific modeling to ubiquitous computing and robotics. </li>
+<li>L-systems, rewriting systems and developmental modeling have been heavily used in computer graphics. Read: Lindenmeyer, Prusinkiewicz.</li>
+</ul>
+<p><a href="http://www.karlsims.com/papers/siggraph94.pdf">Sims, K. Evolved Virtual Creatures</a>, <a href="https://www.youtube.com/watch?v=JBgG_VSP7f8">video</a>, and <a href="https://www.youtube.com/user/kjlg74?feature=watch">3DEVC examples</a></p>
+<p><a href="https://www.youtube.com/watch?v=fjNPUtwURpc">L-Systems (skip to 11:45)</a></p>
+<h2>Controversy</h2>
+<p>Artificial Life is not without controversy. Although it aims to dispel earlier <em>vitalism</em>, it remains deeply enmeshed in the controversies regarding <em>emergence</em> and <em>complexity</em> (see &quot;from complexity to perplexity&quot; (Horgan)), with similar challenges as AI and the study of consciousness. As a science it has been accused of being &quot;fact-free&quot; (Maynard Smith), yet its research has been published in <em>Science</em> and <em>Nature</em>. </p>
+<p>The question of artificial nature touches the nerve of creativity; an enticing opportunity for generative and algorithmic arts. Art/culture critic Edward Shanken suggests that ALife is grounded in theory and ideas more than in life itself. Simon Penny, N. Katharine Hayles and Rodney Brooks criticized both AI and ALife for being &#39;disembodied&#39;, priveling mind over body; though more contemporary ALife now involves greater interaction, immersion, robotics and biochemistry. </p>
+<p>The position of life as property of organization has been characterized as <strong>strong ALife</strong>. The <strong>weak ALife</strong> position on the other hand allows that we can simulate life in order to understand the mechanisms of real living entities, but we cannot actually synthesize life itself. In any case, to define a simulation as &#39;alive&#39; depends on having a widely agreed upon definition of &#39;life&#39; itself, which remains problematic. </p>
+<p>Soft ALife has also been frequently related to issues of computer security and viruses, and hard/wet ALife with cyborg and biological disaster, and warfare.</p>
+<hr>
+<p>We have found that life isn&#39;t always what we think it is: evolution is not necessarily progressive, nor gradual, survival is not often a question of fitness, large amounts of DNA are shared between incredibly different species, environmental nurture is essential to development, etc. Can we understand more deeply by creating autonomous life-like systems?</p>
+<p>Life is the best example we have of systems adapting to unpredictable environments while propagating complexity; of surpassing themselves. What we learn may inform adaptive, responsive (responsible? sustainable?) designs for present-day concerns: biotech, ubicomp, cloud &amp; device, robotics... </p>
+<p>It may offer opportunities to raise new ethical issues. For example, the post-human / post-organic life discussions (see Hayles); away from &#39;essentialism&#39; toward &#39;cyborg subjects&#39; (Haraway). The future of <em>our</em> life is (and always has been) deeply connected with the future of machines.</p>
+<hr>
+<h2>ALife Resources</h2>
+<h3>Journals:</h3>
+<p><a href="http://www.mitpressjournals.org/loi/artl">Artificial Life</a>, Evolutionary Computation, IEEE Transactions of Evolutionary Computation, Physica D (Nonlinear Phenomena), Adaptive Behavior, <a href="http://www.springer.com/computer/ai/journal/10015">Artificial Life and Robotics</a>, <a href="http://www.igi-global.com/journal/international-journal-artificial-life-research/1153">IJALR</a></p>
+<h3>Conferences:</h3>
+<p>ECAL, <a href="http://evostar.dei.uc.pt/2012/">EvoWorkshops</a>, IEEE ALIFE, IEEE CEC, GECCO, ALEA, EA</p>
+<h3>See also:</h3>
+<p><a href="http://alife.org/">alife.org</a>, <a href="http://biota.org">biota.org</a>, <a href="http://www.freshsim.org/discussion/11/established-alife-projects">FreshSim</a>, <a href="http://comdig.unam.mx/">Complexity Digest</a></p>
+</div>
+	
+	<div class="footer">
+	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
+	Graham Wakefield, 2013</div>
+	
+</div>
+</body>
+</html>

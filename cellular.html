@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Cellular and lattice models</title>
+    
+<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
+  
+<script src="js/jquery.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/main.js" type="text/javascript"></script>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+<body>
+<div id="wrapper">
+	
+	<div class="header">
+		<h1>GCT 753</h1>
+		<a href="index.html">Overview</a><br/>
+		<a href="software.html">Software</a><br/>
+		<a href="lua.html">Lua</a><br/>
+		<br>
+		<a href="introduction.html">Themes</a><br/>
+		<a href="artificial_life.html">Artificial Life</a><br/>
+		<!--
+		<a href="generative_art.html">Generative Art & Design</a><br/>
+		-->
+		
+	</div>
+	<div class="section"><h1>Cellular and lattice models</h1>
+<h2>Game of Life</h2>
+<p><a href="https://www.youtube.com/watch?v=wNypW-aSCmE">3D cellular automaton takes over minecraft</a></p>
+<h2>Reaction Diffusion</h2>
+<p><a href="http://mrob.com/pub/comp/xmorphia/">xmorphia</a>, great video examples of <a href="http://www.youtube.com/watch?v=F5oKgVZ6bTk">u-skate world</a>, and even <a href="http://www.youtube.com/watch?v=B03lcPEmSOQ">u-skate in 3D</a>.</p>
+<h2>Statistical models</h2>
+<p>The <em>Ising model</em> of ferromagnetism in statistical mechanics can also be simulated in a Monte Carlo fashion. Each site (cell) has either positive or negative spin (we can encode that as 0 or 1 value). At each time step, consider a site at random, and evaluate the probability of changing state. If changing state moves the site toward energetic equilibrium with neighbors (determined according to the Hamiltonian of the site) , then the change is made. Otherwise, the change is made only with a small probability that is dependent on the energetic difference and overall temperature. Thus at high temperatures, the system remains noisy, while at low temperatures it gradually self-organizes into all sites with equal spin.</p>
+<p>It is also related to the <em>contact process</em> model, which has been used to simulate the spread of infection: infected sites become healthy at a constant rate, while healthy sites become infected at a rate proportional to the number infected neighbors. This can be extented to multiple states for a multitype contact process. The <em>voter model</em> similarly simulates the changing of opinion in social groups.</p>
+<p>The siteular <em>Potts model</em> (also known as the <em>Glazier-Graner</em> model) generalizes these to allow more than two site states, and in some cases, an unbounded number of possible site states; however it still utilizes the notion of statistical movement toward neighbor equilibrium to drive change, though the definition of a local Hamiltonian. Variations have been used to model grain growth, foam, fluid flow, chemotaxis, biological cells, and even the developmental cycle of whole organisms. Note that in this field, the term <em>cell</em> is used not to refer to a site on the lattice, but to a whole group of connected sites that share the same state. So in modeling foam, a <em>cell</em> represents a single bubble, and is made of one or more <em>sites</em>. Most changes therefore happen at the boundaries between these cells.</p>
+<h2>Other variations</h2>
+<p><a href="http://www.youtube.com/playlist?list=PL69EDA11384365494">SmoothLife</a> still uses a discrete grid, but both the kernel and transition functions are adjusted for smooth, continuous values; it removes the discrete bias and leads to fascinating results. <a href="http://www.youtube.com/watch?v=l7t8LtdBAV8">Another implementaton</a>. <a href="http://www.youtube.com/watch?v=zA857JdUn9o&amp;list=PL69EDA11384365494&amp;index=46">Taken to 3D</a>.</p>
+<h2>In art</h2>
+<p><a href="http://www.jonathanmccabe.com/">Jonathan McCabe</a> and <a href="http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html">commentary by Mitchell Whitelaw</a></p>
+<p>Some of these systems share resemblance with analog video feedback (<a href="http://www.youtube.com/watch?v=hDYEVv9t32U">example</a>, <a href="http://www.youtube.com/watch?v=Uw5onuS2_mw">example</a>), which has been exploited by earlier media artists (notably the Steiner and Woody Vasulka).</p>
+</div>
+	
+	<div class="footer">
+	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
+	Graham Wakefield, 2013</div>
+	
+</div>
+</body>
+</html>

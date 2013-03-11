@@ -1,1 +1,123 @@
-hi
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Index</title>
+    
+<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
+  
+<script src="js/jquery.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/main.js" type="text/javascript"></script>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+<body>
+<div id="wrapper">
+	
+	<div class="header">
+		<h1>GCT 753</h1>
+		<a href="index.html">Overview</a><br/>
+		<a href="software.html">Software</a><br/>
+		<a href="lua.html">Lua</a><br/>
+		<br>
+		<a href="introduction.html">Themes</a><br/>
+		<a href="artificial_life.html">Artificial Life</a><br/>
+		<!--
+		<a href="generative_art.html">Generative Art & Design</a><br/>
+		-->
+		
+	</div>
+	<div class="section"><h1>GCT753: Topics in Computational Design (Artificial Natures)</h1>
+<p>KAIST GSCT Spring 2013<br>Instructor: Dr. Graham Wakefield (<a href="http://www.grahamwakefield.net">grrrwaaa@gmail.com</a>)<br>Hours: Tue/Thu 10:30 - 12:00<br>Location: N25 3239<br>Language: English<br>Credit: 3<br>Web: <a href="http://grrrwaaa.github.com/gct753/">http://grrrwaaa.github.com/gct753/</a></p>
+<h2>Overview</h2>
+<p>How can we create cultural artifacts (art, architecture, design, service) that are as rich, adaptive, and fascinating as nature? Media computation is often presented in terms of isolated and narrow problem-solving tasks, but the culture technology of tomorrow is increasingly connected, persistent, interactive, and open-ended. How can we create media systems that respond continuously and creatively to an ever-changing environment?</p>
+<p>From its origins computing has been inspired by nature, including aspects of intelligence, pattern formation, self-construction and reproduction, autonomy and collective behavior. This course introduces the key conceptual frameworks and techniques of bio-inspired computation and their applications in artifacts of cultural technology, particularly for interactive and generative media arts. The course however most strongly emphasizes practice: during the course, creative applications are examined and implemented in interactive audiovisual media. The aim is not only to develop understanding and expertise, but also to look ahead toward the artificial/natural/cultural environments of tomorrow.</p>
+<h3>Format</h3>
+<p>Theoretical issues, technical models, and exemplary works are presented in lecture sessions, and implemented during lab sessions. Students may use a software engine supplied by the instructor. Toward the end of the course lab sessions will be oriented towards helping students with their final projects. Lecture and course materials, including the software engine, will be presented and disseminated through the class web-site.</p>
+<h3>Objectives</h3>
+<p>By the end of the course, students will: </p>
+<ul>
+<li>Understand the many themes of bio-inspired computation, how it has been applied in generative
+and interactive arts, and how it may be extrapolated into future culture technologies. </li>
+<li>Be able to apply these techniques for tasks of problem-solving as well as interactive and creative
+works, as demonstrated in a project portfolio.</li>
+</ul>
+<h3>Prerequisites</h3>
+<p>The course is designed to be suitable to students with different levels of technical expertise, but some prior programming experience is assumed.</p>
+<h3>Assignments &amp; final project</h3>
+<p>Assignments must be completed individually. Collaboration is permitted for final projects, however each student must be able to clearly identify which parts of the project they were responsible for. The final project may extend existing work from one (or more) of the assignments, but will be evaluated only according to the new contributions. Final projects are selected by students, but must present an agent-environment system that integrates interactivity with  adaptation (such as evolution or learning).</p>
+<p>Coursework will be delivered through <a href="https://github.com/grrrwaaa/gct753">github</a>.</p>
+<p>Lab sessions and assignments will utilize a software engine provided by the instructor, compatible with OSX and possibly Linux or Windows. Using a specific engine allows us to concentrate on important conceptual issues without being distracted by platform and library variations and inconsistencies. The engine supports easy experimentation by students and rapid in-class authoring examples by the instructor. The principles learned can be easily translated to other languages and systems.</p>
+<h3>Grading</h3>
+<p>Grading will be based on: </p>
+<ul>
+<li>in-class participation (20%), </li>
+<li>assignments (40%), and </li>
+<li>final project presentation (40%). </li>
+</ul>
+<p>Assignment and projects will be graded according to: </p>
+<ul>
+<li>technical proficiency (33%), </li>
+<li>aesthetic quality (33%), and </li>
+<li>novel contribution (33%).</li>
+</ul>
+<h3>Materials</h3>
+<p>A selection of key papers will be disseminated during the course. Two books are also recommended, from which many readings will be selected: </p>
+<ul>
+<li><a href="https://mitpress.mit.edu/books/bio-inspired-artificial-intelligence">Floreano &amp; Mattiussi, Bio-Inspired Artificial Intelligence</a></li>
+<li><a href="http://mitpress.mit.edu/books/computational-beauty-nature">Flake, The Computational Beauty of Nature</a></li>
+</ul>
+<h2>Tentative schedule</h2>
+<h3>Week 1</h3>
+<p><strong>Topics:</strong> Course overview. Introduction to biologically-inspired computation and artificial life art. Introduction to major themes, presentation of representative works. Presentation of the software engine used for labs and assignments.</p>
+<p><strong>Readings:</strong> Selected readings (Mitchell Whitelaw, Simon Penny, Sommerer &amp; Mignonneau, Karl Sims)</p>
+<h3>Week 2</h3>
+<p><strong>Topics:</strong> Automata theory. Lattice automata, cellular automata, the Game of Life. 
+Dynamic systems, reaction-diffusion systems, chaotic and dissipative structures. Implementations following Conway, Turing.</p>
+<p><strong>Readings:</strong> Readings from the course books. Selections from Wolfram, Turing, Prigogine. </p>
+<h3>Week 3</h3>
+<p><strong>Topics:</strong> Conceptual issues: emergence and the mechanism-vitalism debate, self-organization in discrete and continuous systems, Wolfram’s classes of CA and Langton’s edge of chaos. Implementations following Wolfram, Langton. </p>
+<p><strong>Readings:</strong> Readings from the course books. Summary texts (Penny, Whitelaw etc.)</p>
+<p><strong><em>Assignment 1:</em></strong> Variations on the Cellular Automaton.</p>
+<h3>Weeks 4-5</h3>
+<p><strong>Topics:</strong> Evolutionary models. Genotype and phenotype representations. Optimizing selection, aesthetic selection, co-evolutionary and ecosystemic selection. Genetic algorithm, genetic programming, evolutionary programming. Implementations following Sims, Draves.</p>
+<p><strong>Readings:</strong> Readings from the course books. Original texts by McCormack, Holland, Koza. </p>
+<p><strong><em>Assignment 2:</em></strong> (Week 5) Evolutionary programming of images or sounds.</p>
+<h3>Week 6</h3>
+<p><strong>Topics:</strong> Development. Rewriting systems in computation, L-systems, shape grammars. Pattern formation. The evo-devo revolution, cell signaling and regulatory networks.</p>
+<p><strong>Readings:</strong> Selected readings from the course books. Original texts (Lindenmeyer, Turing). </p>
+<h3>Week 7</h3>
+<p><strong>Topics:</strong> Agents, agent-environment interaction. Behavioral systems in cognitive science, AI &amp; robotics. Random walks. Vehicles (Braitenberg), subsumption architecture (Brooks), chemotaxis. Implementations following Reas, chemotaxis.</p>
+<p><strong>Readings:</strong> Selected readings from the course books.  Original texts (Braitenberg, Brooks).</p>
+<p><strong><em>Assignment 3:</em></strong> Either a) morphology using an L-system or b) pattern formation with a reaction-diffusion system.</p>
+<h3>Weeks 8-9</h3>
+<p><strong>Topics:</strong> Collective behavior and intelligence, biological self-organization. Swarms and PSO, ant colony models (stigmergy and pheromone trails), collective optimization and distributed computing, game theory.
+Implementations: stigmergy, pheromone trails. </p>
+<p><strong>Readings:</strong> Selected readings from the course books.  </p>
+<p><strong><em>Assignment 3:</em></strong> (Week 9) Collective agent behaviors.</p>
+<h3>Week 10</h3>
+<p><strong>Topics:</strong> Neural models. The neuron, von Neumann, biological &amp; artificial plasticity, artificial neural networks (ANNs), supervised, unsupervised &amp; reinforcement learning.</p>
+<p><strong>Readings:</strong> Selected readings from the course books.</p>
+<h3>Week 11</h3>
+<p><strong>Topics:</strong> Advanced topics: Immune systems. Natural and artificial immunity, algorithms, shape spaces.</p>
+<p><strong>Readings:</strong> Selected readings from the course books.</p>
+<p><strong><em>Assignment:</em></strong> Final project proposal due. </p>
+<h3>Week 12</h3>
+<p><strong>Topics:</strong> Advanced topics: Programmable media and byte-code ecosystems. Corewars, Tierra, Viruses.</p>
+<p><strong>Readings:</strong> Selected readings from the course books. Original texts (Ray, Turing). </p>
+<h3>Week 13</h3>
+<p><strong>Topics:</strong> Advanced topics: Artificial chemistries.  Autonomous structure and self-organization, emergence of life. Implementation focus: Fontana’s alchemy.</p>
+<p><strong>Readings:</strong> Selected readings from the course books. Original texts (Fontana et al.). </p>
+<h3>Weeks 14+</h3>
+<p>Project development labs, final project presentation &amp; critique.</p>
+</div>
+	
+	<div class="footer">
+	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
+	Graham Wakefield, 2013</div>
+	
+</div>
+</body>
+</html>
