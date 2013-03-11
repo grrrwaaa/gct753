@@ -1,4 +1,5 @@
 gct753
 ======
 
-GCT753: Topics in Computational Design (Artificial Natures)
+[Website](http://grrrwaaa.github.com/gct753/)
+
