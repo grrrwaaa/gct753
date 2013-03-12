@@ -17,6 +17,8 @@ Computing media nevertheless revolutionize generative art. A great deal of early
 
 [Whitelaw, M. System Stories and Model Worlds: A Critical Approach to Generative Art.](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.136.5399)
 
+[Boden, M., Edmonds, E. What is Generative Art?](http://research.it.uts.edu.au/creative/eae/intart/pdfs/generative-art.pdf)
+
 ## Artificial Life Art
 
 Recall that art & design are well-represented within Artificial Life research. Langton accorded importance to the creative and aesthetic aspects of ALife. Several works (notably Karl Sims') have been accoladed in both scientific and art communities. Furthermore, many scholars have noted the aesthetic nature of evaluation of ALife simulations, for their 'lifelikeness' or 'interestingness'. 
@@ -32,6 +34,8 @@ Recall that art & design are well-represented within Artificial Life research. L
 [Sommerer, C. and Mignonneau, L. The application of artificial life to interactive computer installations](http://link.springer.com/article/10.1007%2FBF02471174?LI=true#page-1)
 
 [Sommerer, C. and Mignonneau, L. A-Volve an evolutionary artificial life environment.](http://books.google.co.kr/books?hl=en&lr=&id=0J8kQEjXe38C&oi=fnd&pg=PA167&dq=Sommerer+and+Mignonneau&ots=nlWrCyeDV5&sig=OgzhQf55zUmrtyGYjoSAcFCSqpw&redir_esc=y#v=onepage&q=Sommerer%20and%20Mignonneau&f=false)
+
+[Driessens, E. and Verstappen, M. Natural Processes and Artificial Procedures.](http://link.springer.com/chapter/10.1007%2F978-3-540-74111-4_7?LI=true#page-1)
 
 [Dorin, A. Enriching Aesthetics with Artiﬁcial
 Life](http://download.springer.com/static/pdf/719/chp%253A10.1007%252F978-1-84882-285-6_14.pdf?auth66=1363162689_1efc6d54d6ee7c6e983d4150f2086f67&ext=.pdf)
