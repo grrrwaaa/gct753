@@ -5,6 +5,8 @@ title: Cellular systems and lattice models
 
 Provides an interesting continuum between non-living (such as molecules in crystal and metalline structures) and living (such as cells of a multi-cellular organism). The main difference is that, although both begin with more or less 'the same program', in living material the individual behavior of each cell specializes according to early conditions. This is important for *developmental biology*. Of course, computational cellular systems are far, far simpler than biological cells; but still draw from this inpsiration. The CA model was propsed by Stanislaw Ulam and used by von Neumann to demonstrate machines that can reproduce themselves; a more concise example being proposed by [Christopher Langton](http://www.youtube.com/watch?v=2iDc4C6vbcc) decades later, itself later [improved upon using artificial evolutionary techniques](http://www.youtube.com/watch?v=vbpoTZlNTiw&NR=1&feature=endscreen).
 
+[The wikibooks on CA](http://www.interciencia.es/PDF/WikipediaBooks/CellAutomata.pdf).
+
 The essential components that define a cellular system:
 
 - **Cellular space:** A collection of cells arranged into a discrete lattice, such as a 2D grid. 
@@ -90,21 +92,6 @@ Or perhaps the neighborhood selection may change between updates (also see parti
 
 These can be implemented by changing the function used in the transition rule, or by extending the state set to accommodate the differences. Changing the function is usually easier to implement and understand.
 
-### Asynchronous CA
-
-Instead of updating all cells at once, update one cell at a time, according to some update policy. 
-
-- A fixed update policy, such as linear scan or pre-determined path, is orderly, but may introduce artifacts (related to the *double-buffering* pattern). 
-- A *probabilistic asynchronous CA* chooses the next active cell according to a random selection (related to the Monte Carlo methods described below).
-- A *mobile CA* chooses a related cell (such as one of the neighbors) of the current active cell as the next active cell. So in addition to choosing a new state for the cell, the transition rule must also choose how to move the active cell. This could also be partly probabilistic.
-
-[Langton's Ant](http://en.wikipedia.org/wiki/Langton%27s_ant) is a mobile CA in a 2D, two-state space, with very simple rules:
-
-- At a white square, turn 90° right, flip the color of the square, move forward one unit
-- At a black square, turn 90° left, flip the color of the square, move forward one unit
-
-[See the script](https://github.com/grrrwaaa/gct753/blob/master/ca_2D_langtons_ant.lua) in the repo, and the [original video by Christopher Langton](http://www.youtube.com/watch?v=w6XQQhCgq5c), including examples of multiple ants (and music by the Vasulkas). Note that Langton's Ant, and other related Turmites, are closely related to the turtle graphics often used for L-systems.
-
 ### Probabilistic/Stochastic CA
 
 In this case the transition rule is not deterministic, but includes some random factor. For example, a probability can be assigned to each successor state according to the prior states. 
@@ -128,6 +115,22 @@ More example block CAs [here](http://psoup.math.wisc.edu/mcell/rullex_marg.html)
 In 1969, German computer pioneer (and painter) Konrad Zuse published his book [Calculating Space](ftp://ftp.idsia.ch/pub/juergen/zuserechnenderraum.pdf), proposing that the physical laws of the universe are discrete by nature, and that the entire universe is the output of a deterministic computation on a single cellular automaton. This became the foundation of the field of study called *digital physics*. Zuse's first model is a 3D particle CA.
 
 ![Zuse's vision of nature](img/zuse.jpg)
+
+### Asynchronous CA
+
+Instead of updating all cells at once, update one cell at a time, according to some update policy. The same choices can be applied per-block in a block-rule CA.
+
+- A fixed update policy, such as linear scan or pre-determined path, is orderly, but may introduce artifacts (related to the *double-buffering* pattern). 
+- A *probabilistic asynchronous CA* chooses the next active cell according to a random selection (related to the Monte Carlo methods described below).
+- A multi-rate CA (self-clocked) updates each cell according to a clock period that varies from cell to cell. The clock period could also be affected by neighbors, to achieve *entrainment* effects.
+- A *mobile CA* chooses a related cell (such as one of the neighbors) of the current active cell as the next active cell. So in addition to choosing a new state for the cell, the transition rule must also choose how to move the active cell. This could also be partly probabilistic.
+
+[Langton's Ant](http://en.wikipedia.org/wiki/Langton%27s_ant) is a mobile CA in a 2D, two-state space, with very simple rules:
+
+- At a white square, turn 90° right, flip the color of the square, move forward one unit
+- At a black square, turn 90° left, flip the color of the square, move forward one unit
+
+[See the script](https://github.com/grrrwaaa/gct753/blob/master/ca_2D_langtons_ant.lua) in the repo, and the [original video by Christopher Langton](http://www.youtube.com/watch?v=w6XQQhCgq5c), including examples of multiple ants (and music by the Vasulkas). Note that Langton's Ant, and other related Turmites, are closely related to the turtle graphics often used for L-systems.
 
 ### Continuous automata
 
