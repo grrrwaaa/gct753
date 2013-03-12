@@ -30,8 +30,7 @@
 		
 	</div>
 	<div class="section"><h1>Cellular systems and lattice models</h1>
-<p>Provides an interesting continuum between non-living (such as molecules in crystal and metalline structures) and living (such as cells of a multi-cellular organism). The main difference is that, although both begin with more or less &#39;the same program&#39;, in living material the individual behavior of each cell specializes according to early conditions. This is important for <em>developmental biology</em>. </p>
-<p>Computational cellular systems are far, far simpler than biological cells; but still draw from this inpsiration.</p>
+<p>Provides an interesting continuum between non-living (such as molecules in crystal and metalline structures) and living (such as cells of a multi-cellular organism). The main difference is that, although both begin with more or less &#39;the same program&#39;, in living material the individual behavior of each cell specializes according to early conditions. This is important for <em>developmental biology</em>. Of course, computational cellular systems are far, far simpler than biological cells; but still draw from this inpsiration.</p>
 <p>The essential components that define a cellular system:</p>
 <ul>
 <li><strong>Cellular space:</strong> A collection of cells arranged into a discrete lattice, such as a 2D grid. </li>
@@ -45,9 +44,8 @@
 <h2>Cellular automata</h2>
 <p>The mathematical notion of <em>automaton</em> indicates a discrete-time system with finite set of possible states, a finite number of inputs, a finite number of outputs, and a transition rule which gives the state at the next step in terms of the state and inputs at the previous step.</p>
 <p>A <em>CA</em> applies this notion to a cellular space. It has discrete time, finite neighborhood (inputs), finite state set (often represented as integers) and synchronous update. The transition rule (or CA rule) is usually deterministic, giving a cell state[t+1] as a function of the states[t] of itself and neighbours; and all cells use the same transition rule. </p>
+<p>The space itself is usually 1D, 2D or 3D, but rarely greater. Wolfram performed most of his research using 1D CAs, such as the &#39;rule 30&#39; CA below, whose evolution bears similarities with some shell patterns. The most famous CA <em>Game of Life</em> is 2D, which is so popular that people have written <a href="http://www.youtube.com/watch?v=My8AsV7bA94">Turing machines</a> and <a href="http://www.youtube.com/watch?v=xP5-iIeKXE8">Game of Life</a> in terms of it. <a href="https://www.youtube.com/watch?v=wNypW-aSCmE">Over here a 3D cellular automaton is taking over Minecraft</a>.</p>
 <p><img src="img/ca_shells.jpg" alt="Evolution of a 1D CA: rule 30"></p>
-<p>The space itself is usually 1D, 2D or 3D, but rarely greater. Wolfram performed most of his research using 1D CAs, such as the &#39;rule 30&#39; CA above, whose evolution bears similarities with some shell patterns. The most famous CA <em>Game of Life</em> is 2D, which is so popular that people have written <a href="http://www.youtube.com/watch?v=My8AsV7bA94">Turing machines</a> and <a href="http://www.youtube.com/watch?v=xP5-iIeKXE8">Game of Life</a> in terms of it. <a href="https://www.youtube.com/watch?v=wNypW-aSCmE">Over here a 3D cellular automaton is taking over Minecraft</a>.</p>
-<p>In theory the transition rule can be represented as a <em>look-up table</em>, however above a certain number of states and neighbors the size of this table would become astronomical (k states raised to the power of k neighbor states raised to the power of n neighbors; for a 3-state, 3-neighbor system this requires 7 billon rules!), so a procedural implementation is preferable. </p>
 <h3>Conway&#39;s Game of Life</h3>
 <p>The <em>Game of Life</em> CA is an example of a <em>outer totalistic</em> CA: The spatial directions of cells do not matter, only the total value of all neighbors is used, along with the current value of teh cell itself. The transition rule for a cell can be stated concisely as follows:</p>
 <ul>
@@ -80,20 +78,36 @@
         state = <span class="number">1</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span></code></pre>
+<p>The Game of Life produces easily recognizable higher-level formations including stable objects, oscillatory objects, mobile objects and objects that produce or consume others, for example, which have been called &#39;ponds&#39;, &#39;gliders&#39;, &#39;eaters&#39;, &#39;glider guns&#39; and so on.</p>
+<p>Note that these rules mean that the Game of Life is not reversible: from a given state it is not possible to determine the previous state.</p>
 <h3>Implementation</h3>
 <p>If the cells are densely packed into a regular lattice structure, such as a 2D grid, they can efficiently be represented as <em>array</em> memory blocks. The state of a cell can be represented by a number, so an array of integers works well. A way to index this array memory to read or write a cell coordinate will be useful.</p>
-<p>CAs may use bit-wise operators to implement the transition rules in a hardware-optimized way, but we will use regular <code>if</code> statements, like the above, for clarity. </p>
+<p>In theory the transition rule can be represented as a <em>look-up table</em>, however above a certain number of states and neighbors the size of this table would become astronomical (k states raised to the power of k neighbor states raised to the power of n neighbors; for a 3-state, 3-neighbor system this requires 7 billon rules!), so a procedural implementation is preferable. CAs may use bit-wise operators to implement the transition rules in a hardware-optimized way, but we will use regular <code>if</code> statements, like the above, for clarity. </p>
 <p>One complication is that the states of the whole lattice must update synchronously. That means: when one cell changes, all cells should change. This is not easy to achieve in most computing systems today, which mostly follow instructions one at a time (with only limited parallelism). A naive implementation will thus update cells one at a time, and the neighborhood of a particular cell will contain both &#39;past&#39; and &#39;future&#39; states. One way to work around this is to maintain two copies of the lattice; one for the &#39;past&#39; states, and one for the &#39;future&#39; states. The transition rule always reads from the &#39;past&#39; lattice, and always writes to the &#39;future&#39; lattice. After all cells are updated, either the &#39;future&#39; is copied to the &#39;past&#39;, or the &#39;future&#39; and &#39;past&#39; lattices are swapped, since the future of yesterday is the past of tomorrow. </p>
 <blockquote>
 <p>This technique is called <em>double-buffering</em>, and is widely used in software systems where a parallel process interacts with a serial machine. It is used to render graphics to the screen, for example.</p>
 </blockquote>
+<h2>Variations</h2>
+<h3>Non-homogenous CA</h3>
+<p>The rule is not the same for all cells / for all time steps. Spatial non-homogeneity can be interesting to simulate different geographies (such as boundaries). Temporal non-homogeneity can be used to perform a sequence of different filters.</p>
+<p>It can be implemented by changing the function used in the transition rule, or by extending the state set to accommodate the differences. Changing the function is usually easier to implement and understand.</p>
+<h3>Asynchronous CA</h3>
+<p>Instead of updating all cells at once, update one cell at a time, according to some update policy. </p>
+<ul>
+<li>A fixed update policy, such as linear scan or pre-determined path, is orderly, but may introduce artifacts (related to the <em>double-buffering</em> pattern). </li>
+<li>A <em>probabilistic asynchronous CA</em> chooses the next active cell according to a random selection (related to the Monte Carlo methods described below).</li>
+<li>A <em>mobile CA</em> chooses a related cell (such as one of the neighbors) of the current active cell as the next active cell. So in addition to choosing a new state for the cell, the transition rule must also choose how to move the active cell. This could also be partly probabilistic.</li>
+</ul>
+<h3>Probabilistic/Stochastic CA</h3>
+<p>In this case the transition rule is not deterministic, but includes some random factor. For example, a probability can be assigned to each successor state according to the prior states. </p>
+<p>Take a look at the <a href="">Forest Fire CA example</a>, and try changing the probabilities to see how it behaves.</p>
 <h2>Reaction Diffusion</h2>
 <p><a href="http://mrob.com/pub/comp/xmorphia/">xmorphia</a>, great video examples of <a href="http://www.youtube.com/watch?v=F5oKgVZ6bTk">u-skate world</a>, and even <a href="http://www.youtube.com/watch?v=B03lcPEmSOQ">u-skate in 3D</a>.</p>
 <h2>Statistical models</h2>
 <p>The <em>Ising model</em> of ferromagnetism in statistical mechanics can also be simulated in a Monte Carlo fashion. Each site (cell) has either positive or negative spin (we can encode that as 0 or 1 value). At each time step, consider a site at random, and evaluate the probability of changing state. If changing state moves the site toward energetic equilibrium with neighbors (determined according to the Hamiltonian of the site) , then the change is made. Otherwise, the change is made only with a small probability that is dependent on the energetic difference and overall temperature. Thus at high temperatures, the system remains noisy, while at low temperatures it gradually self-organizes into all sites with equal spin.</p>
 <p>It is also related to the <em>contact process</em> model, which has been used to simulate the spread of infection: infected sites become healthy at a constant rate, while healthy sites become infected at a rate proportional to the number infected neighbors. This can be extented to multiple states for a multitype contact process. The <em>voter model</em> similarly simulates the changing of opinion in social groups.</p>
 <p>The siteular <em>Potts model</em> (also known as the <em>Glazier-Graner</em> model) generalizes these to allow more than two site states, and in some cases, an unbounded number of possible site states; however it still utilizes the notion of statistical movement toward neighbor equilibrium to drive change, though the definition of a local Hamiltonian. Variations have been used to model grain growth, foam, fluid flow, chemotaxis, biological cells, and even the developmental cycle of whole organisms. Note that in this field, the term <em>cell</em> is used not to refer to a site on the lattice, but to a whole group of connected sites that share the same state. So in modeling foam, a <em>cell</em> represents a single bubble, and is made of one or more <em>sites</em>. Most changes therefore happen at the boundaries between these cells.</p>
-<h2>Other variations</h2>
+<h2>Continuous-valued CAs</h2>
 <p><a href="http://www.youtube.com/playlist?list=PL69EDA11384365494">SmoothLife</a> still uses a discrete grid, but both the kernel and transition functions are adjusted for smooth, continuous values; it removes the discrete bias and leads to fascinating results. <a href="http://www.youtube.com/watch?v=l7t8LtdBAV8">Another implementaton</a>. <a href="http://www.youtube.com/watch?v=zA857JdUn9o&amp;list=PL69EDA11384365494&amp;index=46">Taken to 3D</a>.</p>
 <h2>In art</h2>
 <p><a href="http://www.jonathanmccabe.com/">Jonathan McCabe</a> and <a href="http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html">commentary by Mitchell Whitelaw</a></p>
