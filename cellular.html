@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset='utf-8'>
-<title>Cellular and lattice models</title>
+<title>Cellular systems and lattice models</title>
     
 <link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
@@ -29,9 +29,22 @@
 		-->
 		
 	</div>
-	<div class="section"><h1>Cellular and lattice models</h1>
-<h2>Game of Life</h2>
+	<div class="section"><h1>Cellular systems and lattice models</h1>
+<p>Provides an interesting continuum between non-living (such as molecules in crystal and metalline structures) and living (such as cells of a multi-cellular organism). The main difference is that, although both begin with more or less &#39;the same program&#39;, in living material the individual behavior of each cell specializes according to early conditions. This is important for <em>developmental biology</em>. </p>
+<p>Computational cellular systems are far, far simpler than biological cells; but still draw from this inpsiration.</p>
+<p>The essential components that define a cellular system:</p>
+<ul>
+<li><strong>Cellular space:</strong> A collection of cells arranged into a discrete lattice, such as a 2D grid. </li>
+<li><strong>Cell states:</strong> The information representing the current condition of a cell. In <em>Game of Life</em> this is either 0 or 1, but in other systems the state could be represented by an n-tuple of values, or something more complex. The set of possible states could be defined as finite or unbounded.</li>
+<li><strong>Initial conditions:</strong> What state the cells are in at the start of the simulation.</li>
+<li><strong>Neighborhood:</strong> The set of adjacent/nearby cells that can directly influence a particular cell. In <em>Game of Life</em> these are the 8 side and corner neighbors (the <em>Moore</em> neighborhood). In other systems it could be expressed as a radius or range.</li>
+<li><strong>State transition function:</strong> The rule that a cell follows to update its state, which depends on the current state and the state of the neighborhood.</li>
+<li><strong>Time axis:</strong> The cells are generally updated in a discrete fashion, which may be synchronous (all cells update simultaneously) or asynchronous (cells update separately, e.g. in a probabilistic manner).</li>
+<li><strong>Boundary conditions:</strong> What happens to cells at the edges. A periodic boundary &#39;wraps around&#39; to the opposite edge; a static boundary always has the same state, a copying or reflective boundary mirrors the neighbor state, etc.</li>
+</ul>
+<h2>Cellular automata</h2>
 <p><a href="https://www.youtube.com/watch?v=wNypW-aSCmE">3D cellular automaton takes over minecraft</a></p>
+<h2>Game of Life</h2>
 <h2>Reaction Diffusion</h2>
 <p><a href="http://mrob.com/pub/comp/xmorphia/">xmorphia</a>, great video examples of <a href="http://www.youtube.com/watch?v=F5oKgVZ6bTk">u-skate world</a>, and even <a href="http://www.youtube.com/watch?v=B03lcPEmSOQ">u-skate in 3D</a>.</p>
 <h2>Statistical models</h2>
