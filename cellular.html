@@ -30,7 +30,7 @@
 		
 	</div>
 	<div class="section"><h1>Cellular systems and lattice models</h1>
-<p>Provides an interesting continuum between non-living (such as molecules in crystal and metalline structures) and living (such as cells of a multi-cellular organism). The main difference is that, although both begin with more or less &#39;the same program&#39;, in living material the individual behavior of each cell specializes according to early conditions. This is important for <em>developmental biology</em>. Of course, computational cellular systems are far, far simpler than biological cells; but still draw from this inpsiration.</p>
+<p>Provides an interesting continuum between non-living (such as molecules in crystal and metalline structures) and living (such as cells of a multi-cellular organism). The main difference is that, although both begin with more or less &#39;the same program&#39;, in living material the individual behavior of each cell specializes according to early conditions. This is important for <em>developmental biology</em>. Of course, computational cellular systems are far, far simpler than biological cells; but still draw from this inpsiration. The CA model was propsed by Stanislaw Ulam and used by von Neumann to demonstrate machines that can reproduce themselves; a more concise example being proposed by <a href="http://www.youtube.com/watch?v=2iDc4C6vbcc">Christopher Langton</a> decades later, itself later <a href="http://www.youtube.com/watch?v=vbpoTZlNTiw&amp;NR=1&amp;feature=endscreen">improved upon using artificial evolutionary techniques</a>.</p>
 <p>The essential components that define a cellular system:</p>
 <ul>
 <li><strong>Cellular space:</strong> A collection of cells arranged into a discrete lattice, such as a 2D grid. </li>
@@ -44,8 +44,15 @@
 <h2>Cellular automata</h2>
 <p>The mathematical notion of <em>automaton</em> indicates a discrete-time system with finite set of possible states, a finite number of inputs, a finite number of outputs, and a transition rule which gives the state at the next step in terms of the state and inputs at the previous step.</p>
 <p>A <em>CA</em> applies this notion to a cellular space. It has discrete time, finite neighborhood (inputs), finite state set (often represented as integers) and synchronous update. The transition rule (or CA rule) is usually deterministic, giving a cell state[t+1] as a function of the states[t] of itself and neighbours; and all cells use the same transition rule. </p>
-<p>The space itself is usually 1D, 2D or 3D, but rarely greater. Wolfram performed most of his research using 1D CAs, such as the &#39;rule 30&#39; CA below, whose evolution bears similarities with some shell patterns. The most famous CA <em>Game of Life</em> is 2D, which is so popular that people have written <a href="http://www.youtube.com/watch?v=My8AsV7bA94">Turing machines</a> and <a href="http://www.youtube.com/watch?v=xP5-iIeKXE8">Game of Life</a> in terms of it. <a href="https://www.youtube.com/watch?v=wNypW-aSCmE">Over here a 3D cellular automaton is taking over Minecraft</a>.</p>
+<p>The space itself is usually 1D, 2D or 3D, but rarely greater. Wolfram performed most of his research using 1D CAs, such as the &#39;rule 30&#39; CA below, whose evolution bears similarities with some shell patterns. The most famous CA <em>Game of Life</em> is 2D, which is so popular that people have written <a href="http://www.youtube.com/watch?v=My8AsV7bA94">Turing machines</a> and <a href="http://www.youtube.com/watch?v=xP5-iIeKXE8">Game of Life</a> in terms of it. <a href="https://www.youtube.com/watch?v=wNypW-aSCmE">Over here a 3D cellular automaton is taking over Minecraft</a>, and <a href="http://www.youtube.com/watch?v=PBXO_6Jn1fs">here is a self-replicating computer in 3D</a>.</p>
 <p><img src="img/ca_shells.jpg" alt="Evolution of a 1D CA: rule 30"></p>
+<p>Wolfram divided CA into four classes, according to their long-term behavior:</p>
+<ul>
+<li><strong>Class 1</strong> - stable. Evolves to homogeneous state.</li>
+<li><strong>Class 2</strong> - cyclic. Evolves to simple separated periodic structures. Local changes to the initial pattern tend to remain local</li>
+<li><strong>Class 3</strong> - chaotic. Any stable structures that appear are quickly destroyed by the surrounding noise. Local changes to the initial pattern tend to spread indefinitely</li>
+<li><strong>Class 4</strong> - complex. Local changes to the initial pattern may spread indefinitely. Wolfram has conjectured that many, if not all class 4 cellular automata are capable of universal computation.</li>
+</ul>
 <h3>Conway&#39;s Game of Life</h3>
 <p>The <em>Game of Life</em> CA is an example of a <em>outer totalistic</em> CA: The spatial directions of cells do not matter, only the total value of all neighbors is used, along with the current value of teh cell itself. The transition rule for a cell can be stated concisely as follows:</p>
 <ul>
@@ -78,7 +85,7 @@
         state = <span class="number">1</span>
     <span class="keyword">end</span>
 <span class="keyword">end</span></code></pre>
-<p>The Game of Life produces easily recognizable higher-level formations including stable objects, oscillatory objects, mobile objects and objects that produce or consume others, for example, which have been called &#39;ponds&#39;, &#39;gliders&#39;, &#39;eaters&#39;, &#39;glider guns&#39; and so on.</p>
+<p>The Game of Life produces easily recognizable higher-level formations including stable objects, oscillatory objects, mobile objects and objects that produce or consume others, for example, which have been called &#39;ponds&#39;, &#39;gliders&#39;, &#39;eaters&#39;, &#39;glider guns&#39; and so on. In Wolfram&#39;s terms, it is <em>Class 4</em> CA.</p>
 <p>Note that these rules mean that the Game of Life is not reversible: from a given state it is not possible to determine the previous state.</p>
 <h3>Implementation</h3>
 <p>If the cells are densely packed into a regular lattice structure, such as a 2D grid, they can efficiently be represented as <em>array</em> memory blocks. The state of a cell can be represented by a number, so an array of integers works well. A way to index this array memory to read or write a cell coordinate will be useful.</p>
@@ -89,8 +96,9 @@
 </blockquote>
 <h2>Variations</h2>
 <h3>Non-homogenous CA</h3>
-<p>The rule is not the same for all cells / for all time steps. Spatial non-homogeneity can be interesting to simulate different geographies (such as boundaries). Temporal non-homogeneity can be used to perform a sequence of different filters.</p>
-<p>It can be implemented by changing the function used in the transition rule, or by extending the state set to accommodate the differences. Changing the function is usually easier to implement and understand.</p>
+<p>The rule is not the same for all cells / for all time steps. Spatial non-homogeneity can be interesting to simulate different geographies (such as boundaries). Temporal non-homogeneity can be used to perform a sequence of different filters. </p>
+<p>Or perhaps the neighborhood selection may change between updates (also see particle CA below).</p>
+<p>These can be implemented by changing the function used in the transition rule, or by extending the state set to accommodate the differences. Changing the function is usually easier to implement and understand.</p>
 <h3>Asynchronous CA</h3>
 <p>Instead of updating all cells at once, update one cell at a time, according to some update policy. </p>
 <ul>
@@ -98,19 +106,39 @@
 <li>A <em>probabilistic asynchronous CA</em> chooses the next active cell according to a random selection (related to the Monte Carlo methods described below).</li>
 <li>A <em>mobile CA</em> chooses a related cell (such as one of the neighbors) of the current active cell as the next active cell. So in addition to choosing a new state for the cell, the transition rule must also choose how to move the active cell. This could also be partly probabilistic.</li>
 </ul>
+<p><a href="http://en.wikipedia.org/wiki/Langton%27s_ant">Langton&#39;s Ant</a> is a mobile CA in a 2D, two-state space, with very simple rules:</p>
+<ul>
+<li>At a white square, turn 90° right, flip the color of the square, move forward one unit</li>
+<li>At a black square, turn 90° left, flip the color of the square, move forward one unit</li>
+</ul>
+<p><a href="https://github.com/grrrwaaa/gct753/blob/master/ca_2D_langtons_ant.lua">See the script</a> in the repo, and the <a href="http://www.youtube.com/watch?v=w6XQQhCgq5c">original video by Christopher Langton</a>, including examples of multiple ants (and music by the Vasulkas). Note that Langton&#39;s Ant, and other related Turmites, are closely related to the turtle graphics often used for L-systems.</p>
 <h3>Probabilistic/Stochastic CA</h3>
 <p>In this case the transition rule is not deterministic, but includes some random factor. For example, a probability can be assigned to each successor state according to the prior states. </p>
-<p>Take a look at the <a href="">Forest Fire CA example</a>, and try changing the probabilities to see how it behaves.</p>
+<p>Take a look at the <a href="https://github.com/grrrwaaa/gct753/blob/master/ca_2D_forest_fire.lua">Forest Fire CA example</a>, and try changing the probabilities to see how it behaves.</p>
+<p>Also try modifying Game of Life to include a very small probability of randomly changing state, for example.</p>
+<h3>Particle CA, Lattice-Gas Automata and Block Rule CA</h3>
+<p>The cell states represent the presence (or absence) of particles in a cell, and transition rules represent how particles move across cells. Generally the transition rule must preserve the quantity of particles. The elementary 1D traffic CA (rule 184) is a simple particle CA. </p>
+<p>An implementation option is to use <em>block rules</em>, which consider small regions at a time, rather than individual cells; e.g. a 2x2 region of cells in a 2D CA (the <em>Margolus neighborhood</em>). To handle the boundaries between blocks, the regions are shifted between each application (<a href="http://en.wikipedia.org/wiki/Block_cellular_automaton">see wikipedia</a>). </p>
+<p><img src="img/mnhood.gif" alt="Margolus neigborhood"></p>
+<p>Note that a block rule CA does not need to be implemented with two buffers, since each block updates synchronously internally, and independently externally.</p>
+<p>More example block CAs <a href="http://psoup.math.wisc.edu/mcell/rullex_marg.html">here</a> -- many of these are implemented <a href="https://github.com/grrrwaaa/gct753/blob/master/ca_2D_block_rules.lua">in the example script here</a>. </p>
+<p>In 1969, German computer pioneer (and painter) Konrad Zuse published his book <a href="ftp://ftp.idsia.ch/pub/juergen/zuserechnenderraum.pdf">Calculating Space</a>, proposing that the physical laws of the universe are discrete by nature, and that the entire universe is the output of a deterministic computation on a single cellular automaton. This became the foundation of the field of study called <em>digital physics</em>. Zuse&#39;s first model is a 3D particle CA.</p>
+<p><img src="img/zuse.jpg" alt="Zuse&#39;s vision of nature"></p>
+<h3>Continuous automata</h3>
+<p><strong>Continuous states:</strong> In this case, the states are not discrete but belong to a continuum, such as the linear range 0..1. Instead of using a discrete transition rule or lookup table, continuous functions can be used (or combined with discrete rules such as comparisons). Continuous automata can show liquid and diffusive effects.</p>
+<p><strong>Continuous neighborhood:</strong> Instead of accumulating whole neighbor cells, apply a <em>kernel</em> region, weighting cells according to the degree that they fall under a radius, or by distance.</p>
+<p><a href="http://www.youtube.com/playlist?list=PL69EDA11384365494">SmoothLife</a> still uses a discrete grid, but both the kernel and transition functions are adjusted for smooth, continuous values; it removes the discrete bias and leads to fascinating results. <a href="http://www.youtube.com/watch?v=l7t8LtdBAV8">Another implementaton</a>. <a href="http://www.youtube.com/watch?v=zA857JdUn9o&amp;list=PL69EDA11384365494&amp;index=46">Taken to 3D</a>.</p>
+<p>Can there be continuous space automata? If time were also continuous, they would simply be differential equations.</p>
 <h2>Reaction Diffusion</h2>
-<p><a href="http://mrob.com/pub/comp/xmorphia/">xmorphia</a>, great video examples of <a href="http://www.youtube.com/watch?v=F5oKgVZ6bTk">u-skate world</a>, and even <a href="http://www.youtube.com/watch?v=B03lcPEmSOQ">u-skate in 3D</a>.</p>
+<p>The reaction-diffusion model was proposed by Turing to describe embryo development and pattern-generation; it is still used today in CG. <a href="http://www.dna.caltech.edu/courses/cs191/paperscs191/turing.pdf">Turing, A. The Chemical Basic for Morphogenesis.</a></p>
+<p><img src="img/xmorphia-parameter-map.jpg" alt="The Gray-Scott parameter map"></p>
+<p>One approach to simulating RD using CA is the <em>Gray-Scott</em> model, as described in <a href="http://arxiv.org/pdf/patt-sol/9304003.pdf">Pearson, J. E. Complex Patterns in a Simple System</a>. There is <a href="http://mrob.com/pub/comp/xmorphia/">a wonderful archive of this model at this webpage</a>, including many great video examples of the <a href="http://www.youtube.com/watch?v=F5oKgVZ6bTk">u-skate world</a>, and even <a href="http://www.youtube.com/watch?v=B03lcPEmSOQ">u-skate in 3D</a>.</p>
 <h2>Statistical models</h2>
-<p>The <em>Ising model</em> of ferromagnetism in statistical mechanics can also be simulated in a Monte Carlo fashion. Each site (cell) has either positive or negative spin (we can encode that as 0 or 1 value). At each time step, consider a site at random, and evaluate the probability of changing state. If changing state moves the site toward energetic equilibrium with neighbors (determined according to the Hamiltonian of the site) , then the change is made. Otherwise, the change is made only with a small probability that is dependent on the energetic difference and overall temperature. Thus at high temperatures, the system remains noisy, while at low temperatures it gradually self-organizes into all sites with equal spin.</p>
+<p>The <em>Ising model</em> of ferromagnetism in statistical mechanics can also be simulated in a <em>Monte Carlo</em> fashion. Each site (cell) has either positive or negative spin (we can encode that as 0 or 1 value). At each time step, consider a site at random, and evaluate the probability of changing state. If changing state moves the site toward energetic equilibrium with neighbors (determined according to the Hamiltonian of the site) , then the change is made. Otherwise, the change is made only with a small probability that is dependent on the energetic difference and overall temperature. Thus at high temperatures, the system remains noisy, while at low temperatures it gradually self-organizes into all sites with equal spin.</p>
 <p>It is also related to the <em>contact process</em> model, which has been used to simulate the spread of infection: infected sites become healthy at a constant rate, while healthy sites become infected at a rate proportional to the number infected neighbors. This can be extented to multiple states for a multitype contact process. The <em>voter model</em> similarly simulates the changing of opinion in social groups.</p>
 <p>The siteular <em>Potts model</em> (also known as the <em>Glazier-Graner</em> model) generalizes these to allow more than two site states, and in some cases, an unbounded number of possible site states; however it still utilizes the notion of statistical movement toward neighbor equilibrium to drive change, though the definition of a local Hamiltonian. Variations have been used to model grain growth, foam, fluid flow, chemotaxis, biological cells, and even the developmental cycle of whole organisms. Note that in this field, the term <em>cell</em> is used not to refer to a site on the lattice, but to a whole group of connected sites that share the same state. So in modeling foam, a <em>cell</em> represents a single bubble, and is made of one or more <em>sites</em>. Most changes therefore happen at the boundaries between these cells.</p>
-<h2>Continuous-valued CAs</h2>
-<p><a href="http://www.youtube.com/playlist?list=PL69EDA11384365494">SmoothLife</a> still uses a discrete grid, but both the kernel and transition functions are adjusted for smooth, continuous values; it removes the discrete bias and leads to fascinating results. <a href="http://www.youtube.com/watch?v=l7t8LtdBAV8">Another implementaton</a>. <a href="http://www.youtube.com/watch?v=zA857JdUn9o&amp;list=PL69EDA11384365494&amp;index=46">Taken to 3D</a>.</p>
-<h2>In art</h2>
-<p><a href="http://www.jonathanmccabe.com/">Jonathan McCabe</a> and <a href="http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html">commentary by Mitchell Whitelaw</a></p>
+<h2>Some samples of CA art</h2>
+<p><a href="http://www.jonathanmccabe.com/">Jonathan McCabe&#39;s cyclic multi-scale Turing patterns</a>, and a <a href="http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html">commentary by Mitchell Whitelaw</a></p>
 <p>Some of these systems share resemblance with analog video feedback (<a href="http://www.youtube.com/watch?v=hDYEVv9t32U">example</a>, <a href="http://www.youtube.com/watch?v=Uw5onuS2_mw">example</a>), which has been exploited by earlier media artists (notably the Steiner and Woody Vasulka).</p>
 </div>
 	
