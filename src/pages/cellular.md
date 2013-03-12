@@ -19,11 +19,60 @@ The essential components that define a cellular system:
 
 ## Cellular automata
 
+The mathematical notion of *automaton* indicates a discrete-time system with finite set of possible states, a finite number of inputs, a finite number of outputs, and a transition rule which gives the state at the next step in terms of the state and inputs at the previous step.
+
+A *CA* applies this notion to a cellular space. It has discrete time, finite neighborhood (inputs), finite state set (often represented as integers) and synchronous update. The transition rule (or CA rule) is usually deterministic, giving a cell state[t+1] as a function of the states[t] of itself and neighbours; and all cells use the same transition rule. 
+
+![Evolution of a 1D CA: rule 30](img/ca_shells.jpg)
+
+The space itself is usually 1D, 2D or 3D, but rarely greater. Wolfram performed most of his research using 1D CAs, such as the 'rule 30' CA above, whose evolution bears similarities with some shell patterns. The most famous CA *Game of Life* is 2D, which is so popular that people have written [Turing machines](http://www.youtube.com/watch?v=My8AsV7bA94) and [Game of Life](http://www.youtube.com/watch?v=xP5-iIeKXE8) in terms of it. [Over here a 3D cellular automaton is taking over Minecraft](https://www.youtube.com/watch?v=wNypW-aSCmE).
+
+In theory the transition rule can be represented as a *look-up table*, however above a certain number of states and neighbors the size of this table would become astronomical (k states raised to the power of k neighbor states raised to the power of n neighbors; for a 3-state, 3-neighbor system this requires 7 billon rules!), so a procedural implementation is preferable. 
+
+### Conway's Game of Life
+
+The *Game of Life* CA is an example of a *outer totalistic* CA: The spatial directions of cells do not matter, only the total value of all neighbors is used, along with the current value of teh cell itself. The transition rule for a cell can be stated concisely as follows:
+
+- If the current state is 1 ("alive"):
+	- If the neighbor total is less than 2: New state is 0 ("death by loneliness")
+	- Else if the neighbor total is greater than 3: New state is 0 ("death by overcrowding")
+	- Else: State remains the same ("alive")
+- If the current state is 0 ("dead"):
+	- If the neigbor total is exactly 3: New state is 1 ("reproduction")
+	- Else: State remains the same ("dead")
+	
+Or, in Lua:
+
+```lua
+if state == 1 then
+	-- currently alive
+	if neighbors < 2 then
+		-- death by loneliness
+		state = 0
+	elseif neighbors > 3 then
+		-- death by overcrowding
+		state = 0
+	end
+else
+	-- currently dead
+	if neighbors == 3 then
+		-- birth by reproduction
+		state = 1
+	end
+end
+```
+
+### Implementation
+
+If the cells are densely packed into a regular lattice structure, such as a 2D grid, they can efficiently be represented as *array* memory blocks. The state of a cell can be represented by a number, so an array of integers works well. A way to index this array memory to read or write a cell coordinate will be useful.
+
+CAs may use bit-wise operators to implement the transition rules in a hardware-optimized way, but we will use regular ```if``` statements, like the above, for clarity. 
+
+One complication is that the states of the whole lattice must update synchronously. That means: when one cell changes, all cells should change. This is not easy to achieve in most computing systems today, which mostly follow instructions one at a time (with only limited parallelism). A naive implementation will thus update cells one at a time, and the neighborhood of a particular cell will contain both 'past' and 'future' states. One way to work around this is to maintain two copies of the lattice; one for the 'past' states, and one for the 'future' states. The transition rule always reads from the 'past' lattice, and always writes to the 'future' lattice. After all cells are updated, either the 'future' is copied to the 'past', or the 'future' and 'past' lattices are swapped, since the future of yesterday is the past of tomorrow. 
+
+> This technique is called *double-buffering*, and is widely used in software systems where a parallel process interacts with a serial machine. It is used to render graphics to the screen, for example.
 
 
-[3D cellular automaton takes over minecraft](https://www.youtube.com/watch?v=wNypW-aSCmE)
-
-## Game of Life
 
 
 

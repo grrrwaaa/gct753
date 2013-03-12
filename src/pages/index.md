@@ -7,6 +7,7 @@ KAIST GSCT Spring 2013
 Instructor: Dr. Graham Wakefield ([grrrwaaa@gmail.com](http://www.grahamwakefield.net))  
 Hours: Tue/Thu 10:30 - 12:00  
 Location: N25 3239  
+Office hours: Wed 11am-12pm, 2pm-3pm, N25 3228
 Language: English   
 Credit: 3  
 Web: http://grrrwaaa.github.com/gct753/

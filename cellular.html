@@ -20,14 +20,13 @@
 		<h1>GCT 753</h1>
 		<a href="index.html">Overview</a><br/>
 		<a href="software.html">Software</a><br/>
-		<a href="lua.html">Lua</a><br/>
+		<a href="lua.html">Lua Tutorial</a><br/>
 		<br>
 		<a href="introduction.html">Themes</a><br/>
 		<a href="artificial_life.html">Artificial Life</a><br/>
-		<!--
-		<a href="generative_art.html">Generative Art & Design</a><br/>
-		<a href="cellular.html">Cellular systems</a><br/>
-		-->
+		<a href="generative_art.html">Generative Art</a><br/>
+		<br>
+		<a href="cellular.html">Cellular Systems</a><br/>
 		
 	</div>
 	<div class="section"><h1>Cellular systems and lattice models</h1>
@@ -44,8 +43,50 @@
 <li><strong>Boundary conditions:</strong> What happens to cells at the edges. A periodic boundary &#39;wraps around&#39; to the opposite edge; a static boundary always has the same state, a copying or reflective boundary mirrors the neighbor state, etc.</li>
 </ul>
 <h2>Cellular automata</h2>
-<p><a href="https://www.youtube.com/watch?v=wNypW-aSCmE">3D cellular automaton takes over minecraft</a></p>
-<h2>Game of Life</h2>
+<p>The mathematical notion of <em>automaton</em> indicates a discrete-time system with finite set of possible states, a finite number of inputs, a finite number of outputs, and a transition rule which gives the state at the next step in terms of the state and inputs at the previous step.</p>
+<p>A <em>CA</em> applies this notion to a cellular space. It has discrete time, finite neighborhood (inputs), finite state set (often represented as integers) and synchronous update. The transition rule (or CA rule) is usually deterministic, giving a cell state[t+1] as a function of the states[t] of itself and neighbours; and all cells use the same transition rule. </p>
+<p><img src="img/ca_shells.jpg" alt="Evolution of a 1D CA: rule 30"></p>
+<p>The space itself is usually 1D, 2D or 3D, but rarely greater. Wolfram performed most of his research using 1D CAs, such as the &#39;rule 30&#39; CA above, whose evolution bears similarities with some shell patterns. The most famous CA <em>Game of Life</em> is 2D, which is so popular that people have written <a href="http://www.youtube.com/watch?v=My8AsV7bA94">Turing machines</a> and <a href="http://www.youtube.com/watch?v=xP5-iIeKXE8">Game of Life</a> in terms of it. <a href="https://www.youtube.com/watch?v=wNypW-aSCmE">Over here a 3D cellular automaton is taking over Minecraft</a>.</p>
+<p>In theory the transition rule can be represented as a <em>look-up table</em>, however above a certain number of states and neighbors the size of this table would become astronomical (k states raised to the power of k neighbor states raised to the power of n neighbors; for a 3-state, 3-neighbor system this requires 7 billon rules!), so a procedural implementation is preferable. </p>
+<h3>Conway&#39;s Game of Life</h3>
+<p>The <em>Game of Life</em> CA is an example of a <em>outer totalistic</em> CA: The spatial directions of cells do not matter, only the total value of all neighbors is used, along with the current value of teh cell itself. The transition rule for a cell can be stated concisely as follows:</p>
+<ul>
+<li>If the current state is 1 (&quot;alive&quot;):<ul>
+<li>If the neighbor total is less than 2: New state is 0 (&quot;death by loneliness&quot;)</li>
+<li>Else if the neighbor total is greater than 3: New state is 0 (&quot;death by overcrowding&quot;)</li>
+<li>Else: State remains the same (&quot;alive&quot;)</li>
+</ul>
+</li>
+<li>If the current state is 0 (&quot;dead&quot;):<ul>
+<li>If the neigbor total is exactly 3: New state is 1 (&quot;reproduction&quot;)</li>
+<li>Else: State remains the same (&quot;dead&quot;)</li>
+</ul>
+</li>
+</ul>
+<p>Or, in Lua:</p>
+<pre><code class="lang-lua"><span class="keyword">if</span> state == <span class="number">1</span> <span class="keyword">then</span>
+    <span class="comment">-- currently alive</span>
+    <span class="keyword">if</span> neighbors &lt; <span class="number">2</span> <span class="keyword">then</span>
+        <span class="comment">-- death by loneliness</span>
+        state = <span class="number">0</span>
+    <span class="keyword">elseif</span> neighbors &gt; <span class="number">3</span> <span class="keyword">then</span>
+        <span class="comment">-- death by overcrowding</span>
+        state = <span class="number">0</span>
+    <span class="keyword">end</span>
+<span class="keyword">else</span>
+    <span class="comment">-- currently dead</span>
+    <span class="keyword">if</span> neighbors == <span class="number">3</span> <span class="keyword">then</span>
+        <span class="comment">-- birth by reproduction</span>
+        state = <span class="number">1</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span></code></pre>
+<h3>Implementation</h3>
+<p>If the cells are densely packed into a regular lattice structure, such as a 2D grid, they can efficiently be represented as <em>array</em> memory blocks. The state of a cell can be represented by a number, so an array of integers works well. A way to index this array memory to read or write a cell coordinate will be useful.</p>
+<p>CAs may use bit-wise operators to implement the transition rules in a hardware-optimized way, but we will use regular <code>if</code> statements, like the above, for clarity. </p>
+<p>One complication is that the states of the whole lattice must update synchronously. That means: when one cell changes, all cells should change. This is not easy to achieve in most computing systems today, which mostly follow instructions one at a time (with only limited parallelism). A naive implementation will thus update cells one at a time, and the neighborhood of a particular cell will contain both &#39;past&#39; and &#39;future&#39; states. One way to work around this is to maintain two copies of the lattice; one for the &#39;past&#39; states, and one for the &#39;future&#39; states. The transition rule always reads from the &#39;past&#39; lattice, and always writes to the &#39;future&#39; lattice. After all cells are updated, either the &#39;future&#39; is copied to the &#39;past&#39;, or the &#39;future&#39; and &#39;past&#39; lattices are swapped, since the future of yesterday is the past of tomorrow. </p>
+<blockquote>
+<p>This technique is called <em>double-buffering</em>, and is widely used in software systems where a parallel process interacts with a serial machine. It is used to render graphics to the screen, for example.</p>
+</blockquote>
 <h2>Reaction Diffusion</h2>
 <p><a href="http://mrob.com/pub/comp/xmorphia/">xmorphia</a>, great video examples of <a href="http://www.youtube.com/watch?v=F5oKgVZ6bTk">u-skate world</a>, and even <a href="http://www.youtube.com/watch?v=B03lcPEmSOQ">u-skate in 3D</a>.</p>
 <h2>Statistical models</h2>

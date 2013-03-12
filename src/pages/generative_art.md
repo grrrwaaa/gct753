@@ -1,9 +1,7 @@
-title: Generative Art & Design
+title: Generative Art
 
 
-# Generative Art & Design
-
-## Generative Art
+# Generative Art
 
 Generative art refers to art that is constructed in part according to rules, to some degree outside the author's control. Rules might include mechanical systems, materials with independent behaviors (such as water flow or chemical reactions), mathematical procedures, huge data-sets, geometries and symmetries, and of course randomization. 
 
@@ -11,15 +9,13 @@ Generative artworks have existed throughout human history. Before computing, com
 
 The more it is considered, the more it seems that all art is somewhat generative, and certainly technological. (It is worth noting that the Greek term *techné* is the origin of both *art* and *technology*.) However the term _generative_ is usually used for art in which these systems play a major role in the work, with significant autonomy from the artist's urges. It thus invokes issues of distributed and non-human creativity. 
 
-### Computational Generative Art
-
 Computing media nevertheless revolutionize generative art. A great deal of early computer art is generative by necessity, since the machines were expensive and difficult to use.
 
+[Various. A Framework for understanding Generative Art](http://www.tandfonline.com/doi/pdf/10.1080/14626268.2012.709940)
 
+[Various. Ten Questions Concerning Generative Art](http://diotima.infotech.monash.edu.au/~jonmc/sa/news/ten-questions-concerning-generative-computer-art/)
 
-## Generative Design
-
-
+[Whitelaw, M. System Stories and Model Worlds: A Critical Approach to Generative Art.](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.136.5399)
 
 ## Artificial Life Art
 
