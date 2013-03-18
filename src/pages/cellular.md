@@ -182,13 +182,13 @@ several lines
 
 At the top of your code, there should be a long comment including:
 
-- Your name
-- The date
-- The title
-- A description of the idea of the system, how it works, and why it is interesting, surprising, etc. What kinds of long-term behaviors it supports. 
-- A description of any interactions it supports (what the mouse does, what key presses do)
-- A description of how it was technically achieved. (Perhaps you tried a few different algorithms until it worked as expected?) If you were inspired by another system, mention it.
-- Ideas for possible future extensions of the project.
+- Your **name**
+- The **date**
+- The **title**
+- A **description** of the idea of the system, how it works, and why it is interesting, surprising, etc. What kinds of long-term behaviors it supports. 
+- A description of any **interactions** it supports (what the mouse does, what key presses do)
+- A description of the **technical realization**. (Perhaps you tried a few different algorithms until it worked as expected?) If you were inspired by another system, mention it.
+- Ideas for possible **future extensions** of the project.
 
 Please also comment all the important operations in the code. Please also try to use helpful variable names, e.g. ```width``` is more communicative than ```var3```.
 
@@ -196,9 +196,9 @@ Send your final project as one (or more) Lua script(s) to my email address, on o
 
 Your assignment will be evaluted by these criteria:
 
-- Technical proficiency (33%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented.
-- Aesthetic quality (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting.
-- Novel contribution (33%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key here is not whether it works, but according to the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
+- **Technical completeness** (33%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented.
+- **Aesthetic qualities** (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting.
+- **Novel contribution** (33%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key here is not whether it works, but according to the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
 
 
 
