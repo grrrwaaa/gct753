@@ -165,3 +165,47 @@ Stan Marée used this model to simulate the whole life cycle of [Dictyostelium d
 [Jonathan McCabe's cyclic multi-scale Turing patterns](http://www.jonathanmccabe.com/), and a [commentary by Mitchell Whitelaw](http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html)
 
 Some of these systems share resemblance with analog video feedback ([example](http://www.youtube.com/watch?v=hDYEVv9t32U), [example](http://www.youtube.com/watch?v=Uw5onuS2_mw)), which has been exploited by earlier media artists (notably the Steiner and Woody Vasulka). 
+
+## Assignment 1: Cellular Systems
+
+The first assignment is to construct a new cellular system. You can start from one of the existing systems we have looked at and modify it, or design and create a new one to explore an idea you have; you can look through some of the different *variations on cellular systems* above and try to implement one. You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, rule variations etc. If you end up with more than one system that is interesting, you can submit them all.
+
+Document your work using comments in the code. Note that in Lua, you can write long multi-line comments like this:
+
+```lua
+--[[
+This is a long comment
+that runs over
+several lines
+--]]
+```
+
+At the top of your code, there should be a long comment including:
+
+- Your name
+- The date
+- The title
+- A description of the idea of the system, how it works, and why it is interesting, surprising, etc. What kinds of long-term behaviors it supports. 
+- A description of any interactions it supports (what the mouse does, what key presses do)
+- A description of how it was technically achieved. (Perhaps you tried a few different algorithms until it worked as expected?) If you were inspired by another system, mention it.
+- Ideas for possible future extensions of the project.
+
+Please also comment all the important operations in the code. Please also try to use helpful variable names, e.g. ```width``` is more communicative than ```var3```.
+
+Send your final project as one (or more) Lua script(s) to my email address, on or before **Sunday 31 March**. 
+
+Your assignment will be evaluted by these criteria:
+
+- Technical proficiency (33%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented.
+- Aesthetic quality (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting.
+- Novel contribution (33%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key here is not whether it works, but according to the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
+
+
+
+
+
+
+
+
+
+

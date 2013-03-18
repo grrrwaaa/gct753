@@ -20,14 +20,13 @@
 		<h1>GCT 753</h1>
 		<a href="index.html">Overview</a><br/>
 		<a href="software.html">Software</a><br/>
-		<a href="https://github.com/grrrwaaa/gct753">On GitHub</a><br/>
-		<a href="http://grrrwaaa.github.com/gct753/docs/reference.html">Reference</a><br/>
 		<a href="lua.html">Lua Tutorial</a><br/>
+		<a href="https://github.com/grrrwaaa/gct753">GitHub</a><br/>
+		<a href="http://grrrwaaa.github.com/gct753/docs/reference.html">Reference</a><br/>
 		<br>
 		<a href="introduction.html">Themes</a><br/>
 		<a href="artificial_life.html">Artificial Life</a><br/>
 		<a href="generative_art.html">Generative Art</a><br/>
-		<br>
 		<a href="cellular.html">Cellular Systems</a><br/>
 		
 	</div>
@@ -144,7 +143,33 @@
 <p>Stan Marée used this model to simulate the whole life cycle of <a href="http://www-binf.bio.uu.nl/stan/Thesis/">Dictyostelium discoideum</a>.</p>
 <h3>Multi-Scale Turing Patterns</h3>
 <p><a href="http://www.jonathanmccabe.com/">Jonathan McCabe&#39;s cyclic multi-scale Turing patterns</a>, and a <a href="http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html">commentary by Mitchell Whitelaw</a></p>
-<p>Some of these systems share resemblance with analog video feedback (<a href="http://www.youtube.com/watch?v=hDYEVv9t32U">example</a>, <a href="http://www.youtube.com/watch?v=Uw5onuS2_mw">example</a>), which has been exploited by earlier media artists (notably the Steiner and Woody Vasulka).</p>
+<p>Some of these systems share resemblance with analog video feedback (<a href="http://www.youtube.com/watch?v=hDYEVv9t32U">example</a>, <a href="http://www.youtube.com/watch?v=Uw5onuS2_mw">example</a>), which has been exploited by earlier media artists (notably the Steiner and Woody Vasulka). </p>
+<h2>Assignment 1: Cellular Systems</h2>
+<p>The first assignment is to construct a new cellular system. You can start from one of the existing systems we have looked at and modify it, or design and create a new one to explore an idea you have; you can look through some of the different <em>variations on cellular systems</em> above and try to implement one. You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, rule variations etc. If you end up with more than one system that is interesting, you can submit them all.</p>
+<p>Document your work using comments in the code. Note that in Lua, you can write long multi-line comments like this:</p>
+<pre><code class="lang-lua"><span class="comment">--[[
+This is a long comment
+that runs over
+several lines
+--]]</span></code></pre>
+<p>At the top of your code, there should be a long comment including:</p>
+<ul>
+<li>Your name</li>
+<li>The date</li>
+<li>The title</li>
+<li>A description of the idea of the system, how it works, and why it is interesting, surprising, etc. What kinds of long-term behaviors it supports. </li>
+<li>A description of any interactions it supports (what the mouse does, what key presses do)</li>
+<li>A description of how it was technically achieved. (Perhaps you tried a few different algorithms until it worked as expected?) If you were inspired by another system, mention it.</li>
+<li>Ideas for possible future extensions of the project.</li>
+</ul>
+<p>Please also comment all the important operations in the code. Please also try to use helpful variable names, e.g. <code>width</code> is more communicative than <code>var3</code>.</p>
+<p>Send your final project as one (or more) Lua script(s) to my email address, on or before <strong>Sunday 31 March</strong>. </p>
+<p>Your assignment will be evaluted by these criteria:</p>
+<ul>
+<li>Technical proficiency (33%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented.</li>
+<li>Aesthetic quality (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting.</li>
+<li>Novel contribution (33%). This means creating something that we haven&#39;t built together in class, perhaps even something that has never been made before. The key here is not whether it works, but according to the creative qualities of the idea. Your ideas for future extensions will be evaluated too.</li>
+</ul>
 </div>
 	
 	<div class="footer">
