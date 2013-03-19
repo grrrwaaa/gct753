@@ -182,6 +182,8 @@ Several cellular systems can be coupled together at different scales.
 - Different rules (or different neighborhood specifications) can be run in parallel on the same shared data. 
 - Higher- and lower-level systems could progress at different rates (or statistical frequencies).
 
+Artists Driessens & Verstappen created a recursive cellular system (exhibited in the artwork *IMA Traveller*) which appears to show an endless zoom; as the whole field appears to expand, each cell periodically subdivides into four daughter cells, following one of several rules to vary the color. Cells outside the viewpoint are thrown away. The effect is an infinitely expanding landscape or journey, which can be partially navigated by the gallery visitor. See the [website](http://notnot.home.xs4all.nl/ima/IMAtraveller.html) and in particular the [info](http://notnot.home.xs4all.nl/ima/IMAcat.html) link. This work has inspired discussion by several critics, including [Mitchell Whitelaw](http://www.tandfonline.com/doi/abs/10.1076/digc.14.1.43.8810) and [Jon McCormack and Alan Dorin](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.16.6640&rep=rep1&type=pdf&utm_source=twitterfeed&utm_medium=twitter).
+
 #### Multi-Scale Symmetric Turing Patterns
 
 [Jonathan McCabe's cyclic multi-scale Turing patterns](http://www.jonathanmccabe.com/), and a [commentary by Mitchell Whitelaw](http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html). The implementation is described [in this paper](http://www.jonathanmccabe.com/Cyclic_Symmetric_Multi-Scale_Turing_Patterns.pdf).
