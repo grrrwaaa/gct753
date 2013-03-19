@@ -956,6 +956,34 @@ enum {
  GL_DRAW_BUFFER15                  = 0x8834,
  GL_POINT_SPRITE                   = 0x8861,
  GL_COORD_REPLACE                  = 0x8862,
+ 
+ 
+ GL_TEXTURE_RED_TYPE_ARB           = 0x8C10,
+ GL_TEXTURE_GREEN_TYPE_ARB         = 0x8C11,
+ GL_TEXTURE_BLUE_TYPE_ARB          = 0x8C12,
+ GL_TEXTURE_ALPHA_TYPE_ARB         = 0x8C13,
+ GL_TEXTURE_LUMINANCE_TYPE_ARB     = 0x8C14,
+ GL_TEXTURE_INTENSITY_TYPE_ARB     = 0x8C15,
+ GL_TEXTURE_DEPTH_TYPE_ARB         = 0x8C16,
+ GL_UNSIGNED_NORMALIZED_ARB        = 0x8C17,
+ GL_RGBA32F_ARB                    = 0x8814,
+ GL_RGB32F_ARB                     = 0x8815,
+ GL_ALPHA32F_ARB                   = 0x8816,
+ GL_INTENSITY32F_ARB               = 0x8817,
+ GL_LUMINANCE32F_ARB               = 0x8818,
+ GL_LUMINANCE_ALPHA32F_ARB         = 0x8819,
+ GL_RGBA16F_ARB                    = 0x881A,
+ GL_RGB16F_ARB                     = 0x881B,
+ GL_ALPHA16F_ARB                   = 0x881C,
+ GL_INTENSITY16F_ARB               = 0x881D,
+ GL_LUMINANCE16F_ARB               = 0x881E,
+ GL_LUMINANCE_ALPHA16F_ARB         = 0x881F,
+ GL_RGBA_FLOAT_MODE_ARB            = 0x8820,
+ GL_CLAMP_VERTEX_COLOR_ARB         = 0x891A,
+ GL_CLAMP_FRAGMENT_COLOR_ARB       = 0x891B,
+ GL_CLAMP_READ_COLOR_ARB           = 0x891C,
+ GL_FIXED_ONLY_ARB                 = 0x891D,
+
  GL_POINT_SPRITE_COORD_ORIGIN      = 0x8CA0,
  GL_LOWER_LEFT                     = 0x8CA1,
  GL_UPPER_LEFT                     = 0x8CA2,
@@ -989,6 +1017,7 @@ enum {
  GL_COMPRESSED_SRGB_ALPHA          = 0x8C49,
  GL_COMPRESSED_SLUMINANCE          = 0x8C4A,
  GL_COMPRESSED_SLUMINANCE_ALPHA    = 0x8C4B,
+
  
 GL_FRAMEBUFFER_COMPLETE           = 0x8CD5,
  GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT = 0x8CD6,
@@ -2253,6 +2282,14 @@ function gl.CreateShader(kind, code)
 	return shader
 end
 
+function gl.CreateVertexShader(code)
+	return gl.CreateShader(lib.GL_VERTEX_SHADER, code)
+end
+
+function gl.CreateFragmentShader(code)
+	return gl.CreateShader(lib.GL_FRAGMENT_SHADER, code)
+end
+
 function gl.CreateProgram(...)
 	local program = lib.glCreateProgram()
 	assert(program ~= 0, "Failed to allocate shader program; is the GL context ready?")
@@ -2278,6 +2315,42 @@ function gl.CreateProgram(...)
 		end
 	end
 	return program
+end
+
+--[[
+glUniform1fARB(GLint location, GLfloat v0);
+void glUniform2fARB(GLint location, GLfloat v0, GLfloat v1);
+void glUniform3fARB(GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
+void glUniform4fARB(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
+void glUniform1iARB(GLint location, GLint v0);
+void glUniform2iARB(GLint location, GLint v0, GLint v1);
+void glUniform3iARB(GLint location, GLint v0, GLint v1, GLint v2);
+void glUniform4iARB(GLint location, GLint v0, GLint v1, GLint v2, GLint v3);
+void glUniform1fvARB(GLint location, GLsizei count, const GLfloat *value);
+void glUniform2fvARB(GLint location, GLsizei count, const GLfloat *value);
+void glUniform3fvARB(GLint location, GLsizei count, const GLfloat *value);
+void glUniform4fvARB(GLint location, GLsizei count, const GLfloat *value);
+void glUniform1ivARB(GLint location, GLsizei count, const GLint *value);
+void glUniform2ivARB(GLint location, GLsizei count, const GLint *value);
+void glUniform3ivARB(GLint location, GLsizei count, const GLint *value);
+void glUniform4ivARB(GLint location, GLsizei count, const GLint *value);
+void glUniformMatrix2fvARB(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+void glUniformMatrix3fvARB(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+void glUniformMatrix4fvARB(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+--]]
+function gl.Uniformf(loc, a, b, c, d)
+	if d 	 then lib.glUniform4fARB(loc, a, b, c, d)
+	elseif c then lib.glUniform3fARB(loc, a, b, c)
+	elseif b then lib.glUniform2fARB(loc, a, b)
+	elseif a then lib.glUniform1fARB(loc, a) 
+	end
+end
+function gl.Uniformi(loc, a, b, c, d)
+	if d 	 then lib.glUniform4iARB(loc, a, b, c, d)
+	elseif c then lib.glUniform3iARB(loc, a, b, c)
+	elseif b then lib.glUniform2iARB(loc, a, b)
+	elseif a then lib.glUniform1iARB(loc, a) 
+	end
 end
 
 -- TODO: metatables for Texture, RBO, FBO etc.

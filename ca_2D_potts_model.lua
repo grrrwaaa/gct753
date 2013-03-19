@@ -1,7 +1,4 @@
--- load in the "greys2D" library module (from /modules/greys2D.lua):
 local field2D = require "field2D"
-
-
 local random = math.random
 local exp = math.exp
 
@@ -20,8 +17,7 @@ or
 where deltaH is the change in energy if the copying were to occur.
 --]]
 
--- choose the size of the greys
-local dimx = 400
+local dimx = 300
 local dimy = dimx * 3/4 -- (with a 4:3 aspect ratio)
 
 -- at higher temperatures, the cells are more likely to change *against* the entropy gradient
@@ -29,32 +25,25 @@ local dimy = dimx * 3/4 -- (with a 4:3 aspect ratio)
 local temperature = 0.001
 local inverse_temperature = 1/temperature 	-- for speed
 
--- allocate a greys to store the colors
-local greys = field2D.new(dimx, dimy)
 
--- allocate another greys to store cell-class IDs:
+-- allocate a field to store cell-class IDs:
 local IDs = field2D.new(dimx, dimy)
 
 -- number of initial cell classes
-local IDmax = 10
+local IDmax = 20
+
+local scale = 1
 
 function initialize()
-	for x = 0, greys.width-1 do
-		for y = 0, greys.height-1 do
+	for x = 0, IDs.width-1 do
+		for y = 0, IDs.height-1 do
 			local id = math.random(IDmax)
-			greys:set(id/IDmax, x, y)
 			IDs:set(id, x, y)
 		end
 	end
 end
 
 initialize()
-
--- how to render the scene (toggle fullscreen with the Esc key):
-function draw()	
-	-- draw the greys:
-	greys:draw()
-end
 
 -- compute the H differential between two cell types:
 function getH(id, nid)
@@ -85,7 +74,7 @@ function update(dt)
 	-- a lot of iterations:
 	for i = 1, 100000 do
 		-- choose a random site:
-		local x, y = random(greys.width), random(greys.height)
+		local x, y = random(IDs.width), random(IDs.height)
 		-- choose random neighbor:
 		local nx, ny = x, y
 		local choice = math.random(4)
@@ -112,10 +101,15 @@ function update(dt)
 			if dH <= 0 or random() < dH*temperature then
 				-- make this change:
 				IDs:set(nid, x, y)
-				greys:set(nid/IDmax, x, y)
 			end
 		end
 	end
+end
+
+-- how to render the scene (toggle fullscreen with the Esc key):
+function draw()	
+	-- draw the IDs mapped to a hue range of 0..IDmax
+	IDs:drawHueRange(IDmax)
 end
 
 -- handle keypress events:
@@ -123,15 +117,14 @@ function keydown(k)
 	if k == "r" then
 		initialize()
 	elseif k == "c" then
-		greys:set(0)
+		IDs:set(0)
 	end
 end
 
 -- handle mouse events:
 function mouse(event, btn, x, y)
-	-- clicking & dragging should draw trees into the greys:
+	-- clicking & dragging should draw trees into the IDs:
 	if event == "down" or event == "drag" then
-		IDs:set(0, x * greys.width, y * greys.height)
-		greys:set(0, x * greys.width, y * greys.height)
+		IDs:set(0, x * IDs.width, y * IDs.height)
 	end
 end

@@ -115,15 +115,128 @@ function field2D:map(func)
 end
 
 -- NOTE: this also leaves the texture bound
-function field2D:send(unit)
-	self:bind(unit)
-	gl.TexImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, self.width, self.height, 0, gl.LUMINANCE, gl.FLOAT, self.data)
-end
-
--- NOTE: this also leaves the texture bound
 function field2D:draw(x, y, w, h, unit)
 	self:send(unit)
 	sketch.quad(x or 0, y or 0, w or 1, h or 1)
+end
+
+
+-- draw with a shader:
+field2D.drawHueRange = (function()
+	local program = nil
+	local program_scale = 0
+	return function(self, range)
+		if not program then
+			local vert = gl.CreateVertexShader[[
+			varying vec2 T;
+			void main() {
+				T = vec2(gl_MultiTexCoord0);
+				gl_Position = vec4(T*2.-1., 0, 1);
+			}
+			
+			]]
+			local frag = gl.CreateFragmentShader[[
+			uniform sampler2D tex;
+			uniform float scale;
+			varying vec2 T;
+			
+			vec3 hsv(float h,float s,float v) { 
+				vec3 rgb = abs(fract(h+vec3(3.,2.,1.)/3.)*6.-3.) - 1.;
+				return v * mix(vec3(1.), clamp(rgb,0.,1.), s); 
+			}
+			
+			void main() {
+				float v = texture2D(tex, T).x;
+				// convert to HSV:
+				vec3 rgb = hsv(v * 6. * scale, 0.75, 1.);
+				gl_FragColor = vec4(rgb, 1);
+			}
+			
+			]]
+			program = gl.CreateProgram(vert, frag)
+			gl.assert("creating shader")
+			gl.UseProgram(program)
+			program_scale = gl.GetUniformLocation(program, "scale")
+			gl.assert("binding shader")
+		else
+			gl.UseProgram(program)
+		end
+		
+		gl.Uniformf(program_scale, 1/(range or 1))
+		self:send(0)
+		sketch.quad(0, 0, 1, 1)
+		gl.UseProgram(0)
+	end
+end)()
+
+field2D.drawWeird = (function()
+	local program = nil
+	local program_scale = 0
+	return function(self, range)
+		if not program then
+			local vert = gl.CreateVertexShader[[
+			uniform sampler2D tex;
+			varying vec2 T;
+			void main() {
+				T = vec2(gl_MultiTexCoord0);
+				float v = texture2D(tex, T).x;
+				vec4 pos = vec4(T*2.-1., 0, 1);
+				//pos.z = -v * 0.1;
+				gl_Position = pos;
+			}
+			
+			]]
+			local frag = gl.CreateFragmentShader[[
+			uniform sampler2D tex;
+			uniform float scale;
+			varying vec2 T;
+			
+			vec3 hsv(float h,float s,float v) { 
+				vec3 rgb = abs(fract(h+vec3(3.,2.,1.)/3.)*6.-3.) - 1.;
+				return v * mix(vec3(1.), clamp(rgb,0.,1.), s); 
+			}
+			
+			void main() {
+				float v = texture2D(tex, T).x;
+				// convert to HSV:
+				vec3 rgb = hsv(v * 6. * scale, 0.75, 1.);
+				gl_FragColor = vec4(rgb, 1);
+			}
+			
+			]]
+			program = gl.CreateProgram(vert, frag)
+			gl.assert("creating shader")
+			gl.UseProgram(program)
+			program_scale = gl.GetUniformLocation(program, "scale")
+			gl.assert("binding shader")
+		else
+			gl.UseProgram(program)
+		end
+		
+		gl.Uniformf(program_scale, 1/(range or 1))
+		self:send(0)
+		-- draw as a big mesh
+		local xstep = 1/self.width
+		local ystep = 1/self.height
+		for x = 0, 1, xstep do
+			gl.Begin(gl.QUAD_STRIP)
+			for y = 0, 1, ystep do
+				gl.TexCoord(x, y)
+				gl.Vertex(x, y)
+				gl.TexCoord(x+xstep, y)
+				gl.Vertex(x+xstep, y)
+			end
+			gl.End()
+		end
+		--sketch.quad(0, 0, 1, 1)
+		gl.UseProgram(0)
+	end
+end)()
+
+-- NOTE: this also leaves the texture bound
+function field2D:send(unit)
+	self:bind(unit)
+	gl.TexImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE32F_ARB, self.width, self.height, 0, gl.LUMINANCE, gl.FLOAT, self.data)
 end
 
 function field2D:create()
@@ -137,8 +250,8 @@ function field2D:create()
 		gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
 		gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP)
 		gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP)
-		gl.TexImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, self.width, self.height, 0, gl.LUMINANCE, gl.FLOAT, self.data)
-		gl.BindTexture(gl.TEXTURE_2D, 0)		
+		self:send()	
+		gl.BindTexture(gl.TEXTURE_2D, 0)	
 	end
 end
 
