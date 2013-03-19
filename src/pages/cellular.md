@@ -86,19 +86,26 @@ One complication is that the states of the whole lattice must update synchronous
 
 ### Non-homogenous CA
 
-The rule is not the same for all cells / for all time steps. Spatial non-homogeneity can be interesting to simulate different geographies (such as boundaries). Temporal non-homogeneity can be used to perform a sequence of different filters. 
+The rule is not the same for all cells / for all time steps. Spatial non-homogeneity can be interesting to simulate different geographies (such as boundaries). Temporal non-homogeneity can be used to perform a sequence of different filters.
 
-Or perhaps the neighborhood selection may change between updates (also see particle CA below).
+- Special *boundary* cells in the field may follow different rules from others.
+- Some rules may depend on the cell position; perhaps the same CA has different regions using different rules.
+- The rules used could alternate between different rule definitions, over a period of N frames. Or certain parameters to rules could cycle over certain periods.
+- The neighborhood selection rules could change spatially or temporally as above (also see particle CA below).
+- Variations of space/rule/neighborhood could depend on global conditions, such as the overall density of black and white cells, or due to user interactions.
+- Combinations of the above.
 
 These can be implemented by changing the function used in the transition rule, or by extending the state set to accommodate the differences. Changing the function is usually easier to implement and understand.
 
 ### Probabilistic/Stochastic CA
 
-In this case the transition rule is not deterministic, but includes some random factor. For example, a probability can be assigned to each successor state according to the prior states. 
+In this case the transition rule is not deterministic, but includes some random factor. 
+
+- A probability can be assigned to each successor state according to the prior states. 
+- A *backround noise* can be added, such that from time to time a randomly chosen cell changes state. A *temperature* control could control the statistical frequency of such changes.
+- Combinations with non-homogenous CAs: statistical choice of rules and neighborhoods; variations of probabilities over space and time, etc.
 
 Take a look at the [Forest Fire CA example](https://github.com/grrrwaaa/gct753/blob/master/ca_2D_forest_fire.lua), and try changing the probabilities to see how it behaves.
-
-Also try modifying Game of Life to include a very small probability of randomly changing state, for example.
 
 ### Particle CA, Lattice-Gas Automata and Block Rule CA
 
@@ -116,6 +123,8 @@ In 1969, German computer pioneer (and painter) Konrad Zuse published his book [C
 
 ![Zuse's vision of nature](img/zuse.jpg)
 
+Particle CA can use probabilistic rules to simulate brownian motions and other non-deterministic media (but the rules would usually still need to be matter/energy preserving). Particle CA benefit from the inclusion of boundaries and other spatial non-homogeneities such as influx and outflow of particles at opposite edges.
+
 ### Asynchronous CA
 
 Instead of updating all cells at once, update one cell at a time, according to some update policy. The same choices can be applied per-block in a block-rule CA.
@@ -124,6 +133,8 @@ Instead of updating all cells at once, update one cell at a time, according to s
 - A *probabilistic asynchronous CA* chooses the next active cell according to a random selection (related to the Monte Carlo methods described below).
 - A multi-rate CA (self-clocked) updates each cell according to a clock period that varies from cell to cell. The clock period could also be affected by neighbors, to achieve *entrainment* effects.
 - A *mobile CA* chooses a related cell (such as one of the neighbors) of the current active cell as the next active cell. So in addition to choosing a new state for the cell, the transition rule must also choose how to move the active cell. This could also be partly probabilistic.
+
+There could be more than one 'active cell'. What happens if two active cells occupy the same site?
 
 [Langton's Ant](http://en.wikipedia.org/wiki/Langton%27s_ant) is a mobile CA in a 2D, two-state space, with very simple rules:
 
@@ -134,13 +145,15 @@ Instead of updating all cells at once, update one cell at a time, according to s
 
 ### Continuous automata
 
-**Continuous states:** In this case, the states are not discrete but belong to a continuum, such as the linear range 0..1. Instead of using a discrete transition rule or lookup table, continuous functions can be used (or combined with discrete rules such as comparisons). Continuous automata can show liquid and diffusive effects.
+**Continuous states:** In this case, the states are not discrete but belong to a continuum, such as the linear range 0..1. Instead of using a discrete transition rule or lookup table, continuous functions can be used (or combined with discrete rules such as numeric comparisons). Continuous automata can show liquid and diffusive effects.
 
-**Continuous neighborhood:** Instead of accumulating whole neighbor cells, apply a *kernel* region, weighting cells according to the degree that they fall under a radius, or by distance.
+**Continuous neighborhood:** Instead of accumulating whole neighbor cells, apply a *kernel* region. Perhaps give different weights to cells according to the degree that they fall under a radius, or by distance.
 
 [SmoothLife](http://www.youtube.com/playlist?list=PL69EDA11384365494) still uses a discrete grid, but both the kernel and transition functions are adjusted for smooth, continuous values; it removes the discrete bias and leads to fascinating results. [Another implementaton](http://www.youtube.com/watch?v=l7t8LtdBAV8). [Taken to 3D](http://www.youtube.com/watch?v=zA857JdUn9o&list=PL69EDA11384365494&index=46).
 
 Can there be continuous space automata? If time were also continuous, they would simply be differential equations.
+
+Some of these systems share resemblance with analog video feedback ([example](http://www.youtube.com/watch?v=hDYEVv9t32U), [example](http://www.youtube.com/watch?v=Uw5onuS2_mw)), which has been exploited by earlier media artists (notably the Steiner and Woody Vasulka). 
 
 #### Reaction Diffusion
 
@@ -150,9 +163,9 @@ The reaction-diffusion model was proposed by Turing to describe embryo developme
 
 One approach to simulating RD using CA is the *Gray-Scott* model, as described in [Pearson, J. E. Complex Patterns in a Simple System](http://arxiv.org/pdf/patt-sol/9304003.pdf). There is [a wonderful archive of this model at this webpage](http://mrob.com/pub/comp/xmorphia/), including many great video examples of the [u-skate world](http://www.youtube.com/watch?v=F5oKgVZ6bTk), and even [u-skate in 3D](http://www.youtube.com/watch?v=B03lcPEmSOQ).
 
-### Statistical and unbounded state models
+#### Statistical and unbounded state models
 
-The *Ising model* of ferromagnetism in statistical mechanics can also be simulated in a *Monte Carlo* fashion. Each site (cell) has either positive or negative spin (we can encode that as 0 or 1 value). At each time step, consider a site at random, and evaluate the probability of changing state. If changing state moves the site toward energetic equilibrium with neighbors (determined according to the Hamiltonian of the site) , then the change is made. Otherwise, the change is made only with a small probability that is dependent on the energetic difference and overall temperature. Thus at high temperatures, the system remains noisy, while at low temperatures it gradually self-organizes into all sites with equal spin.
+The *Ising model* of ferromagnetism in statistical mechanics can also be simulated in a *Monte Carlo* fashion. Each site (cell) has either positive or negative spin (we can encode that as 0 or 1 value). At each time step, consider a site at random, and evaluate the probability of changing state. If changing state moves the site toward energetic equilibrium with neighbors (determined according to the Hamiltonian of the site), then the change is made. Otherwise, the change is made only with a small probability that is dependent on the energetic difference and overall temperature. Thus at high temperatures, the system remains noisy, while at low temperatures it gradually self-organizes into all sites with equal spin.
 
 It is also related to the *contact process* model, which has been used to simulate the spread of infection: infected sites become healthy at a constant rate, while healthy sites become infected at a rate proportional to the number infected neighbor (see also the *HodgePodge* simulation). This can be extented to multiple states for a multitype contact process. The *voter model* similarly simulates the changing of opinion in social groups. 
 
@@ -160,13 +173,29 @@ The cellular *Potts model* (also known as the *Glazier-Graner* model) generalize
 
 Stan Marée used this model to simulate the whole life cycle of [Dictyostelium discoideum](http://www-binf.bio.uu.nl/stan/Thesis/).
 
-### Multi-Scale Turing Patterns
+### Multi-Scale Systems 
 
-[Jonathan McCabe's cyclic multi-scale Turing patterns](http://www.jonathanmccabe.com/), and a [commentary by Mitchell Whitelaw](http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html)
+Several cellular systems can be coupled together at different scales. 
 
-Some of these systems share resemblance with analog video feedback ([example](http://www.youtube.com/watch?v=hDYEVv9t32U), [example](http://www.youtube.com/watch?v=Uw5onuS2_mw)), which has been exploited by earlier media artists (notably the Steiner and Woody Vasulka). 
+- Perhaps each cell of a macro-CA is itself an entire micro-CA world. Or several CA can overlap with different spatial relationships. 
+- Different indexing rules (such as affine transformations of coordinate space) can be used to impart non-local symmetries and behavior.
+- Different rules (or different neighborhood specifications) can be run in parallel on the same shared data. 
+- Higher- and lower-level systems could progress at different rates (or statistical frequencies).
 
-## Assignment 1: Cellular Systems
+#### Multi-Scale Symmetric Turing Patterns
+
+[Jonathan McCabe's cyclic multi-scale Turing patterns](http://www.jonathanmccabe.com/), and a [commentary by Mitchell Whitelaw](http://teemingvoid.blogspot.kr/2007/02/jonathan-mccabe-very-cellular-automata.html). The implementation is described [in this paper](http://www.jonathanmccabe.com/Cyclic_Symmetric_Multi-Scale_Turing_Patterns.pdf).
+
+It starts with a straightforward reaction/diffusion system:
+
+- Diffusion is simulated by averaging the continuous cell values over small (activator) and large (inhibitor) radii; if the the smaller (activator) concentration is greater than the larger (inhibitor) concentration, increase the cell value by a small amount; otherwise decrease. 
+- After running the rule over all cells, the entire field is *normalized* (to ensure the minimum cell value is zero and the maximum cell value is 1).
+
+Since this creates structure at a single spatial scale, it can be elaborated by super-imposing several models at different spatial scales (different small and large radii). Or, by changing the radii dynamically over time (as in [Greg Turk's famous paper](http://www.cc.gatech.edu/~turk/my_papers/reaction_diffusion.pdf)). McCabe's system uses several pre-defined scales, but selects which scale to apply for a particular cell according to which one currently shows the least local variation. 
+
+Additionally, his system does not measure all cells within a radius; instead it selects cells at the radius distance and certain angular directions, creating cyclical symmetries in the result. For example, 3-fold symmetry may be used at a smaller scale, and 9-fold symmetry at a larger scale.
+
+# Assignment 1: Cellular Systems
 
 The first assignment is to construct a new cellular system. You can start from one of the existing systems we have looked at and modify it, or design and create a new one to explore an idea you have; you can look through some of the different *variations on cellular systems* above and try to implement one. You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, rule variations etc. If you end up with more than one system that is interesting, you can submit them all.
 
