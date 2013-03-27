@@ -1,3 +1,14 @@
+--[[
+
+Graham Wakefield
+March 2013
+My awesome work
+
+
+
+--]]
+
+
 local field2D = require "field2D"
 
 -- allocate a 2D array:

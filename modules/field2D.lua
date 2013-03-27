@@ -60,6 +60,11 @@ function field2D:index_raw(x, y)
 	return y*self.width + x
 end
 
+--- get the value of a cell with linear interpolation
+function field2D:sample(x, y)
+	
+end	
+
 --- set the value of a cell, or of all cells.
 -- If the x,y coordinate is not specified, it will apply the value for all cells.
 -- If the value to set is a function, this function is called (passing the x, y coordinates as arguments). If the function returns a value, the cell is set to this value; otherwise the cell is left unchanged.
@@ -74,9 +79,9 @@ function field2D:set(value, x, y)
 	elseif type(value) == "function" then
 		for y = 0, self.height-1 do
 			for x = 0, self.width-1 do
-				local idx = self:index_raw(x, y)
 				local result = value(x, y)
 				if result then
+					local idx = self:index_raw(x, y)
 					self.data[idx] = result
 				end	
 			end
@@ -93,8 +98,82 @@ function field2D:set(value, x, y)
 	return self
 end
 
+--- return the value of a cell
+-- If x or y is out of range of the field, it wraps around (positive modulo)
+-- If x or y are not integers, the fractional component is discarded (rounded down)
+-- @tparam ?int x coordinate (row) to set a single cell
+-- @tparam ?int y coordinate (column) to set a single cell
 function field2D:get(x, y)
 	return self.data[self:index(x, y)]
+end
+
+--- return the value at a cell location
+-- If x or y is out of range of the field, it wraps around (positive modulo)
+-- If x or y are not integers, the returned result is a linear interpolation of the four nearest cells
+-- @tparam ?int x coordinate (row) to set a single cell
+-- @tparam ?int y coordinate (column) to set a single cell
+function field2D:sample(x, y)
+	local x = x and x % self.width or 0
+	local y = y and y % self.height or 0
+	local x0 = floor(x)
+	local y0 = floor(y)
+	local x1 = (x0 + 1) % self.width
+	local y1 = (y0 + 1) % self.height
+	local xb = x - x0
+	local yb = y - y0
+	local xa = 1 - xb
+	local ya = 1 - yb
+	local v00 = self.data[self:index_raw(x0, y0)]
+	local v10 = self.data[self:index_raw(x1, y0)]
+	local v01 = self.data[self:index_raw(x0, y1)]
+	local v11 = self.data[self:index_raw(x1, y1)]
+	return v00 * xa * ya
+		 + v10 * xb * ya
+		 + v01 * xa * yb
+		 + v11 * xb * yb
+end
+
+--- fill the field with a diffused copy of another
+function field2D:diffuse(sourcefield, diffusion, passes)
+	passes = passes or 10
+	
+	local optr = self.data
+	local iptr = sourcefield.data
+	--local div = 1.0/((1.+6.*diffusion))
+	local div = 1.0/((1.+4.*diffusion))
+	
+	local w, h = sourcefield.width, sourcefield.height
+	
+	-- Gauss-Seidel relaxation scheme:
+	for n = 1, passes do
+		--for z = 0, self.dim.z-1 do
+			for y = 0, h-1 do
+				for x = 0, w-1 do
+					local pre =	iptr[self:index_raw(x, y)]
+					local va0 =	optr[self:index(x-1,y  )]
+					local vb0 =	optr[self:index(x+1,y  )]
+					local v0a =	optr[self:index(x,	y-1)]
+					local v0b =	optr[self:index(x,	y+1)]
+					--[[
+					local pre  =	iptr[self:index(x,	y,	z  )]
+					local va00 =	optr[self:index(x-1,y,	z  )]
+					local vb00 =	optr[self:index(x+1,y,	z  )]
+					local v0a0 =	optr[self:index(x,	y-1,z  )]
+					local v0b0 =	optr[self:index(x,	y+1,z  )]
+					local v00a =	optr[self:index(x,	y,	z-1)]
+					local v00b =	optr[self:index(x,	y,	z+1)]
+					--]]
+					optr[self:index(x,y,z)] = div*(
+						pre +
+						diffusion * (
+							va0 + vb0 +
+							v0a + v0b
+						)
+					)
+				end
+			end
+		--end
+	end
 end
 
 function field2D:clear()
