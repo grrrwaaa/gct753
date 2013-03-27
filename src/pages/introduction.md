@@ -21,8 +21,6 @@ The most closely relevant topics include biologically inspired computing, and it
 
 ## Some inspiration
 
-[Here's something amazing about how our cells replicate](http://www.youtube.com/watch?v=WFCvkkDSfIU), and more animations by [Drew Berry](http://www.youtube.com/watch?v=yKW4F0Nu-UY&list=PL3DB3C131CBCD2A0F&index=5)
-
 [Tom Ray: the evolutionary biologist who created evolution in the CPU](http://www.youtube.com/watch?v=Wl5rRGVD0QI)
 
 ## Readings
