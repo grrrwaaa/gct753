@@ -200,7 +200,9 @@ Additionally, his system does not measure all cells within a radius; instead it 
 
 # Assignment 1: Cellular Systems
 
-The first assignment is to construct a new cellular system. You can start from one of the existing systems we have looked at and modify it, or design and create a new one to explore an idea you have; you can look through some of the different *variations on cellular systems* above and try to implement one. You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, rule variations etc. If you end up with more than one system that is interesting, you can submit them all.
+The first assignment is to construct a new cellular system. You can start from one of the existing systems we have looked at and modify it, or design and create a new one to explore an idea you have; you can look through some of the different *variations on cellular systems* above and try to implement one. You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, rule variations etc. If you end up with more than one system that is interesting, you can submit them all. 
+
+If you had an idea that seemed interesting but was difficult to implement or did not lead to interesting results, submit that too (with an explanation of why you think it did not work or did not do what you expected); this is just as important a part of research (akin to disproving a hypothesis in science).
 
 Document your work using comments in the code. Note that in Lua, you can write long multi-line comments like this:
 
@@ -217,7 +219,7 @@ At the top of your code, there should be a long comment including:
 - Your **name**
 - The **date**
 - The **title**
-- A **description** of the idea of the system, how it works, and why it is interesting, surprising, etc. What kinds of long-term behaviors it supports. 
+- A **description** of the idea of the system, how it works (or why it doesn't), and why it is interesting, surprising, etc (or why it didn't meet your expectations). What kinds of long-term behaviors it supports. 
 - A description of any **interactions** it supports (what the mouse does, what key presses do)
 - A description of the **technical realization**. (Perhaps you tried a few different algorithms until it worked as expected?) If you were inspired by another system, mention it.
 - Ideas for possible **future extensions** of the project.
@@ -228,9 +230,9 @@ Send your final project as one (or more) Lua script(s) to my email address, on o
 
 Your assignment will be evaluted by these criteria:
 
-- **Technical completeness** (33%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented.
-- **Aesthetic qualities** (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting.
-- **Novel contribution** (33%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key here is not whether it works, but according to the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
+- **Technical completeness** (33%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented. Even if it doesn't work, how well it was conceived and implemented. 
+- **Aesthetic qualities** (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting. If it doesn't work as expected or produce interesting results, then the evaluation here will be on how well you can articulate what you had hoped for, what aspects of that you think are missing, why you think they are missing, what you can suggest to resolve it, etc.
+- **Novel contribution** (33%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key aspects here are the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
 
 
 
