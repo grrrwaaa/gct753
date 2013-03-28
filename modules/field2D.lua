@@ -248,6 +248,62 @@ field2D.drawHueRange = (function()
 	end
 end)()
 
+field2D.drawRGB = (function()
+	local program = nil
+	local program_r = 0
+	local program_g = 0
+	local program_b = 0
+	return function(red, green, blue)
+		assert(red, "missing field arguments (requires 3 fields)")
+		assert(green, "missing field arguments (requires 3 fields)")
+		assert(blue, "missing field arguments (requires 3 fields)")
+		if not program then
+			local vert = gl.CreateVertexShader[[
+			varying vec2 T;
+			void main() {
+				T = vec2(gl_MultiTexCoord0);
+				vec4 pos = vec4(T*2.-1., 0, 1);
+				gl_Position = pos;
+			}
+			
+			]]
+			local frag = gl.CreateFragmentShader[[
+			uniform sampler2D red;
+			uniform sampler2D green;
+			uniform sampler2D blue;
+			varying vec2 T;
+			
+			void main() {
+				float r = texture2D(red, T).x;
+				float g = texture2D(green, T).x;
+				float b = texture2D(blue, T).x;
+				
+				gl_FragColor = vec4(r, g, b, 1); //vec4(r, g, b, 1);
+			}
+			
+			]]
+			program = gl.CreateProgram(vert, frag)
+			gl.assert("creating shader")
+			gl.UseProgram(program)
+			program_r = gl.GetUniformLocation(program, "red")
+			program_g = gl.GetUniformLocation(program, "green")
+			program_b = gl.GetUniformLocation(program, "blue")	
+			gl.assert("binding shader")
+		else
+			gl.UseProgram(program)
+		end
+		
+		blue:send(2)
+		green:send(1)
+		red:send(0)
+			gl.Uniformi(program_r, 0)
+			gl.Uniformi(program_g, 1)
+			gl.Uniformi(program_b, 2)		
+		sketch.quad(0, 0, 1, 1)
+		gl.UseProgram(0)
+	end
+end)()
+
 field2D.drawWeird = (function()
 	local program = nil
 	local program_scale = 0
@@ -335,14 +391,14 @@ function field2D:create()
 end
 
 function field2D:bind(unit)
-	--gl.ActiveTexture(gl.TEXTURE0 + (unit or 0))
+	gl.ActiveTexture(gl.TEXTURE0 + (unit or 0))
 	self:create()
 	
 	gl.BindTexture(gl.TEXTURE_2D, self.texID)
 end
 
 function field2D:unbind(unit)
-	--gl.ActiveTexture(gl.TEXTURE0 + (unit or 0))
+	gl.ActiveTexture(gl.TEXTURE0 + (unit or 0))
 	gl.BindTexture(gl.TEXTURE_2D, 0)
 end
 
