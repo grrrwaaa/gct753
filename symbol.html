@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Symbol systems</title>
+    
+<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
+  
+<script src="js/jquery.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/main.js" type="text/javascript"></script>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+<body>
+<div id="wrapper">
+	
+	<div class="header">
+		<h1>GCT 753</h1>
+		<a href="index.html">Overview</a><br/>
+		<a href="software.html">Software</a><br/>
+		<a href="lua.html">Lua Tutorial</a><br/>
+		&gt;&gt; <a href="https://github.com/grrrwaaa/gct753">GitHub</a><br/>
+		&gt;&gt; <a href="http://grrrwaaa.github.com/gct753/docs/reference.html">Reference</a><br/>
+		<br>
+		<a href="introduction.html">Themes</a><br/>
+		<a href="artificial_life.html">Artificial Life</a><br/>
+		<a href="generative_art.html">Generative Art</a><br/>
+		<a href="cellular.html">Cellular Systems</a><br/>
+		<a href="agent.html">Agent Systems</a><br/>
+		<a href="symbol.html">Symbol Systems</a><br/>
+		<a href="evolutionary.html">Evolutionary Systems</a><br/>
+		
+	</div>
+	<div class="section"><h1>Symbol systems</h1>
+<h2>Rewriting systems</h2>
+<p>A rewriting system defines rules for the transformation of structures, typically strings of symbols. It is closely related to the formal notion of grammar. A system comprises:</p>
+<ul>
+<li>A set of possible symbols (A), called the <em>alphabet</em></li>
+<li>An initial symbol (S), called the <em>axiom</em></li>
+<li>A set (P) of <em>rewriting</em> or <em>production rules</em> to specify how each symbol is transformed to other symbols, at each production step. A rule converts a <em>predecessor</em> symbol into <em>successor</em> symbols.</li>
+<li>A process of applying these rules in parallel, step by step until no more productions can be applied.</li>
+</ul>
+<p>For example, if the alphabet comprises <code>{ a, b }</code>, the rules include <code>a -&gt; aba</code> and <code>abb -&gt; nil</code>, and the start symbol is <code>a</code> then a sequence of productions could proceed as follows:</p>
+<pre><code class="lang-lua">    a        <span class="comment">-- apply rule 1</span>
+    aba        <span class="comment">-- apply rule 1 (twice)</span>
+    abbab    <span class="comment">-- apply rule 2, and rule 1</span>
+    abb        <span class="comment">-- apply rule 2</span>
+    <span class="keyword">nil</span>        <span class="comment">-- no more productions applicable</span></code></pre>
+<h3>Development and L-systems</h3>
+<p>The structure of a multi-cellular organisms develops in a gradual process from a single fertilized cell (the <em>zygote</em>) through progressive steps of cell duplication and specialization in a process called <em>development</em>; an active area of scientific research today. We know that each cell responds to chemical signals from its neighbors and other environmental conditions in order to know how to <em>differentiate</em> (to become a specific kind of cell in the body), according to the processes of the genome. The zygote does not contain a blueprint for the final organism, simply genotypic instructions for responding to environmental stimuli, which happen (in most cases) to produce the fully developed phenotype. </p>
+<p>A compact developmental representation can result in a more complex developed organism by relying on the self-organizing tendencies of the chemical substrate (such as the chemical pattern formation we saw with reaction-diffusion systems), the creative re-use of instructions (leading to the <em>modularity</em> and <em>symmetry</em> widely found in biology), and careful control over the ordering, when and for how long particular instructions operate (<em>heterochrony</em>). Development is clearly <em>parallel</em>, <em>decentralized</em>, granting some <em>robustness</em>, and yet it is also <em>context dependent</em>. It is also <em>self-limiting</em>, such that most developmental processes halt after the embryonic phase (though some may continue through the organism&#39;s lifetime, such as the <em>regeneration</em> of lost limbs).</p>
+<p>In 1968 biologist Astrid Lindenmeyer proposed to model several aspects of developmental systems (cell division, cell differentiation and cell death) using rewriting systems. The analogy was that each symbol represents a cell in a particular state, and the rules represent the processes of differentiating from one state to another, dividing into two cells, or of programmed cell death; the start symbol represents the zygote.</p>
+<p>One of the simplest ways to use rewriting sytems for art and design is to interpret the produced strings as instructions for another program. The classic example is using them as instructions for a &quot;turtle graphics&quot; interpreter. </p>
+<p>For example, using the following system:</p>
+<pre><code class="lang-lua">    <span class="comment">-- possible symbols:</span>
+    alphabet = { <span class="string">"F"</span>, <span class="string">"+"</span>, <span class="string">"-"</span> }
+    <span class="comment">-- just one rule: replace "F" with "F+F--F+F"</span>
+    rule[<span class="string">"F"</span>] = <span class="string">"F+F--F+F"</span>
+    <span class="comment">-- start with:</span>
+    start = <span class="string">"F"</span></code></pre>
+<p>If we interpret the &quot;F&quot; symbol to mean &quot;move forward&quot;, and the &quot;+&quot; and &quot;-&quot; symbols to mean turn left and right by 60 degrees, then each successive application of this rule generates a successive iteration of the Koch curve fractal:</p>
+<p><img src="img/koch.jpg" alt="Iterations of the Koch curve fractal"></p>
+<h4>Bracketed systems</h4>
+<p>By adding push <code>&quot;[&quot;</code> and pop <code>&quot;]&quot;</code> symbols to save/restore graphics state (position, orientation etc.), the graphics interpreter can easily render branched structures such as trees and ferns.</p>
+<h4>Stochastic systems</h4>
+<h4>Circuit systems</h4>
+<h4>Parametric systems</h4>
+<h4>Context-sensitive systems</h4>
+<p>Signals and regulation.</p>
+<h3>Shape grammars</h3>
+<h3>Non-symbolic fractals</h3>
+<p>Fractal structures do not need to use symbolic rewriting. <a href="https://www.youtube.com/watch?v=FEnI_JPL6I0">Here</a> is an example of a fractal tree structure created through simple video feedback.</p>
+<h3>The evo-devo revolution</h3>
+<p>Cell signaling and regulatory networks.</p>
+<h2>Artificial chemistries</h2>
+<p>Autonomous structure and self-organization, emergence of life. </p>
+<h3>Fontana&#39;s Alchemy</h3>
+<h2>Programmable media and byte-code ecosystems</h2>
+<p>Corewars</p>
+<h3>Tom Ray&#39;s Tierra</h3>
+<h3>Viruses</h3>
+<h2>Immune systems, shape spaces</h2>
+<p>Natural and artificial immunity, algorithms, shape spaces.</p>
+</div>
+	
+	<div class="footer">
+	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
+	Graham Wakefield, 2013</div>
+	
+</div>
+</body>
+</html>
