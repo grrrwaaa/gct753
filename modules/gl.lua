@@ -2416,13 +2416,13 @@ function sketch.quad(x, y, w, h)
 			x, y, w, h = -w/2, -h/2, w, h
 		end
 	end
-	lib.glTexCoord2f(0, 1)
-	lib.glVertex3f(x, y, 0)
-	lib.glTexCoord2f(1, 1)
-	lib.glVertex3f(x+w, y, 0)
-	lib.glTexCoord2f(1, 0)
-	lib.glVertex3f(x+w, y+h, 0)
 	lib.glTexCoord2f(0, 0)
+	lib.glVertex3f(x, y, 0)
+	lib.glTexCoord2f(1, 0)
+	lib.glVertex3f(x+w, y, 0)
+	lib.glTexCoord2f(1, 1)
+	lib.glVertex3f(x+w, y+h, 0)
+	lib.glTexCoord2f(0, 1)
 	lib.glVertex3f(x, y+h, 0)
 	lib.glEnd()
 end

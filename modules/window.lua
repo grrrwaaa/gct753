@@ -150,9 +150,11 @@ win.ondraw = function(self)
 	gl.Viewport(0, 0, w, h)
 	gl.MatrixMode(lib.GL_PROJECTION)
 	gl.LoadIdentity()
-	gl.Ortho(0, 1, 1, 0, -100, 100)
+	gl.Ortho(0, 1, 0, 1, -100, 100)
 	gl.MatrixMode(lib.GL_MODELVIEW)
 	gl.LoadIdentity()
+	
+	gl.Disable(lib.GL_DEPTH_TEST)
 
 	if draw and type(draw) == "function" then
 		local ok, err = pcall(draw, w, h)

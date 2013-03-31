@@ -197,6 +197,7 @@ end
 function field2D:draw(x, y, w, h, unit)
 	self:send(unit)
 	sketch.quad(x or 0, y or 0, w or 1, h or 1)
+	self:unbind(unit)
 end
 
 
@@ -245,6 +246,7 @@ field2D.drawHueRange = (function()
 		self:send(0)
 		sketch.quad(0, 0, 1, 1)
 		gl.UseProgram(0)
+		self:unbind(unit)
 	end
 end)()
 
@@ -301,6 +303,7 @@ field2D.drawRGB = (function()
 			gl.Uniformi(program_b, 2)		
 		sketch.quad(0, 0, 1, 1)
 		gl.UseProgram(0)
+		self:unbind(unit)
 	end
 end)()
 
@@ -365,6 +368,7 @@ field2D.drawWeird = (function()
 		end
 		--sketch.quad(0, 0, 1, 1)
 		gl.UseProgram(0)
+		self:unbind(unit)
 	end
 end)()
 
