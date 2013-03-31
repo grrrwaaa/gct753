@@ -233,7 +233,7 @@ field2D.drawHueRange = (function()
 			}
 			
 			]]
-			program = gl.CreateProgram(vert, frag)
+			program = gl.Program(vert, frag)
 			gl.assert("creating shader")
 			gl.UseProgram(program)
 			program_scale = gl.GetUniformLocation(program, "scale")
@@ -284,7 +284,7 @@ field2D.drawRGB = (function()
 			}
 			
 			]]
-			program = gl.CreateProgram(vert, frag)
+			program = gl.Program(vert, frag)
 			gl.assert("creating shader")
 			gl.UseProgram(program)
 			program_r = gl.GetUniformLocation(program, "red")
@@ -342,7 +342,7 @@ field2D.drawWeird = (function()
 			}
 			
 			]]
-			program = gl.CreateProgram(vert, frag)
+			program = gl.Program(vert, frag)
 			gl.assert("creating shader")
 			gl.UseProgram(program)
 			program_scale = gl.GetUniformLocation(program, "scale")
