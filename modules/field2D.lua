@@ -303,7 +303,9 @@ field2D.drawRGB = (function()
 			gl.Uniformi(program_b, 2)		
 		sketch.quad(0, 0, 1, 1)
 		gl.UseProgram(0)
-		self:unbind(unit)
+		blue:unbind(2)
+		green:unbind(1)
+		red:unbind(0)
 	end
 end)()
 
