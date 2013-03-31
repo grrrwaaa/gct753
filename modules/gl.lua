@@ -4350,6 +4350,9 @@ end
 -- add lazy loader:
 setmetatable(gl, { __index = glindex, })
 
+local glGetString = gl.GetString
+function gl.GetString(p) return ffi.string(glGetString(p)) end
+
 print("using OpenGL", gl.GetString(gl.VERSION))
 
 local glClear = gl.Clear
@@ -4390,9 +4393,6 @@ function gl.End() glEnd() end
 
 
 function gl.Get(p) error("TODO for the array returns.") end
-
-local glGetString = gl.GetString
-function gl.GetString(p) return ffi.string(glGetString(p)) end
 
 function gl.LoadMatrix(t) 
 	assert(type(t) == "table", "gl.LoadMatrix requires a table argument")
