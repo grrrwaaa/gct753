@@ -60,7 +60,7 @@ Genetic variation can occur during replication of the genome, such as copying-er
 An artificial evolutionary system can be run by these steps:
 
 1. **Initialization** of a 'seed' population of genotypes
-2. **Development** of phenotypes from the genotypes (often instantaneous)
+2. **Development** of phenotypes from the genotypes 
 3. Evaluation and **selection** of best/viable candidates of phenotypes, according to fitness criteria or ongong viability conditions
 4. **Reproduction**, creating new genotypes (applying **mutation** and **recombination** for creative variety)
 5. Repeat from step (2) or terminate if a terminating condition is satisfied (such as sufficient fitness). 
@@ -76,7 +76,7 @@ The representation of the genotype, and mechanisms of development, genetic trans
 The mechanisms of variation possible partly depend on the representation chosen. The two most common principles of variation in artificial evolution are naturally inspired:
 
 - Random **mutation**; akin to errors copying DNA. If the genome is represented as a binary string, then random locations in the string may be replaced by new random characters. For example, a parent "dog" could produce children such as "fog", "dqg", and so on. Obviously some mutations will not create viable individuals.
-- Sexual **cross-over** (or **recombination**): akin to sexual reproduction in biology. As a binary string, the child takes the first fraction from one parent, and the remainder from the other. For example, breeding the strings "dog" and "cat" could generate children such as "dot", "dat", "cag" and "cog". 
+- Sexual **cross-over** (or **recombination**): akin to sexual reproduction in biology. As a binary string, the child takes the first fraction from one parent, and the remainder from the other. For example, breeding the strings "dog" and "cat" could generate children such as "dot", "dat", "cag" and "cog". A more flexible system might also permit "doat", "caog", "dt", etc. 
 - Other variations (insertion, deletion, inversion) are less common, but have been used.
 
 ## Evolutionary Art and Music
