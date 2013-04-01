@@ -60,11 +60,6 @@ function field2D:index_raw(x, y)
 	return y*self.width + x
 end
 
---- get the value of a cell with linear interpolation
-function field2D:sample(x, y)
-	
-end	
-
 --- set the value of a cell, or of all cells.
 -- If the x,y coordinate is not specified, it will apply the value for all cells.
 -- If the value to set is a function, this function is called (passing the x, y coordinates as arguments). If the function returns a value, the cell is set to this value; otherwise the cell is left unchanged.
@@ -101,20 +96,22 @@ end
 --- return the value of a cell
 -- If x or y is out of range of the field, it wraps around (positive modulo)
 -- If x or y are not integers, the fractional component is discarded (rounded down)
--- @tparam ?int x coordinate (row) to set a single cell
--- @tparam ?int y coordinate (column) to set a single cell
+-- @tparam ?int x coordinate (row) to get a single cell
+-- @tparam ?int y coordinate (column) to get a single cell
 function field2D:get(x, y)
 	return self.data[self:index(x, y)]
 end
 
---- return the value at a cell location
--- If x or y is out of range of the field, it wraps around (positive modulo)
--- If x or y are not integers, the returned result is a linear interpolation of the four nearest cells
--- @tparam ?int x coordinate (row) to set a single cell
--- @tparam ?int y coordinate (column) to set a single cell
+--- return the value at a normalized index (0..1 range maps to field dimensions)
+-- Uses linear interpolation between nearest cells.
+-- Indexes out of range will wrap.
+-- @param x coordinate (0..1) to sample
+-- @param y coordinate (0..1) to sample
 function field2D:sample(x, y)
-	local x = x and x % self.width or 0
-	local y = y and y % self.height or 0
+	assert(x, "missing x coordinate for sampling")
+	assert(y, "missing y coordinate for sampling")
+	local x = x and ((x * self.width) % self.width) or 0
+	local y = y and ((y * self.height) % self.height) or 0
 	local x0 = floor(x)
 	local y0 = floor(y)
 	local x1 = (x0 + 1) % self.width
@@ -193,15 +190,21 @@ function field2D:map(func)
 	end
 end
 
--- NOTE: this also leaves the texture bound
+--- Draw the field in greyscale from 0..1
+-- @param x left coordinate (optional, defaults to 0)
+-- @param y bottom coordinate (optional, defaults to 0)
+-- @param w width (optional, defaults to 1)
+-- @param h height (optional, defaults to 1)
+-- @param unit texture unit to use (defaults to 0)
 function field2D:draw(x, y, w, h, unit)
 	self:send(unit)
 	sketch.quad(x or 0, y or 0, w or 1, h or 1)
 	self:unbind(unit)
 end
 
-
--- draw with a shader:
+--- Draw the field as a Hue spectrum from red to blue
+-- @param range the maximum field value (renders as blue) 
+function field2D:drawHueRange(range) end
 field2D.drawHueRange = (function()
 	local program = nil
 	local program_scale = 0
@@ -408,12 +411,6 @@ function field2D:unbind(unit)
 	gl.BindTexture(gl.TEXTURE_2D, 0)
 end
 
-function field2D:copy()
-	local f2 = field2D.new(self.width, self.height)
-	-- copy data:
-	ffi.copy(self.data, f2.data, f2.size)
-	return f2
-end
 
 function field2D.new(dimx, dimy)
 	dimx = dimx or 64
@@ -430,6 +427,14 @@ function field2D.new(dimx, dimy)
 		-- size in bytes:
 		size = ffi.sizeof(data),
 	}, field2D)
+end
+
+--- Create a copy of the field with the same dimensions and contents
+function field2D:copy()
+	local f2 = field2D.new(self.width, self.height)
+	-- copy data:
+	ffi.copy(self.data, f2.data, f2.size)
+	return f2
 end
 
 return setmetatable(field2D, {
