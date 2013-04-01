@@ -23,15 +23,19 @@ Just like CA, at times, the self-organizing behavior of systems of even relative
 
 Braitenberg, V. (1984). Vehicles: Experiments in synthetic psychology. Cambridge, MA: MIT Press. 
 
+![Vehicle](http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/Braitenberg%20Vehikels_files/BVinh.jpg)
+
 > A Braitenberg vehicle is an agent that can autonomously move around. It has primitive sensors (measuring some stimulus at a point) and wheels (each driven by its own motor) that function as actuators or effectors. A sensor, in the simplest configuration, is directly connected to an effector, so that a sensed signal immediately produces a movement of the wheel. Depending on how sensors and wheels are connected, the vehicle exhibits different behaviors (which can be goal-oriented).  [wikipedia](http://en.wikipedia.org/wiki/Braitenberg_vehicle)
 
 Braitenberg argues that his extraordinarily simple mechanical vehicles manifest behaviors that appear identifiable as fear, aggression, love, foresight, and optimism.
 
-Casey Reas (co-author of Processing) has used populations of Braitenberg-inspired vehicles to create artworks based on their combined paths.
+Casey Reas (co-author of Processing), Yanni Loukissas, and many others have used populations of Braitenberg-inspired vehicles to create artworks based on their combined paths.
+
+![Reas' Tissue](http://reas.com/tissue_p/reas_tissue_p_13.jpg)
 
 ### Steering Behaviors
 
-Reynolds' vehicles, from ["Steering Behaviors for Autonomous Characters](http://www.red3d.com/cwr/steer/gdc99/), breaks movement into three layers:
+Reynolds' vehicles, from [Steering Behaviors for Autonomous Characters](http://www.red3d.com/cwr/steer/gdc99/), breaks movement into three layers:
 
 - Action Selection: selecting actions to perform according to environmental input and goals to achieve. 
 - Steering: path determination according to the action selected. Many different behaviors can be used; a simple particle-system model could be ```steering force = desired_velocity - current_velocity```.
