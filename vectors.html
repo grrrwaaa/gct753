@@ -34,12 +34,10 @@
 		
 	</div>
 	<div class="section"><h1>(Euclidean) Vectors</h1>
-<p>A <strong>vector</strong> is one way of describing a direction with a magnitude. Vectors can describe spatial properties such as locations, but also properties that change over time such as velocities, accelerations, forces of attraction and repulsion, local wind speed and direction, etc. </p>
-<p>A magnitude without direction (such as a regular number) is called a <strong>scalar</strong>.</p>
+<p>A <strong>vector</strong> is one way of describing a direction with a magnitude. Vectors can describe spatial properties such as locations, but also properties that change over time such as velocities, accelerations, forces of attraction and repulsion, local wind speed and direction, etc. A magnitude without direction (such as a regular number) is called a <strong>scalar</strong>.</p>
 <p>In a 2D space, a vector has two components (X, Y), in a 3D space, it has three (X, Y, Z). Programming with vectors is easier if these components are combined into a single abstraction of a <em>vector object</em>. We can also treat a position in space as a vector: <em>the vector from the origin (0, 0) to the position</em>. </p>
-<p>For agent-oriented programming we often need to take the perspective <em>relative to an agent</em>, rather than the absolute, global perspective. </p>
 <p>Adding two vectors is like applying their movements in series. </p>
-<p>The difference between two points can be obtained by subtraction; it also a vector. The <em>relative</em> position of B with respect to A is simply <code>B - A</code>. So the position of agent B relative to agent A is <code>B.position - A.position</code>. </p>
+<p>The difference between two points can be obtained by subtraction; it also a vector. The <em>relative</em> position of B with respect to A is simply <code>B - A</code>. So the position of agent B relative to agent A is <code>B.position - A.position</code>. (For agent-oriented programming we often need to take the perspective <em>relative to an agent</em>, rather than the absolute, global perspective.)</p>
 <p>We can multiply (or divide) vectors by scalars to make them longer or shorter. So <code>A * 2</code> produces a copy of vector A which is twice as long.</p>
 <p>Using this, we can interpolate between two vectors A and B by interpolating their components according to an interpolation factor <code>a</code> which varies between 0 (for A) and 1 (for B) like this: <code>A + a * (B - A)</code>. This is <em>linear interpolation</em>, or &quot;lerp&quot;. If a is 0.5, then it corresponds to the <em>mean</em> (average) of two vectors.</p>
 <p>The distance between two points is the length (<em>magnitude</em>) of the vector between them. We can use Pythagoras&#39; theorem: <code>distance = math.sqrt(v.x*v.x + v.y*v.y)</code>. </p>
@@ -55,7 +53,9 @@ v.y = v.y / len</code></pre>
 <span class="comment">-- Polar to Cartesian:</span>
 <span class="keyword">local</span> x = len * <span class="built_in">math</span>.cos(angle)
 <span class="keyword">local</span> y = len * <span class="built_in">math</span>.sin(angle)</code></pre>
-<p>This is one way that we can rotate a vector: convert to polar form, add to (or subtract from) the angle, convert back to Cartesian form.</p>
+<p>This is one way that we can rotate a vector: convert to polar form, add to (or subtract from) the angle, convert back to Cartesian form. Another way is to rotate the X and Y components individually, and sum them (the matrix form):</p>
+<pre><code class="lang-lua">x1 = v.x * <span class="built_in">math</span>.cos(rotation) + v.y * <span class="built_in">math</span>.sin(rotation)
+y1 = v.y * <span class="built_in">math</span>.cos(rotation) - v.x * <span class="built_in">math</span>.cos(rotation)</code></pre>
 <p>The <em>dot product</em> (also known as <em>scalar product</em> or <em>inner product</em>) of two vectors v1 and v2 is defined as <code>v1.x*v2x + v1.y*v2.y</code>. (Note the similarity with the Pythagorean theorem). In a way the dot product tells us how similar two vectors are (it is related to correlation). Geometrically it is defined as <code>||A|| ||B|| cos t</code>, which means the length of A multiplied by the length of B multipled by the angle t between A and B. So we can re-arrange that to determine the angle between to vectors as <code>arccosine( dot(A, B) / (mag(A) * mag(B)))</code>. Of course, if A and B are <em>unit vectors</em>, this simplifies to <code>arccosine(dot(A, b))</code>. </p>
 <blockquote>
 <p>One useful result is that if the dot product is zero, then A and B are orthogonal (at right angles to each other). If it is positive, then the angle between is less than 90 degrees, and if negative, the vectors must face away from each other since the angle between them is greater than 90 degrees. (And since magnitudes are always positive, we can skip that part of the calculation too!)</p>

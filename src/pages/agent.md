@@ -27,19 +27,23 @@ Braitenberg, V. (1984). Vehicles: Experiments in synthetic psychology. Cambridge
 
 > A Braitenberg vehicle is an agent that can autonomously move around. It has primitive sensors (measuring some stimulus at a point) and wheels (each driven by its own motor) that function as actuators or effectors. A sensor, in the simplest configuration, is directly connected to an effector, so that a sensed signal immediately produces a movement of the wheel. Depending on how sensors and wheels are connected, the vehicle exhibits different behaviors (which can be goal-oriented).  [wikipedia](http://en.wikipedia.org/wiki/Braitenberg_vehicle)
 
-Braitenberg argues that his extraordinarily simple mechanical vehicles manifest behaviors that appear identifiable as fear, aggression, love, foresight, and optimism.
+Cyberneticist Valentino Braitenberg argues that his extraordinarily simple mechanical vehicles manifest behaviors that appear identifiable as fear, aggression, love, foresight, and optimism. The vehicle idea was a thought experiment conceived to show that complex, apparently purposive behaviour did not need to depend on complex representations of the environment inside a creature or agents brain. In fact simply by reacting to the environment in a consistent manner was more than enough to explain the low level reactive behaviours exhibited by many animals.
 
 Casey Reas (co-author of Processing), Yanni Loukissas, and many others have used populations of Braitenberg-inspired vehicles to create artworks based on their combined paths.
 
 ![Reas' Tissue](http://reas.com/tissue_p/reas_tissue_p_13.jpg)
 
+Vehicles have also been constructed in hardware of course -- [see examples here](http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/) -- and may even have been inspired by [Grey Walter](http://en.wikipedia.org/wiki/William_Grey_Walter)'s tortoise (turtle). (Brief history [here](http://www.rutherfordjournal.org/article020101.html)).
+
+![Machina Speculatrix](img/machina_speculatrix.jpg) 
+
 ### Steering Behaviors
 
 Reynolds' vehicles, from [Steering Behaviors for Autonomous Characters](http://www.red3d.com/cwr/steer/gdc99/), breaks movement into three layers:
 
-- Action Selection: selecting actions to perform according to environmental input and goals to achieve. 
-- Steering: path determination according to the action selected. Many different behaviors can be used; a simple particle-system model could be ```steering force = desired_velocity - current_velocity```.
-- Locomotion: conversion of steering into actual movement.
+- **Action Selection**: selecting actions to perform according to environmental input and goals to achieve. 
+- **Steering**: path determination according to the action selected. Many different behaviors can be used; a simple particle-system model could be ```steering force = desired_velocity - current_velocity```.
+- **Locomotion**: conversion of steering into actual movement.
 
 The paper is well worth exploring as a collection of patterns for autonomous agent movements; and presents the elements that make up his simulation of flocking behavior.
 
@@ -55,9 +59,7 @@ In the late 1980s Reynolds proposed a model of animal motion to model flocks, he
 - **Copy**: Fly in the same general direction as other nearby boids
 - **Center**: Move toward the center of the flock (avoid exposure)
 
-Gary Flake also recommends:
-
-- **View**: Move laterally away from any boid blocking the view
+Gary Flake also recommends adding an influence for *View*: to move laterally away from any boid blocking the view.
 
 To make this more realistic, we can consider that each boid can only perceive other boids within a certain distance and viewing angle. We should also restrict how quickly boids can change direction and speed (to account for momentum). Additionally, the avoidance rule may carry greater *weight* or take precedence over the other rules.
 
@@ -90,6 +92,8 @@ Over time, the termites begin to collect the woodchips into small piles, which g
 ## Action selection systems
 
 ### Subsumption architecture
+
+Strongly influenced by Braitenberg's vehicles.
 
 ### Neural networks
 

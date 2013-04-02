@@ -3,17 +3,13 @@ title: Vectors
 
 # (Euclidean) Vectors
 
-A **vector** is one way of describing a direction with a magnitude. Vectors can describe spatial properties such as locations, but also properties that change over time such as velocities, accelerations, forces of attraction and repulsion, local wind speed and direction, etc. 
-
-A magnitude without direction (such as a regular number) is called a **scalar**.
+A **vector** is one way of describing a direction with a magnitude. Vectors can describe spatial properties such as locations, but also properties that change over time such as velocities, accelerations, forces of attraction and repulsion, local wind speed and direction, etc. A magnitude without direction (such as a regular number) is called a **scalar**.
 
 In a 2D space, a vector has two components (X, Y), in a 3D space, it has three (X, Y, Z). Programming with vectors is easier if these components are combined into a single abstraction of a *vector object*. We can also treat a position in space as a vector: *the vector from the origin (0, 0) to the position*. 
 
-For agent-oriented programming we often need to take the perspective *relative to an agent*, rather than the absolute, global perspective. 
-
 Adding two vectors is like applying their movements in series. 
 
-The difference between two points can be obtained by subtraction; it also a vector. The *relative* position of B with respect to A is simply ```B - A```. So the position of agent B relative to agent A is ```B.position - A.position```. 
+The difference between two points can be obtained by subtraction; it also a vector. The *relative* position of B with respect to A is simply ```B - A```. So the position of agent B relative to agent A is ```B.position - A.position```. (For agent-oriented programming we often need to take the perspective *relative to an agent*, rather than the absolute, global perspective.)
 
 We can multiply (or divide) vectors by scalars to make them longer or shorter. So ```A * 2``` produces a copy of vector A which is twice as long.
 
@@ -42,7 +38,12 @@ local x = len * math.cos(angle)
 local y = len * math.sin(angle)
 ```
 
-This is one way that we can rotate a vector: convert to polar form, add to (or subtract from) the angle, convert back to Cartesian form.
+This is one way that we can rotate a vector: convert to polar form, add to (or subtract from) the angle, convert back to Cartesian form. Another way is to rotate the X and Y components individually, and sum them (the matrix form):
+
+```lua
+x1 = v.x * math.cos(rotation) + v.y * math.sin(rotation)
+y1 = v.y * math.cos(rotation) - v.x * math.cos(rotation)
+```
 
 The *dot product* (also known as *scalar product* or *inner product*) of two vectors v1 and v2 is defined as ```v1.x*v2x + v1.y*v2.y```. (Note the similarity with the Pythagorean theorem). In a way the dot product tells us how similar two vectors are (it is related to correlation). Geometrically it is defined as ```||A|| ||B|| cos t```, which means the length of A multiplied by the length of B multipled by the angle t between A and B. So we can re-arrange that to determine the angle between to vectors as ``` arccosine( dot(A, B) / (mag(A) * mag(B)))```. Of course, if A and B are *unit vectors*, this simplifies to ```arccosine(dot(A, b))```. 
 

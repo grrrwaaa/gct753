@@ -52,15 +52,17 @@
 <blockquote>
 <p>A Braitenberg vehicle is an agent that can autonomously move around. It has primitive sensors (measuring some stimulus at a point) and wheels (each driven by its own motor) that function as actuators or effectors. A sensor, in the simplest configuration, is directly connected to an effector, so that a sensed signal immediately produces a movement of the wheel. Depending on how sensors and wheels are connected, the vehicle exhibits different behaviors (which can be goal-oriented).  <a href="http://en.wikipedia.org/wiki/Braitenberg_vehicle">wikipedia</a></p>
 </blockquote>
-<p>Braitenberg argues that his extraordinarily simple mechanical vehicles manifest behaviors that appear identifiable as fear, aggression, love, foresight, and optimism.</p>
+<p>Cyberneticist Valentino Braitenberg argues that his extraordinarily simple mechanical vehicles manifest behaviors that appear identifiable as fear, aggression, love, foresight, and optimism. The vehicle idea was a thought experiment conceived to show that complex, apparently purposive behaviour did not need to depend on complex representations of the environment inside a creature or agents brain. In fact simply by reacting to the environment in a consistent manner was more than enough to explain the low level reactive behaviours exhibited by many animals.</p>
 <p>Casey Reas (co-author of Processing), Yanni Loukissas, and many others have used populations of Braitenberg-inspired vehicles to create artworks based on their combined paths.</p>
 <p><img src="http://reas.com/tissue_p/reas_tissue_p_13.jpg" alt="Reas&#39; Tissue"></p>
+<p>Vehicles have also been constructed in hardware of course -- <a href="http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/">see examples here</a> -- and may even have been inspired by <a href="http://en.wikipedia.org/wiki/William_Grey_Walter">Grey Walter</a>&#39;s tortoise (turtle). (Brief history <a href="http://www.rutherfordjournal.org/article020101.html">here</a>).</p>
+<p><img src="img/machina_speculatrix.jpg" alt="Machina Speculatrix"> </p>
 <h3>Steering Behaviors</h3>
 <p>Reynolds&#39; vehicles, from <a href="http://www.red3d.com/cwr/steer/gdc99/">Steering Behaviors for Autonomous Characters</a>, breaks movement into three layers:</p>
 <ul>
-<li>Action Selection: selecting actions to perform according to environmental input and goals to achieve. </li>
-<li>Steering: path determination according to the action selected. Many different behaviors can be used; a simple particle-system model could be <code>steering force = desired_velocity - current_velocity</code>.</li>
-<li>Locomotion: conversion of steering into actual movement.</li>
+<li><strong>Action Selection</strong>: selecting actions to perform according to environmental input and goals to achieve. </li>
+<li><strong>Steering</strong>: path determination according to the action selected. Many different behaviors can be used; a simple particle-system model could be <code>steering force = desired_velocity - current_velocity</code>.</li>
+<li><strong>Locomotion</strong>: conversion of steering into actual movement.</li>
 </ul>
 <p>The paper is well worth exploring as a collection of patterns for autonomous agent movements; and presents the elements that make up his simulation of flocking behavior.</p>
 <h3>Random walks in nature</h3>
@@ -72,10 +74,7 @@
 <li><strong>Copy</strong>: Fly in the same general direction as other nearby boids</li>
 <li><strong>Center</strong>: Move toward the center of the flock (avoid exposure)</li>
 </ul>
-<p>Gary Flake also recommends:</p>
-<ul>
-<li><strong>View</strong>: Move laterally away from any boid blocking the view</li>
-</ul>
+<p>Gary Flake also recommends adding an influence for <em>View</em>: to move laterally away from any boid blocking the view.</p>
 <p>To make this more realistic, we can consider that each boid can only perceive other boids within a certain distance and viewing angle. We should also restrict how quickly boids can change direction and speed (to account for momentum). Additionally, the avoidance rule may carry greater <em>weight</em> or take precedence over the other rules.</p>
 <p>Evidently the <em>properties</em> of a boid (apart from location) include direction and speed. It could be assumed that viewing angle and range are shared by all boids, or these could also vary per individual. The <em>sensors</em> of a boid include an ability to detect the density of boids in different directions (to detect the center of the flock), as well as the average speed and direction of boids, within a viewable area. The <em>actions</em> of a boid principally are to alter the direction and speed of flight. </p>
 <h2>Environmental interaction</h2>
@@ -96,6 +95,7 @@
 <h3>PSO</h3>
 <h2>Action selection systems</h2>
 <h3>Subsumption architecture</h3>
+<p>Strongly influenced by Braitenberg&#39;s vehicles.</p>
 <h3>Neural networks</h3>
 <p>The neuron, von Neumann, biological &amp; artificial plasticity, artificial neural networks (ANNs), supervised, unsupervised &amp; reinforcement learning.</p>
 <h3>Complex adaptive systems</h3>
