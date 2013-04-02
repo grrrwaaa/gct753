@@ -154,7 +154,7 @@ function draw()
 	if showneighbors then
 		for i, self in ipairs(boids) do
 			for j, p in ipairs(self.relatives) do
-				draw2D.color(0.4, 0, 0.4)
+				draw2D.color(0.7, 0, 0.7)
 				draw2D.line(self.pos.x, self.pos.y, self.pos.x + p.x, self.pos.y + p.y)	
 			end
 		end	
@@ -168,19 +168,19 @@ function draw()
 		-- show the current influences of this boid:
 		if showinfluences and #self.relatives > 0 then
 			-- avoid
-			draw2D.color(0.8, 0, 0)
+			draw2D.color(1, 0, 0)
 			draw2D.line(0, 0, self.avoid.x, self.avoid.y)			
 			
 			-- copy
-			draw2D.color(0.4, 0.4, 0)
+			draw2D.color(1, 1, 0)
 			draw2D.line(0, 0, self.copy.x, self.copy.y)	
 			
 			-- center
-			draw2D.color(0, 0.4, 0.4)
+			draw2D.color(0, 1, 1)
 			draw2D.line(0, 0, self.center.x, self.center.y)	
 			
 			-- total influence
-			draw2D.color(0, 0.8, 0)
+			draw2D.color(0, 1, 0)
 			draw2D.line(0, 0, self.influence.x, self.influence.y)	
 		end
 		
