@@ -39,11 +39,11 @@ Vehicles have also been constructed in hardware of course -- see examples [here]
 
 ### Steering Behaviors
 
-Reynolds' vehicles, from [Steering Behaviors for Autonomous Characters](http://www.red3d.com/cwr/steer/gdc99/), breaks movement into three layers:
+Craig Reynolds' work with robotics is strongly inspired by Braitenberg's and Walter's vehicles, and became famous for his work on simulating flocking behavior (see below). His work has been widely used in robotics, game design, special effects and simulation. Reynolds' paper [Steering Behaviors for Autonomous Characters](http://www.red3d.com/cwr/steer/gdc99/) breaks agent movement into three layers:
 
 - **Action Selection**: selecting actions to perform according to environmental input and goals to achieve. 
 - **Steering**: path determination according to the action selected. Many different behaviors can be used; a simple particle-system model could be ```steering force = desired_velocity - current_velocity```.
-- **Locomotion**: conversion of steering into actual movement.
+- **Locomotion**: mechanisms of conversion of steering into actual movement.
 
 The paper is well worth exploring as a collection of patterns for autonomous agent movements; and presents the elements that make up his simulation of flocking behavior.
 
@@ -59,7 +59,7 @@ In the late 1980s Reynolds proposed a model of animal motion to model flocks, he
 - **Copy**: Fly in the same general direction as other nearby boids
 - **Center**: Move toward the center of the flock (avoid exposure)
 
-Gary Flake also recommends adding an influence for *View*: to move laterally away from any boid blocking the view.
+(Gary Flake also recommends adding an influence for *View*: to move laterally away from any boid blocking the view.)
 
 To make this more realistic, we can consider that each boid can only perceive other boids within a certain distance and viewing angle. We should also restrict how quickly boids can change direction and speed (to account for momentum). Additionally, the avoidance rule may carry greater *weight* or take precedence over the other rules.
 
@@ -67,6 +67,7 @@ Evidently the *properties* of a boid (apart from location) include direction and
 
 
 
+----
 
 ## Environmental interaction
 
@@ -93,7 +94,7 @@ Over time, the termites begin to collect the woodchips into small piles, which g
 
 ### Subsumption architecture
 
-Strongly influenced by Braitenberg's vehicles.
+Rodney Brooks was also strongly influenced by Braitenberg's vehicles.
 
 ### Neural networks
 

@@ -58,11 +58,11 @@
 <p>Vehicles have also been constructed in hardware of course -- see examples <a href="http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/">here</a>, <a href="http://blog.electricbricks.com/en/2010/05/vehiculos-braitenberg-nxt-g/">here</a>, <a href="http://tinkerlog.com/2009/06/07/mini-braitenberg-vehicle/">here</a> -- and may even have been inspired by <a href="http://en.wikipedia.org/wiki/William_Grey_Walter">Grey Walter</a>&#39;s robotic tortoises from the 1950s. (Brief history <a href="http://www.rutherfordjournal.org/article020101.html">here</a>).</p>
 <p><img src="img/machina_speculatrix.jpg" alt="Machina Speculatrix"> </p>
 <h3>Steering Behaviors</h3>
-<p>Reynolds&#39; vehicles, from <a href="http://www.red3d.com/cwr/steer/gdc99/">Steering Behaviors for Autonomous Characters</a>, breaks movement into three layers:</p>
+<p>Craig Reynolds&#39; work with robotics is strongly inspired by Braitenberg&#39;s and Walter&#39;s vehicles, and became famous for his work on simulating flocking behavior (see below). His work has been widely used in robotics, game design, special effects and simulation. Reynolds&#39; paper <a href="http://www.red3d.com/cwr/steer/gdc99/">Steering Behaviors for Autonomous Characters</a> breaks agent movement into three layers:</p>
 <ul>
 <li><strong>Action Selection</strong>: selecting actions to perform according to environmental input and goals to achieve. </li>
 <li><strong>Steering</strong>: path determination according to the action selected. Many different behaviors can be used; a simple particle-system model could be <code>steering force = desired_velocity - current_velocity</code>.</li>
-<li><strong>Locomotion</strong>: conversion of steering into actual movement.</li>
+<li><strong>Locomotion</strong>: mechanisms of conversion of steering into actual movement.</li>
 </ul>
 <p>The paper is well worth exploring as a collection of patterns for autonomous agent movements; and presents the elements that make up his simulation of flocking behavior.</p>
 <h3>Random walks in nature</h3>
@@ -74,9 +74,10 @@
 <li><strong>Copy</strong>: Fly in the same general direction as other nearby boids</li>
 <li><strong>Center</strong>: Move toward the center of the flock (avoid exposure)</li>
 </ul>
-<p>Gary Flake also recommends adding an influence for <em>View</em>: to move laterally away from any boid blocking the view.</p>
+<p>(Gary Flake also recommends adding an influence for <em>View</em>: to move laterally away from any boid blocking the view.)</p>
 <p>To make this more realistic, we can consider that each boid can only perceive other boids within a certain distance and viewing angle. We should also restrict how quickly boids can change direction and speed (to account for momentum). Additionally, the avoidance rule may carry greater <em>weight</em> or take precedence over the other rules.</p>
 <p>Evidently the <em>properties</em> of a boid (apart from location) include direction and speed. It could be assumed that viewing angle and range are shared by all boids, or these could also vary per individual. The <em>sensors</em> of a boid include an ability to detect the density of boids in different directions (to detect the center of the flock), as well as the average speed and direction of boids, within a viewable area. The <em>actions</em> of a boid principally are to alter the direction and speed of flight. </p>
+<hr>
 <h2>Environmental interaction</h2>
 <h3>Termites</h3>
 <p>Mitchel Resnick&#39;s termite model is a random walker in a space that can contain woodchips, in which each termite can carry one woodchip at a time. The program for a termite looks something like this:</p>
@@ -95,7 +96,7 @@
 <h3>PSO</h3>
 <h2>Action selection systems</h2>
 <h3>Subsumption architecture</h3>
-<p>Strongly influenced by Braitenberg&#39;s vehicles.</p>
+<p>Rodney Brooks was also strongly influenced by Braitenberg&#39;s vehicles.</p>
 <h3>Neural networks</h3>
 <p>The neuron, von Neumann, biological &amp; artificial plasticity, artificial neural networks (ANNs), supervised, unsupervised &amp; reinforcement learning.</p>
 <h3>Complex adaptive systems</h3>
