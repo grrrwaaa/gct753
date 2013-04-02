@@ -33,7 +33,7 @@ Casey Reas (co-author of Processing), Yanni Loukissas, and many others have used
 
 ![Reas' Tissue](http://reas.com/tissue_p/reas_tissue_p_13.jpg)
 
-Vehicles have also been constructed in hardware of course -- [see examples here](http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/) -- and may even have been inspired by [Grey Walter](http://en.wikipedia.org/wiki/William_Grey_Walter)'s tortoise (turtle). (Brief history [here](http://www.rutherfordjournal.org/article020101.html)).
+Vehicles have also been constructed in hardware of course -- see examples [here](http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/), [here](http://blog.electricbricks.com/en/2010/05/vehiculos-braitenberg-nxt-g/), [here](http://tinkerlog.com/2009/06/07/mini-braitenberg-vehicle/) -- and may even have been inspired by [Grey Walter](http://en.wikipedia.org/wiki/William_Grey_Walter)'s robotic tortoises from the 1950s. (Brief history [here](http://www.rutherfordjournal.org/article020101.html)).
 
 ![Machina Speculatrix](img/machina_speculatrix.jpg) 
 
