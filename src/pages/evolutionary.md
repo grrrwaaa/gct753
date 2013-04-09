@@ -90,6 +90,9 @@ One of the central problems in evolutionary art and music is how to implement se
 
 Artificial co-evolution, where one population represents the candidate products, and the other population represents artificial critics.
 
+![Karl Sims](http://www.karlsims.com/papers/ksf11.gif)
+See [Karl Sims' Genetic Images](http://www.karlsims.com/genetic-images.html).
+
 Karl Sims
 Scott Draves
 [1]	S. Draves, “Evolution and Collective Intelligence of the Electric Sheep,” The Art of Artificial Evolution, 2008.
@@ -99,3 +102,10 @@ Scott Draves
 Artificial evolution generates results with randomness, without formal proofs. It may take a long time or a lot of processing power to find a satisfactory result, or may not reach a result at all. 
 
 Fitness landscapes
+
+
+----
+
+## Discussion examples
+
+[Evolving 2D cars](http://boxcar2d.com/)
