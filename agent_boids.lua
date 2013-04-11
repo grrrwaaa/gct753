@@ -86,7 +86,7 @@ function update()
 				local rel = near.pos - self.pos
 				-- shift the relative position into the [-0.5, 0.5] range
 				-- (this is essential because of the toroidal world space)
-				rel:add(0.5):mod(1):sub(0.5)
+				rel:relativewrap()
 				-- in front or behind? (assuming self.vel is also our direction of view)
 				-- positive dot product implies acute angle (i.e. in front of us)
 				local dot = self.vel:dot(rel)
