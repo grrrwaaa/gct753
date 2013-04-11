@@ -146,9 +146,11 @@ end
 
 local showneighbors = true
 local showinfluences = true
+local showview = true
 
 function draw()	
 	draw2D.color(0, 0.3, 0)
+	
 	
 	-- draw lines between boids and the neighbors they can see:
 	if showneighbors then
@@ -185,6 +187,12 @@ function draw()
 		end
 		
 		draw2D.rotate(self.direction)
+		-- draw view:
+		if showview then
+			draw2D.color(1, 1, 1, 0.1)
+			draw2D.arc(0, 0, -math.pi/2, math.pi/2, viewrange)
+		end
+		
 		draw2D.scale(0.01)
 		-- draw body:
 		draw2D.color(1, 1, 1)
@@ -200,5 +208,7 @@ function keydown(k)
 		showinfluences = not showinfluences
 	elseif k == "n" then
 		showneighbors = not showneighbors
+	elseif k == "v" then
+		showview = not showview
 	end
 end
