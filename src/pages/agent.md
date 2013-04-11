@@ -65,8 +65,6 @@ To make this more realistic, we can consider that each boid can only perceive ot
 
 Evidently the *properties* of a boid (apart from location) include direction and speed. It could be assumed that viewing angle and range are shared by all boids, or these could also vary per individual. The *sensors* of a boid include an ability to detect the density of boids in different directions (to detect the center of the flock), as well as the average speed and direction of boids, within a viewable area. The *actions* of a boid principally are to alter the direction and speed of flight. 
 
-
-
 ----
 
 ## Environmental interaction
@@ -83,8 +81,13 @@ Mitchel Resnick's termite model is a random walker in a space that can contain w
 	
 Over time, the termites begin to collect the woodchips into small piles, which gradually coalesce into a single large pile of chips.
 
-
 ### Chemotaxis
+
+> Chemotaxis is the phenomenon whereby somatic cells, bacteria, and other single-cell or multicellular organisms direct their movements according to certain chemicals in their environment. This is important for bacteria to find food (for example, glucose) by swimming towards the highest concentration of food molecules, or to flee from poisons (for example, phenol). In multicellular organisms, chemotaxis is critical to early development (e.g. movement of sperm towards the egg during fertilization) and subsequent phases of development (e.g. migration of neurons or lymphocytes) as well as in normal function. [wikipedia](https://en.wikipedia.org/wiki/Chemotaxis)
+
+A [video example of chemotaxis in E. coli](http://www.youtube.com/watch?v=ZV5CfOkV6ek).
+
+A variety of other *taxes* worth exploring can be found on the [wikipedia page](http://en.wikipedia.org/wiki/Taxis#Aerotaxis).
 
 ### Ant colonies (stigmergy)
 
@@ -103,4 +106,57 @@ The neuron, von Neumann, biological & artificial plasticity, artificial neural n
 ### Complex adaptive systems
 
 ### Game theory
+
+# Assignment 2: Agent Systems
+
+The second assignment is to construct a new agent-based system. You can start from one of the existing systems we have looked at and modify it, or design and create a new one to explore an idea you have. The agents should implement local interactions using one or both of:
+
+- Sensing and responding to other nearby (locally visible) agents
+- Local reading and/or writing to one or more fields
+
+Your agents should also implement:
+
+- Action selection (responding to context in order to choose between strategies)
+- Steering (implementing strategies by deriving and applying forces)
+- Locomotion (implementing these forces to move the agents)
+
+You should also try adding at least one of the following:
+
+- More than one type of agent (e.g. predator and prey)
+- Birth and death
+- Field dynamics (a field that changes over time)
+- Keyboard and mouse interaction
+- Sound
+
+You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, variations etc. If you end up with more than one system that is interesting, you can submit them all. If you had an idea that seemed interesting but was difficult to implement or did not lead to interesting results, submit that too (with an explanation of why you think it did not work or did not do what you expected); this is just as important a part of research.
+
+Document your work using comments in the code. Note that in Lua, you can write long multi-line comments like this:
+
+```lua
+--[[
+This is a long comment
+that runs over
+several lines
+--]]
+```
+
+At the top of your code, there should be a long comment including:
+
+- Your **name**
+- The **date**
+- The **title**
+- A **description** of the idea of the system, how it works (or why it doesn't), and why it is interesting, surprising, etc (or why it didn't meet your expectations). What kinds of long-term behaviors it supports. 
+- A description of any **interactions** it supports (what the mouse does, what key presses do)
+- A description of the **technical realization**. (Perhaps you tried a few different algorithms until it worked as expected?) If you were inspired by another system, mention it.
+- Ideas for possible **future extensions** of the project.
+
+Please also comment all the important operations in the code. Please also try to use helpful variable names, e.g. ```width``` is more communicative than ```var3```.
+
+Send your final project as one (or more) Lua script(s) to my email address, on or before **Sunday 28th April**. 
+
+Your assignment will be evaluted by these criteria:
+
+- **Technical completeness** (33%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented. Even if it doesn't work, how well it was conceived and implemented. 
+- **Aesthetic qualities** (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting. If it doesn't work as expected or produce interesting results, then the evaluation here will be on how well you can articulate what you had hoped for, what aspects of that you think are missing, why you think they are missing, what you can suggest to resolve it, etc.
+- **Novel contribution** (33%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key aspects here are the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
 

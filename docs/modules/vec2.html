@@ -134,6 +134,14 @@
 	<td class="summary">Calculate modulo two vectors (or numbers) to create a new vector</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#vec2:relativewrap">vec2:relativewrap&nbsp;(dimx, dimy)</a></td>
+	<td class="summary">Determine shortest relative vector in a toroidal space</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#vec2:relativewrapnew">vec2:relativewrapnew&nbsp;(dimx, dimy)</a></td>
+	<td class="summary">Create new vector as shortest relative vector in a toroidal space</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#vec2:lerp">vec2:lerp&nbsp;(v, f)</a></td>
 	<td class="summary">interpolate from self to v by factor of f</td>
 	</tr>
@@ -186,11 +194,11 @@
 	<td class="summary">Create a vector by rotating a vector by an angle</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#random">random&nbsp;()</a></td>
-	<td class="summary">Create a new vector of magnitude 1 in a uniformly random direction:</td>
+	<td class="name" nowrap><a href="#random">random&nbsp;(mag)</a></td>
+	<td class="summary">Create a new vector in a uniformly random direction:</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#vec2:randomize">vec2:randomize&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#vec2:randomize">vec2:randomize&nbsp;(mag)</a></td>
 	<td class="summary">Set to a vector of magnitude 1 in a uniformly random direction:</td>
 	</tr>
 	<tr>
@@ -619,6 +627,56 @@
 
 </dd>
     <dt>
+    <a name = "vec2:relativewrap"></a>
+    <strong>vec2:relativewrap&nbsp;(dimx, dimy)</strong>
+    </dt>
+    <dd>
+    Determine shortest relative vector in a toroidal space
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">dimx</span>
+       width of space (optional, default 1)</li>
+      <li><span class="parameter">dimy</span>
+       height of space (optional, default dimx)</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        self
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "vec2:relativewrapnew"></a>
+    <strong>vec2:relativewrapnew&nbsp;(dimx, dimy)</strong>
+    </dt>
+    <dd>
+    Create new vector as shortest relative vector in a toroidal space
+
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">dimx</span>
+       width of space (optional, default 1)</li>
+      <li><span class="parameter">dimy</span>
+       height of space (optional, default dimx)</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        new vector
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "vec2:lerp"></a>
     <strong>vec2:lerp&nbsp;(v, f)</strong>
     </dt>
@@ -896,11 +954,16 @@
 </dd>
     <dt>
     <a name = "random"></a>
-    <strong>random&nbsp;()</strong>
+    <strong>random&nbsp;(mag)</strong>
     </dt>
     <dd>
-    Create a new vector of magnitude 1 in a uniformly random direction:
+    Create a new vector in a uniformly random direction:
 
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">mag</span>
+       magnitude (optional, default 1)</li>
+    </ul>
 
     <h3>Returns:</h3>
     <ol>
@@ -914,11 +977,16 @@
 </dd>
     <dt>
     <a name = "vec2:randomize"></a>
-    <strong>vec2:randomize&nbsp;()</strong>
+    <strong>vec2:randomize&nbsp;(mag)</strong>
     </dt>
     <dd>
     Set to a vector of magnitude 1 in a uniformly random direction:
 
+    <h3>Parameters:</h3>
+    <ul>
+      <li><span class="parameter">mag</span>
+       magnitude (optional, default 1)</li>
+    </ul>
 
     <h3>Returns:</h3>
     <ol>
