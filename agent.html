@@ -96,7 +96,15 @@
 <p>Chemotaxis is the phenomenon whereby somatic cells, bacteria, and other single-cell or multicellular organisms direct their movements according to certain chemicals in their environment. This is important for bacteria to find food (for example, glucose) by swimming towards the highest concentration of food molecules, or to flee from poisons (for example, phenol). In multicellular organisms, chemotaxis is critical to early development (e.g. movement of sperm towards the egg during fertilization) and subsequent phases of development (e.g. migration of neurons or lymphocytes) as well as in normal function. <a href="https://en.wikipedia.org/wiki/Chemotaxis">wikipedia</a></p>
 </blockquote>
 <p>A <a href="http://www.youtube.com/watch?v=ZV5CfOkV6ek">video example of chemotaxis in E. coli</a>.</p>
-<p>A variety of other <em>taxes</em> worth exploring can be found on the <a href="http://en.wikipedia.org/wiki/Taxis#Aerotaxis">wikipedia page</a>.</p>
+<p>E. coli can use its flagella to move in just two modes (<em>locomotion</em>): </p>
+<ul>
+<li>Move forward more or less straight</li>
+<li>Tumble about randomly</li>
+</ul>
+<p>The <em>goal</em> is to find the highest sugar concentration. It can sense the local sugar concentration at its current location. However it cannot sense at a distance, and has no sense of direction, never mind which direction is best. </p>
+<p>Instead it uses chemical memory to detect sugar concentration <em>gradient</em>, that is, the differential of concentration at the current location compared to how it was just a few moments ago. This gradient tells the E. coli whether things are getting better or worse, which can be used to select between the swimming or tumbling patterns. </p>
+<p>With just a few tuning parameters, this can lead to a very rapid success in finding the higher concentrations of sugar (assuming the environment is smoothly varying). </p>
+<p>A variety of other <em>taxes</em> worth exploring can be found on the <a href="http://en.wikipedia.org/wiki/Taxis#Aerotaxis">wikipedia page</a>. Note how chemotaxis (and other taxes) can be divided into positive (attractive) and negative (repulsive) characters, just like forces (directly seen in steering forces). This is closely related to the concepts of positive and negative feedback. </p>
 <h3>Ant colonies (stigmergy)</h3>
 <h3>PSO</h3>
 <h2>Action selection systems</h2>
