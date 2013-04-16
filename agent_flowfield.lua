@@ -6,8 +6,9 @@ local vec2 = require "vec2"
 -- make each run different:
 math.randomseed(os.time())
 
+
 -- the flow field
-local dimx = 64
+local dimx = 128
 local dimy = dimx
 local flow = field2D(dimx, dimy)
 
@@ -17,6 +18,17 @@ flow:set(function(x, y)
 	local b = math.cos(math.pi * 2 * y/dimy * y/dimy) 
 	return 0.5 + 0.5 * (a * b)
 end)
+
+
+function reset_field()
+	flow:set(function() return math.random() end)
+	flow:diffuse(flow, 2)
+	flow:diffuse(flow, 1)
+	flow:diffuse(flow, 2)
+	flow:normalize()
+end
+
+reset_field()
 
 -- create a few agents:
 local agents = {}
@@ -35,10 +47,10 @@ function update()
 		-- read local field:
 		local dir = math.pi * 2 * flow:sample(a.pos.x, a.pos.y)		
 		-- use this direction to create a force vector:
-		local F = vec2.fromPolar(0.01, dir)
+		local F = vec2.fromPolar(0.1, dir)
 		
 		-- apply force
-		a.vel:lerp(a.vel + F, 0.1)
+		a.vel:add(F)
 		a.vel:limit(0.01)		
 		-- integrate velocity to position
 		a.pos:add(a.vel)
@@ -68,6 +80,7 @@ function draw()
 end
 
 function reset()
+	reset_field()
 	for i, a in ipairs(agents) do
 		a.pos:randomize()
 	end
