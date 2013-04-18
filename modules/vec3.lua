@@ -453,12 +453,13 @@ end
 
 --- The angle between two vectors (two points)
 -- (The relative angle from self to v)
--- @param v vector to measure angle between to
+-- @param a vector to measure angle between
+-- @param b vector to measure angle between
 -- @return distance
-function vec3:anglebetween(v)
-	local a1 = self:normalizenew()
-	local b1 = self:normalizenew()
-	return acos(a1:dot(b1))
+function vec2.anglebetween(a, b)
+	local am = a:length()
+	local bm = b:length()
+	return acos(a:dot(b) / (am * bm))
 end
 
 function vec3:__tostring()

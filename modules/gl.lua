@@ -1024,6 +1024,7 @@ enum {
  GL_COMPRESSED_SLUMINANCE          = 0x8C4A,
  GL_COMPRESSED_SLUMINANCE_ALPHA    = 0x8C4B,
 
+
  
 GL_FRAMEBUFFER_COMPLETE           = 0x8CD5,
  GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT = 0x8CD6,
@@ -1050,6 +1051,10 @@ GL_FRAMEBUFFER_COMPLETE           = 0x8CD5,
  GL_DEPTH_ATTACHMENT               = 0x8D00,
  GL_STENCIL_ATTACHMENT             = 0x8D20,
  GL_FRAMEBUFFER                    = 0x8D40,
+ GL_RENDERBUFFER                   = 0x8D41,
+ GL_RENDERBUFFER_WIDTH             = 0x8D42,
+ GL_RENDERBUFFER_HEIGHT            = 0x8D43,
+ GL_RENDERBUFFER_INTERNAL_FORMAT   = 0x8D44
 };
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
@@ -4413,8 +4418,12 @@ function gl.MultMatrix(t)
 end
 
 function gl.Normal(x, y, z)
-	if type(x) == "table" then x, y, z = unpack(x) end
-	gl.Vertex3d(x, y, z)
+	if type(x) == "userdata" or type(x) == "cdata" then
+		x, y, z = x:unpack()
+	elseif type(x) == "table" then 
+		x, y, z = unpack(x) 
+	end
+	gl.Normal3d(x, y, z or 0)
 end
 
 function gl.PixelStore(p, v) gl.PixelStoref(p, v) end
