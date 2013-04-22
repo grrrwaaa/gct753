@@ -33,6 +33,8 @@ local antenna2 = vec2(ant_sensor_size, -ant_sensor_size)
 
 function food_reset()
 	food:set(0)
+	totalfood = 0
+	
 	for i = 1, 40 do
 		local x, y = math.random(dimx), math.random(dimy)
 		local size = 2
@@ -68,6 +70,7 @@ food_reset()
 food_phero_reset()
 agents_reset()
 
+-- steer by pheromone concentration:
 function sniff_agent_direction(a, phero)
 	-- where are my antenna?
 	-- rotate & translate into agent view:
@@ -93,7 +96,6 @@ function sniff_agent_direction(a, phero)
 end
 
 function update()
-	
 	-- food_pheromone trails gradually decay:
 	food_phero:scale(phero_decay)
 	nest_phero:scale(phero_decay)
@@ -111,6 +113,7 @@ function update()
 			a.direction = math.random() * 2 * math.pi
 		end
 		
+		-- change of goal / direction?
 		if a.food > 0 then
 			-- are we there yet?
 			if a.pos:distance(nest) < nestsize then
@@ -118,6 +121,15 @@ function update()
 				nestfood = nestfood + a.food
 				a.food = 0
 				a.direction = a.direction + math.pi
+			else
+				-- look for nest:
+				sniff_agent_direction(a, nest_phero)
+				
+				-- say "I came from food"
+				food_phero:splat(a.food, a.pos.x, a.pos.y)
+				
+				-- my own food decays too:
+				a.food = a.food * phero_decay
 			end
 		else
 			-- found food??
@@ -127,43 +139,12 @@ function update()
 				food:splat(-ant_capacity, a.pos.x, a.pos.y)
 				a.food = a.food + ant_capacity
 				a.direction = a.direction + math.pi
-			end
-		end	
-	end
-	
-	for i, a in ipairs(agents) do	
-		if a.food > 0 then
-			-- look for nest:
-			sniff_agent_direction(a, nest_phero)
-			
-			-- say "I came from food"
-			food_phero:splat(a.food, a.pos.x, a.pos.y)
-			
-			-- are we there yet?
-			if a.pos:distance(nest) < nestsize then
-				-- drop food and search again:
-				a.food = 0
-				a.pos:set(nest)
-				a.direction = math.random() * 2 * math.pi
-			end
-			
-			-- my own food decays too:
-			a.food = a.food * phero_decay
-		else
-			-- look for food:
-			sniff_agent_direction(a, food_phero)
-			
-			-- say "I came from the nest":
-			nest_phero:splat(ant_capacity, a.pos.x, a.pos.y)
-			
-			-- found food??
-			local f = food:sample(a.pos.x, a.pos.y)
-			if f > 0 then
-				-- remove it:
-				food:splat(-ant_capacity, a.pos.x, a.pos.y)
-				a.food = a.food + ant_capacity
-				--a.direction = a.direction + math.pi
-				a.direction = math.random() * 2 * math.pi
+			else
+				-- look for food:
+				sniff_agent_direction(a, food_phero)
+				
+				-- say "I came from the nest":
+				nest_phero:splat(ant_capacity, a.pos.x, a.pos.y)
 			end
 		end		
 	end
@@ -197,16 +178,14 @@ function draw()
 				draw2D.color(1, a.food / ant_capacity, 0.5)
 				draw2D.ellipse(0, 0, 0.006)
 				draw2D.ellipse(-0.005, 0, 0.006)
-				draw2D.ellipse(-0.01, 0, 0.006)
-				
+				draw2D.ellipse(-0.01, 0, 0.006)				
 				
 				-- sensors:
 				draw2D.line(0, 0, antenna1.x, antenna1.y)
 				draw2D.line(0, 0, antenna2.x, antenna2.y)
 			draw2D.pop()
 		end
-	end
-	
+	end	
 end	
 
 function keydown(k)
