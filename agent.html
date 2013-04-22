@@ -105,7 +105,11 @@
 <p>Instead it uses chemical memory to detect sugar concentration <em>gradient</em>, that is, the differential of concentration at the current location compared to how it was just a few moments ago. This gradient tells the E. coli whether things are getting better or worse, which can be used to select between the swimming or tumbling patterns. </p>
 <p>With just a few tuning parameters, this can lead to a very rapid success in finding the higher concentrations of sugar (assuming the environment is smoothly varying). </p>
 <p>A variety of other <em>taxes</em> worth exploring can be found on the <a href="http://en.wikipedia.org/wiki/Taxis#Aerotaxis">wikipedia page</a>. Note how chemotaxis (and other taxes) can be divided into positive (attractive) and negative (repulsive) characters, just like forces (directly seen in steering forces). This is closely related to the concepts of positive and negative feedback. </p>
-<h3>Ant colonies (stigmergy)</h3>
+<h3>Stigmergy</h3>
+<p><em>Stigmergy</em> is a mechanism of indirect coordination between agents by leaving traces in the environment as a mode of stimulating future action by agents in the same location. For example, ants (and some other social insects) lay down a trace of pheromones when returning to the nest while carrying food. Future ants are attracted to follow these trails, increasing the likelihood of encountering food. This environmental marking constitutes a shared external memory (without needing a map). However if the food source is exhausted, the pheromone trails will gradually fade away, leading to new foraging behavior. </p>
+<p>Traces evidently lead to self-reinforcement and self-organization: complex and seeminly intelligent structures without global planning or control. Since the term stigmergy focuses on self-reinforcing, task-oriented signaling, E. O. Wilson suggested a more general term <em>sematectonic communication</em> for environmental communication that is not necessarily task-oriented.</p>
+<p>Stigmergy has become a key concept in the field of <a href="http://en.wikipedia.org/wiki/Swarm_intelligence">swarm intelligence</a>, and the method of <em>ant colony optimization</em> in particular. In ACO, the landscape is a parameter space (possibly much larger than two or three dimensions) in which populations of virtual agents leave pheromone trails to high-scoring solutions.</p>
+<p>Territory marking.</p>
 <h3>PSO</h3>
 <h2>Action selection systems</h2>
 <h3>Subsumption architecture</h3>
