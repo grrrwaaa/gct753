@@ -110,10 +110,7 @@ Traces evidently lead to self-reinforcement and self-organization: complex and s
 
 Stigmergy has become a key concept in the field of [swarm intelligence](http://en.wikipedia.org/wiki/Swarm_intelligence), and the method of *ant colony optimization* in particular. In ACO, the landscape is a parameter space (possibly much larger than two or three dimensions) in which populations of virtual agents leave pheromone trails to high-scoring solutions.
 
-
-Territory marking.
-
-### PSO
+Related environmental communication strategies include social nest construction (e.g. termites) and territory marking.
 
 ## Action selection systems
 
