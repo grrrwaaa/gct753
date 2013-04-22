@@ -174,12 +174,11 @@ function draw()
 			draw2D.push()
 				draw2D.translate(a.pos.x, a.pos.y)
 				draw2D.rotate(a.direction)
-				
+				-- body
 				draw2D.color(1, a.food / ant_capacity, 0.5)
 				draw2D.ellipse(0, 0, 0.006)
 				draw2D.ellipse(-0.005, 0, 0.006)
-				draw2D.ellipse(-0.01, 0, 0.006)				
-				
+				draw2D.ellipse(-0.01, 0, 0.006)								
 				-- sensors:
 				draw2D.line(0, 0, antenna1.x, antenna1.y)
 				draw2D.line(0, 0, antenna2.x, antenna2.y)
