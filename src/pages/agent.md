@@ -124,8 +124,6 @@ The neuron, von Neumann, biological & artificial plasticity, artificial neural n
 
 ### Complex adaptive systems
 
-### Game theory
-
 # Assignment 2: Agent Systems
 
 The second assignment is to construct a new agent-based system. You can start from one of the existing systems we have looked at and modify it, or design and create a new one to explore an idea you have. The agents should implement local interactions using one or both of:
@@ -145,7 +143,6 @@ You should also try adding at least one of the following:
 - Birth and death
 - Field dynamics (a field that changes over time)
 - Keyboard and mouse interaction
-- Sound
 
 You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, variations etc. If you end up with more than one system that is interesting, you can submit them all. If you had an idea that seemed interesting but was difficult to implement or did not lead to interesting results, submit that too (with an explanation of why you think it did not work or did not do what you expected); this is just as important a part of research.
 
