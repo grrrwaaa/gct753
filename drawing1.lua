@@ -2,15 +2,17 @@ local draw2D = require "draw2D"
 local win = require "window"
 local vec2 = require "vec2"
 
-win:setdim(500, 500)
+win:setdim(400, 400)
 
 local pi = math.pi
-math.randomseed(os.time())
+--math.randomseed(os.time())
 
 -- the location that agents wish to reach:
 local target = vec2(0.5, 0.5)
-local maxforce = 0.0001
-local maxspeed = 0.01
+local maxforce = 0.00001
+local maxspeed = 0.001
+local viewrange = 0.2
+local viewangle = math.pi * 0.5
 
 local all_agents = {}
 
@@ -18,6 +20,8 @@ function draw_agent_boxily(a)
 	draw2D.push()
 		draw2D.translate(a.pos.x, a.pos.y)
 		draw2D.rotate(a.direction)
+		draw2D.color(1, 1, 1, 0.25)
+		draw2D.arc(0, 0, -viewangle, viewangle, viewrange)		
 		draw2D.scale(a.scale, a.scale)
 		
 		draw2D.color(1, 0., 0.5)
@@ -30,6 +34,8 @@ function draw_agent_blobbily(a)
 	draw2D.push()
 		draw2D.translate(a.pos.x, a.pos.y)
 		draw2D.rotate(a.direction)
+		draw2D.color(1, 1, 1, 0.25)
+		draw2D.arc(0, 0, -viewangle, viewangle, viewrange)		
 		draw2D.scale(a.scale, a.scale)
 		
 		draw2D.color(1, 0.5, 0)
@@ -61,27 +67,75 @@ function make_agent()
 	all_agents[#all_agents + 1] = agent
 end
 
-for i = 1, 500 do
+for i = 1, 100 do
 	make_agent()
 end
 
 
 function update()
 	for i, a in ipairs(all_agents) do	
-		-- update agent a:		
-		-- calculate desired velocity
-		-- (position of target with respect to the agent):
-		local rel = target - a.pos
-		-- this is the ideal new velocity:
-		local want = rel
-		
-		-- the new steering force:
-		-- desired velocity minus current velocity
-		-- (scaled down so that movement is gradual)
-		local F = (want - a.vel) * 0.001
+		-- make a place to store observed neigbors:
+		local observations = {}
+		for j, b in ipairs(all_agents) do
+			if i == j then
+				-- skip this one, we're looking at ourselves!
+			else
+				-- compare a and b:
+				-- get relative vector:
+				local rel = b.pos - a.pos
+				-- use Pythagoras to get distance:
+				local dist = rel:length()
+				-- is this close enough?
+				if dist < viewrange then
+					-- convert my direction to a vector:
+					local myvec = vec2(
+						math.cos(a.direction),
+						math.sin(a.direction)
+					)
+					local relu = rel:normalize()
+					local angle = math.acos(relu:dot(myvec))
+					
+					if math.abs(angle) < viewangle then
+						-- there was an observation!
+						local n = #observations + 1
+						observations[n] = b
+					end
+				end
+			end
+		end
+		-- calculate steering force based on visible neighbors:
+		-- steering force
+		local F = vec2()
+		if #observations == 0 then
+			-- no neighbors, wander randomly:
+			F:randomize():mul(0.1)
+		else
+			local sum = vec2()
+			local sepforce = vec2()
+			local sumvel = vec2()
+			-- for each observed neighbor:
+			for i, b in ipairs(observations) do
+				sum = sum + b.pos
+				sumvel = sumvel + b.vel				
+				-- compute the separating force for this combo:
+				local rel = b.pos - a.pos
+				local len = rel:length()
+				local scaled = -0.01 * rel / (len * len)
+				-- add to total separating force:
+				sepforce = sepforce + scaled
+			end
+			-- get center of gravity:
+			local avg = sum / #observations
+			local avgvel = sumvel / #observations
+			local alignforce = avgvel * 100			
+			-- get relative direction to it:
+			local avgrel = avg - a.pos
+			-- add up all our forces:
+			F = avgrel + sepforce + alignforce
+		end
+	
 		-- limit force (magnitude):
 		F:limit(maxforce)
-		
 		-- calculate acceleration:
 		-- F = m*a
 		-- thus a = F / m
@@ -103,22 +157,6 @@ function update()
 		-- boundary check
 		a.pos:mod(1)
 		
-		-- (commented out for now, because it works OK without boundary check if the agents are target-seeking)
-		--[[
-		if a.x < 0 then
-			a.x = 0
-		elseif a.x > 1 then
-			--a.direction = a.direction + pi
-			--a.x = a.x % 1
-			a.x = 1
-		elseif a.y < 0 then
-			a.y = 0
-		elseif a.y > 1 then
-			--a.direction = 2 * pi - a.direction
-			--a.y = a.y % 1		
-			a.y = 1
-		end	
-		--]]
 	end
 end
 

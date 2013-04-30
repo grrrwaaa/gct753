@@ -3,7 +3,9 @@
 local sqrt = math.sqrt
 local sin, cos = math.sin, math.cos
 local atan2 = math.atan2
+local acos = math.acos
 local random = math.random
+local min, max = math.min, math.max
 local pi = math.pi
 local twopi = pi * 2
 local format = string.format
@@ -239,6 +241,80 @@ function vec2.modnew(a, b)
 end
 vec2.__mod = vec2.modnew
 
+--- Calculate minimum of elements (in-place)
+-- @param v number or vector limit
+-- @return self
+function vec2:min(v)
+	if type(v) == "number" then
+		self.x = min(self.x, v)
+		self.y = min(self.y, v)
+		return self
+	else
+		self.x = min(self.x, v.x)
+		self.y = min(self.y, v.y)
+		return self
+	end
+end
+
+--- Calculate minimum of elements to create a new vector
+-- @param a vector or number
+-- @param b vector or number
+-- @return new vector
+function vec2.minnew(a, b)
+	if type(b) == "number" then
+		return new(min(a.x, b), min(a.y, b))
+	elseif type(a) == "number" then
+		return new(min(a, b.x), min(a, b.y))
+	else
+		return new(min(a.x, b.x), min(a.y, b.y)) 
+	end
+end
+
+--- Calculate maximum of elements (in-place)
+-- @param v number or vector limit
+-- @return self
+function vec2:max(v)
+	if type(v) == "number" then
+		self.x = max(self.x, v)
+		self.y = max(self.y, v)
+		return self
+	else
+		self.x = max(self.x, v.x)
+		self.y = max(self.y, v.y)
+		return self
+	end
+end
+
+--- Calculate maximum of elements to create a new vector
+-- @param a vector or number
+-- @param b vector or number
+-- @return new vector
+function vec2.maxnew(a, b)
+	if type(b) == "number" then
+		return new(max(a.x, b), max(a.y, b))
+	elseif type(a) == "number" then
+		return new(max(a, b.x), max(a, b.y))
+	else
+		return new(max(a.x, b.x), max(a.y, b.y)) 
+	end
+end
+
+--- Constrain vector to range (in-place)
+-- @param lo vector or number minimum value 
+-- @param hi vector or number minimum value 
+-- @return self
+function vec2:clip(lo, hi)
+	return self:max(lo):min(hi)
+end
+
+--- Constrain vector to range to create a new vector
+-- @param lo vector or number minimum value 
+-- @param hi vector or number minimum value 
+-- @return new vector
+function vec2:clip(lo, hi)
+	return self:maxnew(lo):min(hi)
+end
+
 --- Determine shortest relative vector in a toroidal space
 -- @param dimx width of space (optional, default 1)
 -- @param dimy height of space (optional, default dimx)
@@ -385,8 +461,8 @@ function vec2:rotate(angle)
 	local c = cos(angle)
 	local s = sin(angle)
 	local x, y = self.x, self.y
-	self.x = v.x * c + v.y * s
-	self.y = v.y * c - v.x * s
+	self.x = x * c - y * s
+	self.y = y * c + x * s
 	return self
 end
 
@@ -397,8 +473,8 @@ function vec2:rotatenew(angle)
 	local c = cos(angle)
 	local s = sin(angle)
 	return new(
-		self.x * c + self.y * s,
-		self.y * c - self.x * s
+		self.x * c - self.y * s,
+		self.y * c + self.x * s
 	)
 end
 
@@ -458,10 +534,13 @@ end
 
 --- The angle between two vectors (two points)
 -- (The relative angle from self to v)
--- @param v vector to measure angle between to
+-- @param a vector to measure angle between
+-- @param b vector to measure angle between
 -- @return distance
-function vec2:anglebetween(v)
-	return (v - self):angle()
+function vec2.anglebetween(a, b)
+	local am = a:length()
+	local bm = b:length()
+	return acos(a:dot(b) / (am * bm))
 end
 
 function vec2:__tostring()
