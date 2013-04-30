@@ -44,6 +44,13 @@ function vec3.copy(v)
 	return new(v.x, v.y, v.z)
 end
 
+--- Create a copy of a vec2 vector:
+-- @param v vec3
+-- @param z number
+function vec3.fromvec2(v, z)
+	return new(v.x, v.y, z or 0)
+end
+
 --- Set the components of a vector:
 -- @param x component
 -- @param y component
