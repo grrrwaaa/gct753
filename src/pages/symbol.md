@@ -20,27 +20,32 @@ A rewriting system defines rules for the transformation of structures, typically
 - A set (P) of *rewriting* or *production rules* to specify how each symbol is transformed to other symbols, at each production step. A rule converts a *predecessor* symbol into *successor* symbols.
 - A process of applying these rules in parallel, step by step until no more productions can be applied.
 
-For example, if the alphabet comprises ```{ a, b }```, the rules include ```a -> aba``` and ```abb -> nil```, and the start symbol is ```a``` then a sequence of productions could proceed as follows:
+For example, if the alphabet comprises ```{ "B", "F", "+", "-", "[", "]" }```, the rules include ```F -> FF``` and ```B -> F[-B]+B```, and the start symbol is ```B``` then a sequence of productions could proceed as follows:
 
 ```lua
-	a		-- apply rule 1
-	aba		-- apply rule 1 (twice)
-	abbab	-- apply rule 2, and rule 1
-	abb		-- apply rule 2
-	nil		-- no more productions applicable
+	B						
+	-- apply rule 1:
+	F[-B]+B					
+	-- apply rule 1 (twice), and rule 2:
+	FF[-F[-B]+B]+F[-B]+B		
+	-- apply rule 1 three times, rule 1 four times:
+	FFFF[-FF[-F[-B]+B]+F[-B]+B]+FF[-F[-B]+B]+F[-B]+B		
+	-- etc.
 ```
+
+Notice that any symbol that is not a predecessor of a production rule is passed through unchanged (it is not removed). 
+
+### Turtle graphics
 
 One of the simplest ways to use rewriting sytems for art and design is to interpret the produced strings as instructions for another program. The classic example is using them as instructions for a "turtle graphics" interpreter. 
 
 For example, using the following system:
 
 ```lua
-	-- possible symbols:
-	alphabet = { "F", "+", "-" }
 	-- just one rule: replace "F" with "F+F--F+F"
-	rule["F"] = "F+F--F+F"
+	rules["F"] = "F+F--F+F"
 	-- start with:
-	start = "F"
+	S = "F"
 ```
 
 If we interpret the "F" symbol to mean "move forward", and the "+" and "-" symbols to mean turn left and right by 60 degrees, then each successive application of this rule generates a successive iteration of the Koch curve fractal:
@@ -49,27 +54,61 @@ If we interpret the "F" symbol to mean "move forward", and the "+" and "-" symbo
 
 ### Bracketed systems
 
-By adding push ```"["``` and pop ```"]"``` symbols to save/restore graphics state (position, orientation etc.), the graphics interpreter can easily render branched structures such as trees and ferns.
+By adding push ```"["``` and pop ```"]"``` symbols to save/restore graphics state (position, orientation etc.), the graphics interpreter can render branched structures such as trees and ferns. The result is further improved by reducing the length of each line according to the bracketed recursion depth.
 
-### Stochastic systems
+### Context-sensitive formal languages
 
-### Circuit systems
+An alphabet and production rules specify a formal language. In 1959 Noam Chomsky identified a hierarchy of four types of formal languages. They rest on the concept of *terminal* and *non-terminal* symbols, where a symbol is terminal if it cannot be further rewritten. Nonterminal symbols, which can be further rewritten, are normally indicated using upper case letters (A, B, C) and terminal symbols by lowercase letters (a, b, c). 
+
+Each set in the hierarchy contains those above it:
+
+1. **Regular (Type-3):** the predecessors of rules are a single nonterminal, the successors are a single terminal possibly followed by a single nonterminal, e.g. A -> Ab or A -> B.
+2. **Context-free (Type-2):** the predecessors are a single nonterminal, and the sucessors can be any string of terminals and nonterminals. 
+3. **Context-sensitive (Type-1):** the predecessors contain multiple symbols (including at least one nonterminal), and the sucessor is a copy with the nonterminal replaced by an arbitrary string of nonterminals. E.g. aBc -> aBbc, Ab -> aaab, abcD -> abcF, etc. They are therefore akin to Type-2 rules except with additional conditions regarding neighboring symbols (which remain unchanged).
+4. **Unrestricted (Type-0):** predecessors and successors can both be any finite sequence of symbols without restriction.
+
+So far we have considered only regular and context-free formal languages, since we have been restricted to single nonterminal symbols on the left-hand side (predecessors). Clearly, as a biological model (where the string is the phenotype and the production rules are genotype), our system should be context sensitive. Context would imply environmental conditions as well as neighbor cell signaling. 
+
+In order to support context-sensitive languages, we will need more powerful pattern-matching capabilities, and need extra care to handle ambiguous situations. E.g. we must be careful to consider longer patterns before shorter ones, to ensure that e.g. ```aba``` matches a rule ```aba -> abba``` rather than the rule ```a -> b```. That is, our set of rules must now form a list (rather than a set), which is ordered by *priority*. 
 
 ### Parametric systems
 
-### Context-sensitive systems
+A **parametric** L-system embeds parameters (such as line length and rotation angle) into the symbols, and sucessors may modify these parameter values. For example, the rule ```F(x) -> F(x*2)``` transforms a forward step into a forward step of twice the length.
 
-Signals and regulation.
+A **conditional parametric** L-system extends this to incorporate conditions, such that the subsitution only occurs if the condition is true. For example, ```F(x : x < 10) -> F(x*2)``` transforms a forward step into a forward step of twice the length, only if the initial length was less than 10. 
 
-### Shape grammars
+In both cases, our pattern matching system now needs to be able to handle classes of symbols (or at least, ignore anything between parentheses). 
 
-### Non-symbolic fractals
+### Stochastic systems
 
-Fractal structures do not need to use symbolic rewriting. [Here](https://www.youtube.com/watch?v=FEnI_JPL6I0) is an example of a fractal tree structure created through simple video feedback.
+So far our systems are deterministic, and will always reproduce the same results after a fixed number of steps. To create a more natural-looking result, we can introduce non-determinism:
 
-### The evo-devo revolution
+- Into the interpreter (by adding small deviations to the turtle, for example). This will remove the stark repetition, but still preserves topological symmetry.
+- Into the production rules. This can generate new topologies. 
 
-Cell signaling and regulatory networks.
+A **stochastic** L-system does the latter: for a given non-terminal predecessor, there may be several successor strings which are selected at random (possibly according to weights). Or, if the rules are listed by priority, each rule can have a probablity of being ignored.
+
+## Evo-Devo
+
+L-Systems are difficult to predict and control: it is difficult to infer from an L-system definition and interpreter what the results will be, since (like cellular systems) the interactions are local but the consequences are global. Note that nature faces the same challenge: it cannot predict what changes to a genotype will result is viable or better phenotypes, and must proceed by trial and error (within the scope offered by development). Biologists exploring the mechanisms of development and generation of variation within it, and the relationship with evolutionary selection, work within the relatively new discipline of *evolutionary development* or "evo-devo". 
+
+The role of development in the generation of variation is equally important for artificial evolution, however it has been less thoroughly explored. Two lessons from the biologists:
+
+- Development is not just a compact representation of a phenotype, but can be crucial to the generation of complex systems.
+- The recent discovery that widely different species re-use the same developmental genes and mechanisms. This perhaps suggests that finding a good set of re-usable mechanisms for long-term evolvability (continuous generation of selectable novelty) is not an easy task. 
+- Development is not a one-way process, under command of the genome: factors in the environment can activate or inhibit parts of the genome (and parts of a genome can activate and inhibit other parts) in a complex *regulatory network*, and the state of the environment can affect the results of actions of the genome. In some cases the genome itself may not even be fixed. In part this environment is also inherited from an organisms' parents. 
+- Development is ultimately working within the limits of a physical, chemical system, with entropic tendencies, self-organizing potential, noisy behavior, etc.
+
+Artificial Evo-Devo systems could be categorized as follows:
+
+- The developmental process is hand-written, and evolution only works on parameters for this system. This is amounts to a simple genotype-phenotype map. 
+- Mechanims of development are encoded in the genotype, but in a fixed sequence (a fixed order with a fixed number of applications). This is suitable for evolving optimal L-systems for a given pattern, for example.
+- The genotype encodes the sequence of applications of hand-written development mechanisms, as used for example in genetic programming.
+- Both the basic mechanisms and the sequence of applications are encoded in the genotype and are therefore subject to evolution. Obviously the space of exploration is much larger and less predictable, but the challenge of finding suitable primitives and representations is difficult.
+
+Whether it is parameters, sequence, mechanisms (or several) that are to be evolved, they must all be represented in the genome in forms that can be inherited, with additional mechanisms for generating variation (e.g. mutations). That is, each one of these elements must be represented symbolically as data (e.g. as strings, trees or matrices of symbols, which may be as low-level as binary form or as high-level as readable text). 
+
+----
 
 ## Artificial chemistries
 
