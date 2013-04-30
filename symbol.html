@@ -34,6 +34,10 @@
 		
 	</div>
 	<div class="section"><h1>Symbol systems</h1>
+<h2>Development and L-systems</h2>
+<p>The structure of a multi-cellular organisms develops in a gradual process from a single fertilized cell (the <em>zygote</em>) through progressive steps of cell duplication and specialization in a process called <em>development</em>; an active area of scientific research today. We know that each cell responds to chemical signals from its neighbors and other environmental conditions in order to know how to <em>differentiate</em> (to become a specific kind of cell in the body), according to the processes of the genome. The zygote does not contain a blueprint for the final organism, simply genotypic instructions for responding to environmental stimuli, which happen (in most cases) to produce the fully developed phenotype. </p>
+<p>A compact developmental representation can result in a more complex developed organism by relying on the self-organizing tendencies of the chemical substrate (such as the chemical pattern formation we saw with reaction-diffusion systems), the creative re-use of instructions (leading to the <em>modularity</em> and <em>symmetry</em> widely found in biology), and careful control over the ordering, when and for how long particular instructions operate (<em>heterochrony</em>). Development is clearly <em>parallel</em>, <em>decentralized</em>, granting some <em>robustness</em>, and yet it is also <em>context dependent</em>. It is also <em>self-limiting</em>, such that most developmental processes halt after the embryonic phase (though some may continue through the organism&#39;s lifetime, such as the <em>regeneration</em> of lost limbs).</p>
+<p>In 1968 biologist Astrid Lindenmeyer proposed to model several aspects of developmental systems (cell division, cell differentiation and cell death) using rewriting systems on symbolic strings. The analogy is that each symbol represents a cell in a particular state, and the rules of transformation represent the processes of differentiating from one state to another, dividing into two cells, or of programmed cell death.</p>
 <h2>Rewriting systems</h2>
 <p>A rewriting system defines rules for the transformation of structures, typically strings of symbols. It is closely related to the formal notion of grammar. A system comprises:</p>
 <ul>
@@ -48,10 +52,6 @@
     abbab    <span class="comment">-- apply rule 2, and rule 1</span>
     abb        <span class="comment">-- apply rule 2</span>
     <span class="keyword">nil</span>        <span class="comment">-- no more productions applicable</span></code></pre>
-<h3>Development and L-systems</h3>
-<p>The structure of a multi-cellular organisms develops in a gradual process from a single fertilized cell (the <em>zygote</em>) through progressive steps of cell duplication and specialization in a process called <em>development</em>; an active area of scientific research today. We know that each cell responds to chemical signals from its neighbors and other environmental conditions in order to know how to <em>differentiate</em> (to become a specific kind of cell in the body), according to the processes of the genome. The zygote does not contain a blueprint for the final organism, simply genotypic instructions for responding to environmental stimuli, which happen (in most cases) to produce the fully developed phenotype. </p>
-<p>A compact developmental representation can result in a more complex developed organism by relying on the self-organizing tendencies of the chemical substrate (such as the chemical pattern formation we saw with reaction-diffusion systems), the creative re-use of instructions (leading to the <em>modularity</em> and <em>symmetry</em> widely found in biology), and careful control over the ordering, when and for how long particular instructions operate (<em>heterochrony</em>). Development is clearly <em>parallel</em>, <em>decentralized</em>, granting some <em>robustness</em>, and yet it is also <em>context dependent</em>. It is also <em>self-limiting</em>, such that most developmental processes halt after the embryonic phase (though some may continue through the organism&#39;s lifetime, such as the <em>regeneration</em> of lost limbs).</p>
-<p>In 1968 biologist Astrid Lindenmeyer proposed to model several aspects of developmental systems (cell division, cell differentiation and cell death) using rewriting systems. The analogy was that each symbol represents a cell in a particular state, and the rules represent the processes of differentiating from one state to another, dividing into two cells, or of programmed cell death; the start symbol represents the zygote.</p>
 <p>One of the simplest ways to use rewriting sytems for art and design is to interpret the produced strings as instructions for another program. The classic example is using them as instructions for a &quot;turtle graphics&quot; interpreter. </p>
 <p>For example, using the following system:</p>
 <pre><code class="lang-lua">    <span class="comment">-- possible symbols:</span>
@@ -62,12 +62,12 @@
     start = <span class="string">"F"</span></code></pre>
 <p>If we interpret the &quot;F&quot; symbol to mean &quot;move forward&quot;, and the &quot;+&quot; and &quot;-&quot; symbols to mean turn left and right by 60 degrees, then each successive application of this rule generates a successive iteration of the Koch curve fractal:</p>
 <p><img src="img/koch.jpg" alt="Iterations of the Koch curve fractal"></p>
-<h4>Bracketed systems</h4>
+<h3>Bracketed systems</h3>
 <p>By adding push <code>&quot;[&quot;</code> and pop <code>&quot;]&quot;</code> symbols to save/restore graphics state (position, orientation etc.), the graphics interpreter can easily render branched structures such as trees and ferns.</p>
-<h4>Stochastic systems</h4>
-<h4>Circuit systems</h4>
-<h4>Parametric systems</h4>
-<h4>Context-sensitive systems</h4>
+<h3>Stochastic systems</h3>
+<h3>Circuit systems</h3>
+<h3>Parametric systems</h3>
+<h3>Context-sensitive systems</h3>
 <p>Signals and regulation.</p>
 <h3>Shape grammars</h3>
 <h3>Non-symbolic fractals</h3>
@@ -80,6 +80,7 @@
 <h2>Programmable media and byte-code ecosystems</h2>
 <p>Corewars</p>
 <h3>Tom Ray&#39;s Tierra</h3>
+<p><a href="http://www.youtube.com/watch?v=Wl5rRGVD0QI">Tom Ray: the evolutionary biologist who created evolution in the CPU</a></p>
 <h3>Viruses</h3>
 <h2>Immune systems, shape spaces</h2>
 <p>Natural and artificial immunity, algorithms, shape spaces.</p>

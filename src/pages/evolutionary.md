@@ -92,6 +92,7 @@ Artificial co-evolution, where one population represents the candidate products,
 
 ![Karl Sims](http://www.karlsims.com/papers/ksf11.gif)
 See [Karl Sims' Genetic Images](http://www.karlsims.com/genetic-images.html).
+[1991 Siggraph Paper](http://www.karlsims.com/papers/siggraph91.html)
 
 Karl Sims
 Scott Draves

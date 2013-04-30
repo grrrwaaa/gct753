@@ -3,6 +3,14 @@ title: Symbol systems
 
 # Symbol systems
 
+## Development and L-systems
+
+The structure of a multi-cellular organisms develops in a gradual process from a single fertilized cell (the *zygote*) through progressive steps of cell duplication and specialization in a process called *development*; an active area of scientific research today. We know that each cell responds to chemical signals from its neighbors and other environmental conditions in order to know how to *differentiate* (to become a specific kind of cell in the body), according to the processes of the genome. The zygote does not contain a blueprint for the final organism, simply genotypic instructions for responding to environmental stimuli, which happen (in most cases) to produce the fully developed phenotype. 
+
+A compact developmental representation can result in a more complex developed organism by relying on the self-organizing tendencies of the chemical substrate (such as the chemical pattern formation we saw with reaction-diffusion systems), the creative re-use of instructions (leading to the *modularity* and *symmetry* widely found in biology), and careful control over the ordering, when and for how long particular instructions operate (*heterochrony*). Development is clearly *parallel*, *decentralized*, granting some *robustness*, and yet it is also *context dependent*. It is also *self-limiting*, such that most developmental processes halt after the embryonic phase (though some may continue through the organism's lifetime, such as the *regeneration* of lost limbs).
+
+In 1968 biologist Astrid Lindenmeyer proposed to model several aspects of developmental systems (cell division, cell differentiation and cell death) using rewriting systems on symbolic strings. The analogy is that each symbol represents a cell in a particular state, and the rules of transformation represent the processes of differentiating from one state to another, dividing into two cells, or of programmed cell death.
+
 ## Rewriting systems
 
 A rewriting system defines rules for the transformation of structures, typically strings of symbols. It is closely related to the formal notion of grammar. A system comprises:
@@ -22,14 +30,6 @@ For example, if the alphabet comprises ```{ a, b }```, the rules include ```a ->
 	nil		-- no more productions applicable
 ```
 
-### Development and L-systems
-
-The structure of a multi-cellular organisms develops in a gradual process from a single fertilized cell (the *zygote*) through progressive steps of cell duplication and specialization in a process called *development*; an active area of scientific research today. We know that each cell responds to chemical signals from its neighbors and other environmental conditions in order to know how to *differentiate* (to become a specific kind of cell in the body), according to the processes of the genome. The zygote does not contain a blueprint for the final organism, simply genotypic instructions for responding to environmental stimuli, which happen (in most cases) to produce the fully developed phenotype. 
-
-A compact developmental representation can result in a more complex developed organism by relying on the self-organizing tendencies of the chemical substrate (such as the chemical pattern formation we saw with reaction-diffusion systems), the creative re-use of instructions (leading to the *modularity* and *symmetry* widely found in biology), and careful control over the ordering, when and for how long particular instructions operate (*heterochrony*). Development is clearly *parallel*, *decentralized*, granting some *robustness*, and yet it is also *context dependent*. It is also *self-limiting*, such that most developmental processes halt after the embryonic phase (though some may continue through the organism's lifetime, such as the *regeneration* of lost limbs).
-
-In 1968 biologist Astrid Lindenmeyer proposed to model several aspects of developmental systems (cell division, cell differentiation and cell death) using rewriting systems. The analogy was that each symbol represents a cell in a particular state, and the rules represent the processes of differentiating from one state to another, dividing into two cells, or of programmed cell death; the start symbol represents the zygote.
-
 One of the simplest ways to use rewriting sytems for art and design is to interpret the produced strings as instructions for another program. The classic example is using them as instructions for a "turtle graphics" interpreter. 
 
 For example, using the following system:
@@ -47,17 +47,17 @@ If we interpret the "F" symbol to mean "move forward", and the "+" and "-" symbo
 
 ![Iterations of the Koch curve fractal](img/koch.jpg)
 
-#### Bracketed systems
+### Bracketed systems
 
 By adding push ```"["``` and pop ```"]"``` symbols to save/restore graphics state (position, orientation etc.), the graphics interpreter can easily render branched structures such as trees and ferns.
 
-#### Stochastic systems
+### Stochastic systems
 
-#### Circuit systems
+### Circuit systems
 
-#### Parametric systems
+### Parametric systems
 
-#### Context-sensitive systems
+### Context-sensitive systems
 
 Signals and regulation.
 
@@ -82,6 +82,8 @@ Autonomous structure and self-organization, emergence of life.
 Corewars
 
 ### Tom Ray's Tierra 
+
+[Tom Ray: the evolutionary biologist who created evolution in the CPU](http://www.youtube.com/watch?v=Wl5rRGVD0QI)
 
 ### Viruses
 
