@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Lua</title>
+    
+<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
+  
+<script src="js/jquery.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/main.js" type="text/javascript"></script>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+<body>
+<div id="wrapper">
+	
+	<div class="header">
+		<h1>GCT 753</h1>
+		<a href="index.html">Overview</a><br/>
+		<a href="software.html">Software</a><br/>
+		<a href="lua.html">Lua Tutorial</a><br/>
+		&gt;&gt; <a href="https://github.com/grrrwaaa/gct753">GitHub</a><br/>
+		&gt;&gt; <a href="http://grrrwaaa.github.com/gct753/docs/reference.html">Reference</a><br/>
+		<br>
+		<a href="introduction.html">Themes</a><br/>
+		<a href="artificial_life.html">Artificial Life</a><br/>
+		<a href="generative_art.html">Generative Art</a><br/>
+		<a href="cellular.html">Cellular Systems</a><br/>
+		<a href="agent.html">Agent Systems</a><br/>
+		<a href="symbol.html">Symbol Systems</a><br/>
+		<a href="evolutionary.html">Evolutionary Systems</a><br/>
+		
+	</div>
+	<div class="section"><h1>Lua 5.1 quick tutorial</h1>
+<p>Commonly compared to: JavaScript, Ruby, Python, Scheme. Notable characteristics:</p>
+<ul>
+<li>Fast (used widely for game engines). <a href="www.luajit.org">LuaJIT</a> can approach and sometimes exceed C. </li>
+<li>Clean &amp; powerful array/dictionary data structure (table)</li>
+<li>Proper lexical scoping</li>
+<li>First-class functions</li>
+<li>Coroutines </li>
+<li>Garbage collected</li>
+<li>Prototype inheritance (similar to <a href="http://en.wikipedia.org/wiki/Self_(programming_language">Self</a>)</li>
+<li>Small, portable &amp; easy to embed with C</li>
+<li><a href="http://www.opensource.org/licenses/mit-license.php">MIT license</a></li>
+</ul>
+<h2>Syntax</h2>
+<pre><code class="lang-lua"><span class="comment">-- Two dashes create a comment that ends at the line break</span>
+<span class="built_in">print</span>(<span class="string">"hello world"</span>)
+<span class="comment">-- Note: no need for semicolons to terminate statements.</span></code></pre>
+<h3>Simple types</h3>
+<pre><code class="lang-lua"><span class="comment">-- Unlike C, the type information is stored with the value, not the variable; </span>
+<span class="comment">-- this means that the type of a variable can change dynamically.</span>
+x = <span class="number">1</span>             <span class="comment">-- x now refers to a number</span>
+x = <span class="string">"foo"</span>         <span class="comment">-- x now refers to a string</span>
+
+<span class="comment">-- check types like this:</span>
+<span class="keyword">if</span> <span class="built_in">type</span>(x) == <span class="string">"number"</span> <span class="keyword">then</span> 
+    <span class="comment">-- do stuff</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- these lines are all equivalent</span>
+<span class="comment">-- they assign the number value 1 to the variable name x:</span>
+x = <span class="number">1</span>
+x = <span class="number">1.0</span>
+x = <span class="number">100e-2</span>  <span class="comment">-- e base10 format</span>
+x = <span class="number">0x1</span> <span class="comment">--hexadecimal format</span>
+<span class="comment">-- Note: all numbers in Lua are 64-bit doubles</span>
+
+<span class="comment">-- strings:</span>
+<span class="built_in">print</span>(<span class="string">"a simple string"</span>)
+<span class="built_in">print</span>(<span class="string">'a simple string'</span>)
+
+<span class="comment">-- embedding special characters and multi-line strings:</span>
+x = <span class="string">'escape the \' character, and write \n a new line'</span>
+x = <span class="string">[[
+The double square brackets are a simple way to write strings
+that span
+over several
+lines]]</span>
+
+<span class="comment">-- Boolean values:</span>
+t = <span class="keyword">true</span>
+f = <span class="keyword">false</span>
+<span class="keyword">if</span> t <span class="keyword">then</span> <span class="built_in">print</span>(<span class="string">"t!"</span>) <span class="keyword">end</span> <span class="comment">-- prints t!</span>
+<span class="keyword">if</span> f <span class="keyword">then</span> <span class="built_in">print</span>(<span class="string">"f!"</span>) <span class="keyword">end</span> <span class="comment">-- prints nothing</span>
+
+<span class="comment">-- nil indicates the absence of value. </span>
+<span class="comment">-- Assigning nil to a variable marks the variable for garbage collection.</span>
+n = <span class="keyword">nil</span>
+<span class="comment">-- nil also evaluates to false for a predicate:</span>
+<span class="keyword">if</span> n <span class="keyword">then</span> <span class="built_in">print</span>(<span class="string">"n!"</span>) <span class="keyword">end</span> <span class="comment">-- prints nothing</span></code></pre>
+<h3>Structured data</h3>
+<p>Lua provides only one data structure: the <em>table</em>. Tables in Lua are associative arrays, mapping <strong>keys</strong> to <strong>values</strong>. Both keys and values can be <em>any</em> valid Lua type except nil. However, the implementation makes sure that when used with continuous number keys, the table performs as a fast array. </p>
+<pre><code class="lang-lua"><span class="comment">-- creating an array-like table of strings, the quick way:</span>
+t = { <span class="string">"one"</span>, <span class="string">"two"</span>, <span class="string">"three"</span> }
+
+<span class="comment">-- creating a dictionary-like table, the quick way:</span>
+t = { one = <span class="number">1</span>, two = <span class="number">2</span>, three = <span class="number">3</span> }
+
+<span class="comment">-- creating a table with both array-like and dictionary-like parts:</span>
+t = { <span class="string">"one"</span>, <span class="string">"two"</span>, <span class="string">"three"</span>, one = <span class="number">1</span>, two = <span class="number">2</span>, three = <span class="number">3</span> }
+
+<span class="comment">-- create an empty table:</span>
+t = {}
+
+<span class="comment">-- add or replace key-value pairs in the table:</span>
+t[<span class="number">1</span>] = <span class="string">"one"</span>    <span class="comment">-- array-like</span>
+t[<span class="string">"two"</span>] = <span class="number">2</span>    <span class="comment">-- dictionary-like</span>
+<span class="comment">-- a simpler way of saying that:</span>
+t.two = <span class="number">2</span>
+
+<span class="built_in">print</span>(t.two, t[<span class="string">"two"</span>])     <span class="comment">--&gt; 2 2</span>
+
+<span class="comment">-- remove a key-value pair by assigning the value nil:</span>
+t.two = <span class="keyword">nil</span>
+<span class="built_in">print</span>(t.two)            <span class="comment">--&gt; &lt;nil&gt;</span>
+
+<span class="comment">-- create a table with a sub-table:</span>
+t = {
+    numbers = { <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> },
+    letters = { <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span> },
+}
+
+<span class="comment">-- any Lua type (except nil) can be used as key or value</span>
+<span class="comment">-- (including functions, other tables, the table itself, ...)</span>
+t[x] = t</code></pre>
+<p>It’s important to remember that a Lua table has two parts; an array-portion and a hash-table portion. The array portion is indexed with integer keys, starting from 1 upwards. All other keys are stored in the hash (or record) portion.</p>
+<p>The array portion gives Lua tables the capability to act as ordered lists, and can grow/shrink as needed (similar to C++ vectors). Sometimes the array portion is called the list portion, because it is useful for creating lists similarly to LISP. In particular, the table constructor will insert numeric keys in order for any values that are not explicitly keyed:</p>
+<pre><code class="lang-lua"><span class="comment">-- these two lines are equivalent</span>
+<span class="keyword">local</span> mylist = { [<span class="number">1</span>]=<span class="string">"foo"</span>, [<span class="number">2</span>]=<span class="string">"bar"</span>, [<span class="number">3</span>]=<span class="string">"baz"</span> }:
+<span class="keyword">local</span> mylist = { <span class="string">"foo"</span>, <span class="string">"bar"</span>, <span class="string">"baz"</span> }
+
+<span class="built_in">print</span>(mylist[<span class="number">2</span>])             <span class="comment">--&gt; bar</span>
+
+<span class="built_in">print</span>(<span class="built_in">unpack</span>(mylist))         <span class="comment">--&gt; foo bar baz</span></code></pre>
+<p>Remember that Lua expects most tables to count from 1, not from 0.</p>
+<h3>Iterating a table</h3>
+<p>To visit <strong>all</strong> key-value pairs of a table, use a for loop like the following. Note that the order of traversal is undefined; it may be different each time.</p>
+<pre><code class="lang-lua"><span class="keyword">for</span> key, value <span class="keyword">in</span> <span class="built_in">pairs</span>(mytable) <span class="keyword">do</span>
+    <span class="comment">-- do things with the key and value</span>
+<span class="keyword">end</span></code></pre>
+<p>To visit <strong>only</strong> array-portion of a table, use one of these forms:</p>
+<pre><code class="lang-lua"><span class="keyword">for</span> i = <span class="number">1</span>, #mytable <span class="keyword">do</span>
+    <span class="keyword">local</span> value = t[i]
+    <span class="comment">-- do things with the key and value</span>
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> key, value <span class="keyword">in</span> <span class="built_in">ipairs</span>(mytable) <span class="keyword">do</span>
+    <span class="comment">-- do things with the key and value</span>
+<span class="keyword">end</span></code></pre>
+<h3>Functions</h3>
+<p>Unlike C, functions are first-class values, just like numbers, strings and tables. That means that functions can take functions as arguments, functions can return other functions as return values, functions can be keys and values in tables. It also means that functions can be created and garbage collected dynamically.</p>
+<p>Functions can be declared in several ways:</p>
+<pre><code class="lang-lua"><span class="comment">-- these are equivalent:</span>
+sayhello = function(message)
+  <span class="built_in">print</span>(<span class="string">"hello"</span>, message)
+<span class="keyword">end</span>
+
+<span class="function"><span class="keyword">function</span> <span class="title">sayhello</span><span class="params">(message)</span></span>
+  <span class="built_in">print</span>(<span class="string">"hello"</span>, message)
+<span class="keyword">end</span>
+
+<span class="comment">-- using the function:</span>
+sayhello(<span class="string">"me"</span>)  <span class="comment">-- prints: hello me</span>
+sayhello(<span class="string">"you"</span>) <span class="comment">-- prints: hello you</span>
+
+<span class="comment">-- replacing the function</span>
+sayhello = function(message)
+  <span class="built_in">print</span>(<span class="string">"hi"</span>, message)
+<span class="keyword">end</span>
+
+sayhello(<span class="string">"me"</span>)  <span class="comment">-- prints: hi me</span></code></pre>
+<p>Functions can zero or more arguments. In Lua, they can also have more than one return vaue:</p>
+<pre><code class="lang-lua"><span class="function"><span class="keyword">function</span> <span class="title">minmax</span><span class="params">(a, b)</span></span>
+  <span class="keyword">return</span> <span class="built_in">math</span>.min(a, b), <span class="built_in">math</span>.max(a, b)
+<span class="keyword">end</span>
+<span class="built_in">print</span>(minmax(<span class="number">42</span>, <span class="number">13</span>)) <span class="comment">-- prints: 13 42</span></code></pre>
+<h3>Logic and control flow</h3>
+<pre><code class="lang-lua"><span class="comment">-- if blocks:</span>
+<span class="keyword">if</span> x == <span class="number">1</span> <span class="keyword">then</span>
+  <span class="built_in">print</span>(<span class="string">"one"</span>)
+  <span class="comment">-- as many elseifs as desired can be chained</span>
+<span class="keyword">elseif</span> x == <span class="number">2</span> <span class="keyword">then</span>
+  <span class="built_in">print</span>(<span class="string">"two"</span>)
+<span class="keyword">elseif</span> x == <span class="number">3</span> <span class="keyword">then</span>
+  <span class="built_in">print</span>(<span class="string">"three"</span>)
+<span class="keyword">else</span>
+  <span class="built_in">print</span>(<span class="string">"many"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">-- while loops:</span>
+x = <span class="number">10</span>
+<span class="keyword">while</span> x &gt; <span class="number">0</span> <span class="keyword">do</span>
+  <span class="built_in">print</span>(x)
+  x = x - <span class="number">1</span>
+<span class="keyword">end</span>
+
+<span class="keyword">repeat</span>
+  <span class="built_in">print</span>(x)
+  x = x + <span class="number">1</span>
+<span class="keyword">until</span> x == <span class="number">10</span>
+
+<span class="comment">-- numeric for loop:</span>
+<span class="comment">-- count from 1 to 10</span>
+<span class="keyword">for</span> i = <span class="number">1</span>, <span class="number">10</span> <span class="keyword">do</span> 
+    <span class="built_in">print</span>(i) 
+<span class="keyword">end</span>        
+<span class="comment">-- count 1, 3, 5, 7, 9:</span>
+<span class="keyword">for</span> i = <span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span> <span class="keyword">do</span> 
+    <span class="built_in">print</span>(i) 
+<span class="keyword">end</span>
+<span class="comment">-- count down from 10 to 1:</span>
+<span class="keyword">for</span> i = <span class="number">10</span>, <span class="number">1</span>, -<span class="number">1</span> <span class="keyword">do</span> 
+    <span class="built_in">print</span>(i) 
+<span class="keyword">end</span>
+
+<span class="comment">-- logical operators:</span>
+<span class="keyword">if</span> x == y <span class="keyword">then</span> <span class="built_in">print</span>(<span class="string">"equal"</span>) <span class="keyword">end</span>
+<span class="keyword">if</span> x ~= y <span class="keyword">then</span> <span class="built_in">print</span>(<span class="string">"not equal"</span>) <span class="keyword">end</span>
+<span class="keyword">if</span> x &gt; <span class="number">0</span> <span class="keyword">and</span> x &lt; <span class="number">1</span> <span class="keyword">then</span> <span class="built_in">print</span>(<span class="string">"between 0 and 1"</span>) <span class="keyword">end</span></code></pre>
+<h3>Lexical scoping</h3>
+<p>If a variable is declared <code>local</code>, it exists for any code that follows it, until the <code>end</code> of that block. If a variable is not declared local, it becomes a global variable, belonging to the entire script. Use local variables as much as possible, as they are faster, and reduce bugs.</p>
+<pre><code class="lang-lua"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">(x)</span></span>
+  <span class="comment">-- a function body is a new block</span>
+  <span class="keyword">local</span> y = <span class="string">"mylocal"</span>
+  <span class="keyword">if</span> x == y <span class="keyword">then</span>
+    <span class="comment">-- this is a sub-block of the function</span>
+    <span class="comment">-- y is still visible here</span>
+    <span class="built_in">print</span>(y)  <span class="comment">-- prints: mylocal</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">-- y is not visible here:</span>
+<span class="built_in">print</span>(y)    <span class="comment">-- prints: nil</span></code></pre>
+<p>Assigning to a variable that has not been declared locally within the current block will search for that name in parent blocks, recursively, up to the top-level. If the name is found, the assignment is made to that variable. If the name is not found, the assignment becomes a global (either creating a new variable, or replacing an existing global). </p>
+<pre><code class="lang-lua"><span class="comment">-- an outer variable:</span>
+<span class="keyword">local</span> x = <span class="string">"outside"</span>
+<span class="built_in">print</span>(x) <span class="comment">-- prints: outside</span>
+
+<span class="comment">-- sub-block uses a local, which does not affect the outer variable:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">safe</span><span class="params">()</span></span>
+  <span class="keyword">local</span> x = <span class="string">"inside"</span>
+<span class="keyword">end</span>
+safe()
+<span class="built_in">print</span>(x) <span class="comment">-- prints: outside</span>
+
+<span class="comment">-- sub-block does not use a local, and overwrites the outer variable:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">unsafe</span><span class="params">()</span></span>
+  x = <span class="string">"inside"</span>
+<span class="keyword">end</span>
+unsafe()
+<span class="built_in">print</span>(x) <span class="comment">-- prints: inside</span></code></pre>
+<h3>Method syntax</h3>
+<p>Objects in Lua that have functions as members can invoke these functions using a special colon syntax:</p>
+<pre><code class="lang-lua"><span class="comment">-- create an object:</span>
+myobject = { value = <span class="number">10</span> }
+
+<span class="comment">-- add a function:</span>
+myobject.printvalue = function(self)
+    <span class="built_in">print</span>(self.value)
+<span class="keyword">end</span>
+
+<span class="comment">-- test it:</span>
+myobject.printvalue(myobject)    <span class="comment">--&gt; 10</span>
+
+<span class="comment">-- use the colon syntax instead passes the 'self' argument implicitly:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">myobject:printvalue</span><span class="params">()</span></span>
+    <span class="built_in">print</span>(self.value)
+<span class="keyword">end</span>
+
+myobject:printvalue()            <span class="comment">--&gt; 10</span></code></pre>
+<h3>Closures</h3>
+<p>Closures arise from the mixed use of lexically scoped local variables, and higher order functions. Any function that makes use of non-local variables effectively keeps those variable references alive within it. An example explains this better:</p>
+<pre><code class="lang-lua"><span class="function"><span class="keyword">function</span> <span class="title">make_counter</span><span class="params">()</span></span>
+  <span class="keyword">local</span> count = <span class="number">0</span>
+  <span class="keyword">return</span> function()
+    count = count + <span class="number">1</span>
+    <span class="built_in">print</span>(count)
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- call to make_counter() returns a function;</span>
+<span class="comment">-- and 'captures' the local count as an 'upvalue' specific to it</span>
+<span class="keyword">local</span> c1 = make_counter()
+c1()  <span class="comment">-- prints: 1</span>
+c1()  <span class="comment">-- prints: 2</span>
+c1()  <span class="comment">-- prints: 3</span>
+
+<span class="comment">-- another call to make_counter() creates a new function,</span>
+<span class="comment">-- with a new count upvalue</span>
+<span class="keyword">local</span> c2 = make_counter()
+c2()  <span class="comment">-- prints: 1</span>
+c2()  <span class="comment">-- prints: 2</span>
+
+<span class="comment">-- the two function's upvalues are independent of each other:</span>
+c1()  <span class="comment">-- prints: 4</span></code></pre>
+<h2>Going deeper</h2>
+<p>We will address more complex topics of metatables, coroutines, the C API, the LuaJIT FFI and so on as we need them.</p>
+<h2>Help</h2>
+<p><a href="http://www.lua.org/manual/5.1">Reference manual</a>; bookmark the <a href="http://www.lua.org/manual/5.1/index.html#index">contents</a>.</p>
+<p><em>Excellent</em> text-book: <a href="http://www.lua.org/docs.html#books">Programming in Lua (second edition)</a>
+<img src="http://www.lua.org/images/pil2.jpg" alt="PIL"></p>
+</div>
+	
+	<div class="footer">
+	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
+	Graham Wakefield, 2013</div>
+	
+</div>
+</body>
+</html>

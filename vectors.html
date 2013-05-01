@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Vectors</title>
+    
+<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
+  
+<script src="js/jquery.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/main.js" type="text/javascript"></script>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+<body>
+<div id="wrapper">
+	
+	<div class="header">
+		<h1>GCT 753</h1>
+		<a href="index.html">Overview</a><br/>
+		<a href="software.html">Software</a><br/>
+		<a href="lua.html">Lua Tutorial</a><br/>
+		&gt;&gt; <a href="https://github.com/grrrwaaa/gct753">GitHub</a><br/>
+		&gt;&gt; <a href="http://grrrwaaa.github.com/gct753/docs/reference.html">Reference</a><br/>
+		<br>
+		<a href="introduction.html">Themes</a><br/>
+		<a href="artificial_life.html">Artificial Life</a><br/>
+		<a href="generative_art.html">Generative Art</a><br/>
+		<a href="cellular.html">Cellular Systems</a><br/>
+		<a href="agent.html">Agent Systems</a><br/>
+		<a href="symbol.html">Symbol Systems</a><br/>
+		<a href="evolutionary.html">Evolutionary Systems</a><br/>
+		
+	</div>
+	<div class="section"><h1>(Euclidean) Vectors</h1>
+<p>A <strong>vector</strong> is one way of describing a direction with a magnitude. Vectors can describe spatial properties such as locations, but also properties that change over time such as velocities, accelerations, forces of attraction and repulsion, local wind speed and direction, etc. A magnitude without direction (such as a regular number) is called a <strong>scalar</strong>.</p>
+<p>In a 2D space, a vector has two components (X, Y), in a 3D space, it has three (X, Y, Z). Programming with vectors is easier if these components are combined into a single abstraction of a <em>vector object</em>. We can also treat a position in space as a vector: <em>the vector from the origin (0, 0) to the position</em>. </p>
+<p>Adding two vectors is like applying their movements in series. </p>
+<p>The difference between two points can be obtained by subtraction; it also a vector. The <em>relative</em> position of B with respect to A is simply <code>B - A</code>. So the position of agent B relative to agent A is <code>B.position - A.position</code>. (For agent-oriented programming we often need to take the perspective <em>relative to an agent</em>, rather than the absolute, global perspective.)</p>
+<p>We can multiply (or divide) vectors by scalars to make them longer or shorter. So <code>A * 2</code> produces a copy of vector A which is twice as long.</p>
+<p>Using this, we can interpolate between two vectors A and B by interpolating their components according to an interpolation factor <code>a</code> which varies between 0 (for A) and 1 (for B) like this: <code>A + a * (B - A)</code>. This is <em>linear interpolation</em>, or &quot;lerp&quot;. If a is 0.5, then it corresponds to the <em>mean</em> (average) of two vectors.</p>
+<p>The distance between two points is the length (<em>magnitude</em>) of the vector between them. We can use Pythagoras&#39; theorem: <code>distance = math.sqrt(v.x*v.x + v.y*v.y)</code>. </p>
+<p>A <em>unit vector</em> is a vector whose magnitude equals 1. The set of all unit vectors makes up the unit circle (a circle of radius 1). We can turn any vector into a unit vector by dividing by its length: </p>
+<pre><code class="lang-lua"><span class="keyword">local</span> len = <span class="built_in">math</span>.sqrt(v.x*v.x + v.y*v.y)
+v.x = v.x / len
+v.y = v.y / len</code></pre>
+<p>The angle between two points can be derived using the <em>arctangent</em> of Y over X. We can calculate it as <code>math.atan2(y, x)</code>. (<code>math.atan(y/x)</code> would work, except that it could be satisfied by two different angles; <code>math.atan2</code> is more explicit and usually gives us the angle we require.)</p>
+<p>The length and angle of a vector form the <em>polar</em> representation. We can convert back to <em>Cartesian</em> form again just as easily:</p>
+<pre><code class="lang-lua"><span class="comment">-- Cartesian to polar:</span>
+<span class="keyword">local</span> len = <span class="built_in">math</span>.sqrt(v.x*v.x + v.y*v.y)
+<span class="keyword">local</span> angle = mat.atan2(y, x)
+<span class="comment">-- Polar to Cartesian:</span>
+<span class="keyword">local</span> x = len * <span class="built_in">math</span>.cos(angle)
+<span class="keyword">local</span> y = len * <span class="built_in">math</span>.sin(angle)</code></pre>
+<p>This is one way that we can rotate a vector: convert to polar form, add to (or subtract from) the angle, convert back to Cartesian form. Another way is to rotate the X and Y components individually, and sum them (the matrix form):</p>
+<pre><code class="lang-lua">x1 = v.x * <span class="built_in">math</span>.cos(rotation) + v.y * <span class="built_in">math</span>.sin(rotation)
+y1 = v.y * <span class="built_in">math</span>.cos(rotation) - v.x * <span class="built_in">math</span>.cos(rotation)</code></pre>
+<p>The <em>dot product</em> (also known as <em>scalar product</em> or <em>inner product</em>) of two vectors v1 and v2 is defined as <code>v1.x*v2x + v1.y*v2.y</code>. (Note the similarity with the Pythagorean theorem). In a way the dot product tells us how similar two vectors are (it is related to correlation). Geometrically it is defined as <code>||A|| ||B|| cos t</code>, which means the length of A multiplied by the length of B multipled by the angle t between A and B. So we can re-arrange that to determine the angle between to vectors as <code>arccosine( dot(A, B) / (mag(A) * mag(B)))</code>. Of course, if A and B are <em>unit vectors</em>, this simplifies to <code>arccosine(dot(A, b))</code>. </p>
+<blockquote>
+<p>One useful result is that if the dot product is zero, then A and B are orthogonal (at right angles to each other). If it is positive, then the angle between is less than 90 degrees, and if negative, the vectors must face away from each other since the angle between them is greater than 90 degrees. (And since magnitudes are always positive, we can skip that part of the calculation too!)</p>
+</blockquote>
+<pre><code class="lang-lua"><span class="comment">-- create a new 2D vector:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">vec2</span><span class="params">(x, y)</span></span>
+    <span class="keyword">local</span> v = {}
+    v.x = x
+    v.y = y
+    <span class="keyword">return</span> v
+<span class="keyword">end</span>
+
+<span class="comment">-- multiply a vector by a number (modifies existing vector):</span>
+<span class="function"><span class="keyword">function</span> <span class="title">vec2_mul</span><span class="params">(self, n)</span></span>
+    self.x = self.x * n
+    self.y = self.y * n
+    <span class="keyword">return</span> self
+<span class="keyword">end</span></code></pre>
+<p>Agents have spatial locations (positions), which we can store as vectors (direciton and magnitude from the world origin):</p>
+<pre><code class="lang-lua"><span class="function"><span class="keyword">function</span> <span class="title">agent</span><span class="params">()</span></span>
+    <span class="keyword">local</span> self = {
+        pos = vec2(<span class="built_in">math</span>.random(), <span class="built_in">math</span>.random())
+    }
+    <span class="keyword">return</span> self
+<span class="keyword">end</span>
+
+<span class="function"><span class="keyword">function</span> <span class="title">agent_draw</span><span class="params">(self)</span></span>
+    g.circle(self.pos.x, self.pos.y, <span class="number">0.01</span>)
+<span class="keyword">end</span>
+
+A = agent()</code></pre>
+<p>New location = old location plus velocity: <code>agent.pos = agent.pos + agent.velocity</code>. This is accumulation or <em>integration</em>, at the <em>first-order</em>. Velocity is the <em>rate of change</em> of position. Second-order integration could be expressed as <code>agent.velocity = agent.velocity + agent.acceleration</code>, since acceleration is the <em>rate of change of velocity</em>. </p>
+<p>Going the other way, we can take the <em>difference</em> of current and previous location to infer the velocity: <code>velocity = current_position - previous_position</code>, which is clearly a relative vector.</p>
+<pre><code class="lang-lua"><span class="function"><span class="keyword">function</span> <span class="title">agent</span><span class="params">()</span></span>
+    <span class="keyword">local</span> self = {
+        pos = vec2(<span class="built_in">math</span>.random(), <span class="built_in">math</span>.random()),
+        vel = vec2(<span class="number">0</span>, <span class="number">0</span>),
+        acc = vec2(<span class="number">0</span>, <span class="number">0</span>),
+    }
+    <span class="keyword">return</span> self
+<span class="keyword">end</span>
+
+<span class="function"><span class="keyword">function</span> <span class="title">agent_update</span><span class="params">(self)</span></span>
+    <span class="comment">-- update velocity by acceleration:</span>
+    vec2_add(self.vel, self.acc)
+    <span class="comment">-- update location by velocity:</span>
+    vec2_add(self.pos, self.vel)
+<span class="keyword">end</span>
+
+<span class="function"><span class="keyword">function</span> <span class="title">agent_draw</span><span class="params">(self)</span></span>
+    g.push()
+    g.translate(self.pos.x, self.pos.y)
+    g.rotate(vec2_angle(self.vel))
+    g.circle(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.01</span>)
+    g.line(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.02</span>, <span class="number">0</span>)
+    g.pop()
+<span class="keyword">end</span></code></pre>
+<p>Agent behavior gets intereseting now if we start modifying the velocity or acceleration over time, e.g. constant, random, mouse-following, etc. </p>
+<p>Some boundary options, if an agent position goes outside the world limits:</p>
+<ul>
+<li>Clip the position at the limits</li>
+<li>Wrap the position to the opposite boundary (e.g. using the modulo <code>%</code> operator)</li>
+<li>Reset at a new random location </li>
+<li>Change direction</li>
+<li>Add acceleration in the opposite direction</li>
+</ul>
+<p>By Newton&#39;s laws of motion, we know that accelerations can be determined by forces (divided by mass, since <code>F = ma</code>). Many different kinds forces can act on an agent, which can all be summed as influences on the acceleration. </p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">agent_update</span><span class="params">(self)</span>
+    <span class="title">local</span> <span class="title">force</span> = <span class="title">vec2</span><span class="params">(0, 0)</span>
+    -- <span class="title">add</span> <span class="title">the</span> <span class="title">various</span> <span class="title">forces</span>:
+    <span class="title">vec2_add</span><span class="params">(force, gravity)</span>;
+    <span class="title">vec2_add</span><span class="params">(force, wind)</span>;
+    -- <span class="title">from</span> <span class="title">F</span> = <span class="title">ma</span>:
+    <span class="title">self</span>.<span class="title">acc</span> = <span class="title">force</span> / <span class="title">self</span>.<span class="title">mass</span>
+    -- <span class="title">update</span> <span class="title">velocity</span> <span class="title">by</span> <span class="title">acceleration</span>:
+    <span class="title">vec2_add</span><span class="params">(self.vel, self.acc)</span>
+    -- <span class="title">update</span> <span class="title">location</span> <span class="title">by</span> <span class="title">velocity</span>:
+    <span class="title">vec2_add</span><span class="params">(self.pos, self.vel)</span>
+<span class="title">end</span></code></pre>
+<p>We might also want to place limits on velocity / acceleration... or let these limits emerge by also including friction or other dissipative forces that counter the current velocity. Attraction (like gravitation) can be applied in the directions between objects and inversely proportional to the distance squared. And for life-like agents, we also introduce <em>forces from within</em>.</p>
+</div>
+	
+	<div class="footer">
+	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
+	Graham Wakefield, 2013</div>
+	
+</div>
+</body>
+</html>
