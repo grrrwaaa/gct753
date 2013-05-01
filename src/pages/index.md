@@ -13,7 +13,11 @@ Web: http://grrrwaaa.github.com/gct633/
 
 ## Overview
 
+This course explores the joy of writing software for audio and media processing, including some of the well-established (and some of the not so well-established) techniques, how to overcome the many challenges it poses, and what potentials for novel research can be encountered.
 
+The course will first focus on audio. Although low-dimensional, audio programming can be surprisingly demanding. New data must be generated at reliable, steady rates of forty thousand samples per second or better, and latencies must remain low for musical sensitivity. It occupies a fascinating boundary between the apparently continuous (analog) but actually discrete (digital), and brings software architecture and user-experience issues to the fore in the mapping of perceptual/musical concepts to actual implementations. The course will then broaden to bring these concepts to bear on other media domains, including 2D image processing, 3D rendering and interactive sensor stream processing (such as from the Microsoft Kinect).
+
+To approach such a broad subject more concretely we may focus on a particular application area such as web-based platforms, immersive environments, or live-coding systems (to be confirmed), and we may also restrict ourselves to specific programming technologies (to be confirmed). 
 
 ### Format
 
@@ -49,90 +53,8 @@ Assignments must be completed individually. Collaboration is permitted for final
 
 ### Materials
 
-A selection of key papers will be disseminated during the course, in addition to the online materials.
+A selection of key papers will be disseminated during the course, in addition to the online materials at http://grrrwaaa.github.io/gct633/.
 
-## Tentative schedule
+## Schedule
 
-### Week 1
-
-**Topics:** Course overview. Introduction to biologically-inspired computation and artificial life art. Introduction to major themes, presentation of representative works. Presentation of the software engine used for labs and assignments.
-
-**Readings:** Selected readings (Mitchell Whitelaw, Simon Penny, Sommerer & Mignonneau, Karl Sims)
-
-### Week 2
-
-**Topics:** Automata theory. Lattice automata, cellular automata, the Game of Life. 
-Dynamic systems, reaction-diffusion systems, chaotic and dissipative structures. Implementations following Conway, Turing.
-
-**Readings:** Readings from the course books. Selections from Wolfram, Turing, Prigogine. 
-
-### Week 3
-
-**Topics:** Conceptual issues: emergence and the mechanism-vitalism debate, self-organization in discrete and continuous systems, Wolfram’s classes of CA and Langton’s edge of chaos. Implementations following Wolfram, Langton. 
-
-**Readings:** Readings from the course books. Summary texts (Penny, Whitelaw etc.)
-
-***Assignment 1:*** Variations on the Cellular Automaton.
-
-### Weeks 4-5
-
-**Topics:** Evolutionary models. Genotype and phenotype representations. Optimizing selection, aesthetic selection, co-evolutionary and ecosystemic selection. Genetic algorithm, genetic programming, evolutionary programming. Implementations following Sims, Draves.
-
-**Readings:** Readings from the course books. Original texts by McCormack, Holland, Koza. 
-
-***Assignment 2:*** (Week 5) Evolutionary programming of images or sounds.
-
-
-### Week 6
-
-**Topics:** Development. Rewriting systems in computation, L-systems, shape grammars. Pattern formation. The evo-devo revolution, cell signaling and regulatory networks.
-
-**Readings:** Selected readings from the course books. Original texts (Lindenmeyer, Turing). 
-
-### Week 7
-
-**Topics:** Agents, agent-environment interaction. Behavioral systems in cognitive science, AI & robotics. Random walks. Vehicles (Braitenberg), subsumption architecture (Brooks), chemotaxis. Implementations following Reas, chemotaxis.
-
-**Readings:** Selected readings from the course books.  Original texts (Braitenberg, Brooks).
-
-***Assignment 3:*** Either a) morphology using an L-system or b) pattern formation with a reaction-diffusion system.
-
-### Weeks 8-9
-
-**Topics:** Collective behavior and intelligence, biological self-organization. Swarms and PSO, ant colony models (stigmergy and pheromone trails), collective optimization and distributed computing, game theory.
-Implementations: stigmergy, pheromone trails. 
-
-**Readings:** Selected readings from the course books.  
-
-***Assignment 3:*** (Week 9) Collective agent behaviors.
-
-### Week 10
-
-**Topics:** Neural models. The neuron, von Neumann, biological & artificial plasticity, artificial neural networks (ANNs), supervised, unsupervised & reinforcement learning.
-
-**Readings:** Selected readings from the course books.
-
-### Week 11
-
-**Topics:** Advanced topics: Immune systems. Natural and artificial immunity, algorithms, shape spaces.
-
-**Readings:** Selected readings from the course books.
-
-***Assignment:*** Final project proposal due. 
-
-### Week 12
-
-**Topics:** Advanced topics: Programmable media and byte-code ecosystems. Corewars, Tierra, Viruses.
-
-**Readings:** Selected readings from the course books. Original texts (Ray, Turing). 
-
-### Week 13
-
-**Topics:** Advanced topics: Artificial chemistries.  Autonomous structure and self-organization, emergence of life. Implementation focus: Fontana’s alchemy.
-
-**Readings:** Selected readings from the course books. Original texts (Fontana et al.). 
-
-### Weeks 14+
-
-Project development labs, final project presentation & critique.
-
+Not yet finalized.
