@@ -27,7 +27,7 @@ Theoretical issues, technical models, and exemplary works are presented in lectu
 
 By the end of the course, students will: 
 
-* Understand the many themes of audio and multimedia programming, how they have been applied in generative and interactive arts, and how it may be extrapolated into future culture technologies. 
+* Understand the many themes of audio and multimedia programming, how they have been applied in interactive arts, and how it may be extrapolated into future culture technologies. 
 * Be able to apply these techniques for tasks of problem-solving as well as interactive and creative works, as demonstrated in a project portfolio.
 
 ### Prerequisites
@@ -40,16 +40,17 @@ Assignments must be completed individually. Collaboration is permitted for final
 
 ### Grading
 
-* The followings evaluation criteria may change:   
-    A. Attendance:    10%
-    B. Midterm exam:  10%
-    C. Final exam:    10%
-    D. Quiz:          0% 
-  	E. Report:        0%
-  	F. Assignments:   30%
-  	G. Project:       30%
-  	H. Presentation:  10% 
-  	
+* The followings evaluation criteria may change:
+
+	- A. Attendance:    10%
+	- B. Midterm exam:  10%
+	- C. Final exam:    10%
+	- D. Quiz:          0%
+	- E. Report:        0%
+	- F. Assignments:   30%
+	- G. Project:       30%
+	- H. Presentation:  10% 
+
 * Limitations on course retaking, if any: Some prior programming experience.
 
 ### Materials
