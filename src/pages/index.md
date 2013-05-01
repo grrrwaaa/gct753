@@ -41,14 +41,15 @@ Assignments must be completed individually. Collaboration is permitted for final
 ### Grading
 
 * The followings evaluation criteria may change:   
-    A. Attendance:    10%    
-    B. Midterm exam:  10%    
-    C. Final exam:    10%    
+    A. Attendance:    10%
+    B. Midterm exam:  10%
+    C. Final exam:    10%
     D. Quiz:          0% 
-  	E. Report:        0%    
-  	F. Assignments:   30%    
-  	G. Project:       30%    
+  	E. Report:        0%
+  	F. Assignments:   30%
+  	G. Project:       30%
   	H. Presentation:  10% 
+  	
 * Limitations on course retaking, if any: Some prior programming experience.
 
 ### Materials
