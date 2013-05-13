@@ -301,7 +301,7 @@ end
 
 --- Constrain vector to range (in-place)
 -- @param lo vector or number minimum value 
--- @param hi vector or number minimum value 
+-- @param hi vector or number maximum value 
 -- @return self
 function vec2:clip(lo, hi)
 	return self:max(lo):min(hi)
