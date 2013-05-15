@@ -38,11 +38,13 @@ The course is designed to be suitable to students with different levels of techn
 
 ### Assignments & final project
 
-Assignments must be completed individually. Collaboration is permitted for final projects, however each student must be able to clearly identify which parts of the project they were responsible for. The final project may extend existing work from one (or more) of the assignments, but will be evaluated only according to the new contributions. Final projects are selected by students, but must present an agent-environment system that integrates interactivity with  adaptation (such as evolution or learning).
-
-Coursework will be delivered through [github](https://github.com/grrrwaaa/gct753).
-
 Lab sessions and assignments will utilize a software engine provided by the instructor, compatible with OSX and possibly Linux or Windows. Using a specific engine allows us to concentrate on important conceptual issues without being distracted by platform and library variations and inconsistencies. The engine supports easy experimentation by students and rapid in-class authoring examples by the instructor. The principles learned can be easily translated to other languages and systems.
+
+Assignments must be completed individually. Collaboration is permitted for final projects, however each student must be able to clearly identify which parts of the project they were responsible for. 
+
+The final project may extend existing work from one (or more) of the assignments, but will be evaluated only according to the new contributions. It should integrate at least two of the kinds of systems we've looked at (cellular, agent, L-system) with some kind of interactivity (e.g. mouse, keyboard) and some kind of adaptation (e.g. evolution, learning). 
+
+Students will give a brief (5-10 minute) presentation on their concepts on May 23rd.
 
 ### Grading
 

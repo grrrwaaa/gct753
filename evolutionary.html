@@ -95,6 +95,8 @@
 <li>Repeat from step (2) or terminate if a terminating condition is satisfied (such as sufficient fitness). </li>
 </ol>
 <p>Steps 2-5 may be run in lock-step, or asynchronously with overlapping individual life-spans.</p>
+<h3>Caveats</h3>
+<p>Artificial evolution generates results with randomness, without formal proofs. It may take a long time or a lot of processing power to find a satisfactory result, or may not reach a result at all. </p>
 <h3>Genetic representation</h3>
 <p>The representation of the genotype, and mechanisms of development, genetic transfer and variation, must be provided by the author. Many systems represent genetic information as a sequence of data, such as a string of characters or binary digits. Some systems use more elaborate structures (trees, networks) that are reducible to sequences. In artificial evolution an obvious analogy of the genotype-as-code and phenotype-as-running-program underlies most systems. Fewer systems provide full models of development and genetic transfoer, assuming instead a relatively predictable translation. Some systems explicity encode numeric values in the genotype (this is not naturalistic). </p>
 <h3>Variation</h3>
@@ -104,7 +106,9 @@
 <li>Sexual <strong>cross-over</strong> (or <strong>recombination</strong>): akin to sexual reproduction in biology. As a binary string, the child takes the first fraction from one parent, and the remainder from the other. For example, breeding the strings &quot;dog&quot; and &quot;cat&quot; could generate children such as &quot;dot&quot;, &quot;dat&quot;, &quot;cag&quot; and &quot;cog&quot;. A more flexible system might also permit &quot;doat&quot;, &quot;caog&quot;, &quot;dt&quot;, etc. </li>
 <li>Other variations (insertion, deletion, inversion) are less common, but have been used.</li>
 </ul>
-<h2>Selection in Evolutionary Art and Music</h2>
+<p>Why use reproduction for evolution? In the face of an unpredictable environment, we cannot know which strategy will be best; we can try small variations, and hedge our bets by making very many of them (population diversity). An individual loss is not catastrophic, but a few successes can be learned from. Furthermore, the face of unpredictibility implies that what was true today may not be tomorrow, so the flexibility to avoid timeless commitment is also a good strategy; but the inheritance of choices is a useful option when the environment retains some stability. If the world were fully predictable, a rational, teleological, monothematic strategy would be preferable. But the world isn&#39;t totally random either (if it was, there would be no valid strategy worth pursuing.) </p>
+<p>See the <a href="http://en.wikipedia.org/wiki/Red_Queen_hypothesis">red queen</a> problem.</p>
+<h2>Selection (applied to Evolutionary Art and Music)</h2>
 <p>One of the central problems in evolutionary art and music is how to implement selection.</p>
 <ul>
 <li>A predefined fitness function. For this to be possible, a formal measure of aesthetic quality is required; but can we really do that?</li>
@@ -114,19 +118,13 @@
 </li>
 <li>First evolve a population of artificial art critics, trained from human-evaluated examples, and then use these to apply selection criteria to a population of candidate artworks.</li>
 </ul>
-<p>Artificial co-evolution, where one population represents the candidate products, and the other population represents artificial critics.</p>
+<p>Some projects have also proposed a form of artificial co-evolution, where one population represents the candidate products, and the other population represents artificial critics.</p>
+<hr>
+<h2>Discussion examples</h2>
 <p><img src="http://www.karlsims.com/papers/ksf11.gif" alt="Karl Sims">
 See <a href="http://www.karlsims.com/genetic-images.html">Karl Sims&#39; Genetic Images</a>.
 <a href="http://www.karlsims.com/papers/siggraph91.html">1991 Siggraph Paper</a></p>
-<p>Karl Sims
-Scott Draves
-[1]    S. Draves, “Evolution and Collective Intelligence of the Electric Sheep,” The Art of Artificial Evolution, 2008.</p>
-<h3>Caveats</h3>
-<p>Artificial evolution generates results with randomness, without formal proofs. It may take a long time or a lot of processing power to find a satisfactory result, or may not reach a result at all. </p>
-<p>Fitness landscapes</p>
-<hr>
-<p>Why use reproduction for evolution? In the face of an unpredictable environment, we cannot know which strategy will be best; we can try small variations, and hedge our bets by making very many of them (population diversity). An individual loss is not catastrophic, but a few successes can be learned from. Furthermore, the face of unpredictibility implies that what was true today may not be tomorrow, so the flexibility to avoid timeless commitment is also a good strategy; but the inheritance of choices is a useful option when the environment retains some stability. If the world were fully predictable, a rational, teleological, monothematic strategy would be preferable. But the world isn&#39;t totally random either (if it was, there would be no valid strategy worth pursuing.) Red queen.</p>
-<h2>Discussion examples</h2>
+<p>Scott Draves, “Evolution and Collective Intelligence of the Electric Sheep,” The Art of Artificial Evolution, 2008.</p>
 <p><a href="http://boxcar2d.com/">Evolving 2D cars</a></p>
 <p><a href="https://www.youtube.com/watch?feature=player_embedded&amp;v=z9ptOeByLA4">Evolving soft robots</a></p>
 </div>
