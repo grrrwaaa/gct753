@@ -110,26 +110,38 @@ Whether it is parameters, sequence, mechanisms (or several) that are to be evolv
 
 ----
 
-## Artificial chemistries
+## Artificial chemistries and programmable media
 
-Autonomous structure and self-organization, emergence of life. 
+One of the most enduring questions facing biology (and artificial life) regards how life itself emerged from non-life, and how that boundary continues to be bridged ("protobiology"). The emergence of life has not yet been observed in physical materials, however there are many hypotheses offered. In general the problem is how life-like behavior and organization emerges from simpler physical chemical systems; or at the very least, how new orders of structure emerge from simpler chemical models. Artificial chemistries (AC) are systems with similarities to models of physics and chemistry which can be used to explore these speculative models with more rigor.
 
-### Fontana's Alchemy
+AC's were proposed by John McCaskill, but probably the best known example ("AlChemy") was created by Walter Fontana and Leo Buss, presented at the second Artificial Life conference. Hideaki Suzuki and Takashi Ikegami pursued the concept in Japan (with "systems of machines and tapes", referencing von Neumann's early work). [Banzhaf, Dittrich and Ziegler present an excellent review here](http://www.cs.mun.ca/~banzhaf/papers/alchemistry_review_MIT.pdf). See also [Artificial Chemistry. Hideaki Suzuki, Peter Dittrich. Artificial Life 2009, Vol. 15, No. 1.](http://www.mitpressjournals.org/doi/abs/10.1162/artl.2009.15.1.15100?journalCode=artl)
 
-## Programmable media and byte-code ecosystems
+Typical an AC includes:
 
-Corewars
+- A set **S** of possible molecule types. This set could be finite or infinite (as far as we know, the set of possible molecules in the universe is infinite.) Molecules could be represented in the program as symbols, character strings, numbers, lambda-expressions, trees, etc.
+- A set **R** of possible reaction rules, in which input combinations of input molecules produce combinations of output molecules; e.g. ```A + B -> 2C``` or ```A + 2B -> A + D```. Note that the second example is a *catalytic* reaction, since one of the inputs (```A```) is preserved unchanged. A reaction may also have other conditions, such as ambient temperature; and may have an associated probability ("rate constant") and energetic cost. 
+- A population **P** of molecules (drawn from **S**) that exist at any moment. 
+- An algorithm **A** specifying how to apply rules **R** to population **P** and thus update to the population of the next instant (**P'**). The algorithm could take into account spatial proximity, or it could assume that all chemicals rapidly disperse (the "well-stirred reactor" model), in which reactions are selected stochastically. On the other hand, if concentrations of molecules are represented as continuous numbers, differential equations may be used. 
 
-### Tom Ray's Tierra 
+The algorithm may also include a source and sink: the source is a continuous input of new (base) molecules, and a sink is a gradual removal of molecules to maintain population size. In addition, certain reactions may be filtered to make the whole system more interesting (e.g. discarding reactions that produce nothing more than one of their inputs).
 
-[Tom Ray: the evolutionary biologist who created evolution in the CPU](http://www.youtube.com/watch?v=Wl5rRGVD0QI)
+> There are clearly similarities with rewriting systems (where the active population is the item being rewritten, made of molecule *terms* and reaction *productions*). There can also be similarities found with evolutionary, cellular and dynamical systems. Alternatively, AC's can be viewed as a special case of agent systems, in which each agent belongs to a molecule-class, and reactions are a result of agent interacitons (in which interactions usually lead to the creation and destruction of agents). 
 
-### Viruses
+The kinds of structures that can emerge include self-maintaining populations, auto-catalytic cycles, adaptive cycles, and so on. Artificial chemistries are also one possible attractive option to overcome the 'over-specified' nature of most artificial evolutionary and / or developmental systems: a mechanism by which new features come into being, new behaviors, new sensors, new evolutionary pathways, even new modes of evolution. They have also been applied to optimization problems, and to the modeling of social systems. 
 
-## Immune systems, shape spaces
+An important design choice is how to define the reaction rules. For a finite system these could be designed by hand (or to model a well-known physical system). For an infinite system they must be derived on demand; this could be done programatically according to reactant structures, in an approximation to molecule bonding mechanisms (or protein folding). For example, a simple demonstration AC uses integer division to define reactions: each molecule type is an integer (greater than one), and two molecules can react if they leave no remainder after division (the long-term behavior of this system tends to increase the concentration of prime numbers). Another possibility is to generate reactions and rates randomly as needed. 
 
-Natural and artificial immunity, algorithms, shape spaces.
+Like artificial life, in artificial chemistries the assumption holds that organization (information) is the most essential component. One of the central insights stems from a clear analogy between life and computation: organisms are created by organisms, just as programs can create programs. Underlying this is the ease of mapping of code and data, mirroring a relationship between physical structure and behavior (form and function). Fontana exploited this directly by representing chemicals as LISP expressions, which react by processing other LISP expressions. Other authors have mapped binary strings into machine instructions for a virtual machine.
 
+### Virtual machines as byte-code ecosystems
+
+The equivalence of code and data underlies the theory of computation itself. It is used widely today by any language **interpreter** (such as the Lua console program), which parses input code into a series of instructions, and interprets these instructions one by one to produce output behavior. As a result is behaves as if it was itself a computer. Programs such as these are called **virtual machines**. Even a turtle-graphics interpreter is a virtual machine.
+
+Since at least the early 1980's people have enjoyed creating virtual machines to explore the possibility of programs competing for control of the virtual machine processors and memory (see [Core War](http://en.wikipedia.org/wiki/Core_War)). Ecologist Tom Ray was inspired to create a virtual machine in which the programs can evolve and modify each other, and found behaviors of symbiosis and parasitism. [Documentary video](http://www.youtube.com/watch?v=Wl5rRGVD0QI)
+
+Although byte-code systems are older, it has also been suggested that they are also a form of artificial chemistry, in which organisms are molecules (structured as binary sequences). 
+
+Virus and anti-virus systems have been modeled in these terms, although they also draw upon theories of immune systems.
 
 
 
