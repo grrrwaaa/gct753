@@ -200,6 +200,7 @@ Karl Sims used GP for his genetic images, and for his evolving virtual creaturs.
 Jurgen Schmidhuber proposed using GP to evolve GP (Meta-GP), since things like chromosomes, crossover etc. are themselves phenomena that have evolved. 
 
 [A field guide to GP](http://dces.essex.ac.uk/staff/rpoli/gp-field-guide/A_Field_Guide_to_Genetic_Programming.pdf)
+[See also this tutorial](http://www.geneticalgorithms.com/Tutorial/index.html)
 
 [An example for audio](http://www.pawfal.org/Software/fastbreeder/)
 
