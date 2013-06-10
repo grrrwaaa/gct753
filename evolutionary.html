@@ -120,6 +120,68 @@
 </ul>
 <p>Some projects have also proposed a form of artificial co-evolution, where one population represents the candidate products, and the other population represents artificial critics.</p>
 <hr>
+<h2>Genetic Programming</h2>
+<p>Genetic Programming was invented by Nigel Cramer in 1985, but greatly expanded through the work of John Koza. GP evolves programs; it is an example of <strong>metaprogramming</strong>.</p>
+<p>GP has been used to generate programs to solve hard problems, and to evolve control systems for artificial agents and robots. The central concept is that the generating a phenotype is a process of generating <em>code</em>. Populations of generated programs can then be selected and evolved as usual. </p>
+<p>Typically the programs for GP follow a tree-like structure. The leaves of the tree are <em>terminals</em> and the branches are <em>functions</em>. Terminals have no inputs; typical terminals are constant numbers and global variable names. Non-terminal functions are specified according to their operator (such as mathematical addition, multiplication, cosine, etc.); they have one or more inputs, which maybe terminals or other functions. This structure is natural to LISP programs:</p>
+<pre><code class="lang-lisp"><span class="list">(<span class="title">*</span><span class="body"> <span class="number">6</span> <span class="list">(<span class="title">sin</span><span class="body"> <span class="list">(<span class="title">+</span><span class="body"> x <span class="number">2</span>)</span></span>)</span></span>)</span></span></code></pre>
+<p>The above would be represented in Lua code as follows:</p>
+<pre><code class="lang-lua"><span class="keyword">return</span> <span class="number">6</span> * (<span class="built_in">math</span>.sin(x + <span class="number">2</span>))</code></pre>
+<p>The <strong>Linear Genetic Programming</strong> variant which represents programs as sequences of instructions rather than trees. It more closely resembles the procedural nature of widely-used programming languages, virtual machines, assembly and machine code. Each instruction uses a single function, with zero or more arguments (constants or registers), and assigns to a register. </p>
+<p>The above program could be linearized to normal form in Lua as follows:</p>
+<pre><code class="lang-lua"><span class="keyword">local</span> r1 = <span class="number">2</span>
+<span class="keyword">local</span> r2 = x
+<span class="keyword">local</span> r3 = r1 + r2
+<span class="keyword">local</span> r4 = <span class="built_in">math</span>.sin(r3)
+<span class="keyword">local</span> r5 = <span class="number">6</span>
+<span class="keyword">local</span> r6 = r5 * r4
+<span class="keyword">return</span> r6</code></pre>
+<p>The linear structure may appear more flexible, since it allows branches to reconnect; however the functional programming interpretation of the tree is provably equivalent. Ultimately the choice depends on practical rather than theoretical questions.</p>
+<h3>Genetic representation</h3>
+<p>It is convenient to represent these programs as a data structure, from which the phenotype code is generated. Doing so makes crossover and mutation much easier.</p>
+<p>For example, integers can be used to specify which function or terminal type a node contains, and which nodes are used as arguments. Tree structures can nest their data directly, while linear structures can refer to nodes by integer register id (or register stack offset). </p>
+<p>For example, here is the above program as a list of instruction codes:</p>
+<pre><code class="lang-lua"><span class="comment">-- operator IDs: { [1] = "constant", [2] = "global", [3] = "add", [4] = "mul", [5] = "sin" }</span>
+<span class="comment">-- global IDs: { [1] = "x", }</span>
+
+<span class="keyword">local</span> geno = {
+    { <span class="number">1</span>, <span class="number">2</span> },
+    { <span class="number">2</span>, <span class="number">1</span> },
+    { <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span> },
+    { <span class="number">5</span>, <span class="number">3</span> },
+    { <span class="number">1</span>, <span class="number">6</span> },
+    { <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span> },
+}</code></pre>
+<h3>Initialization</h3>
+<p>Generating a seed tree can follow a recursive structure, starting from the root at depth 0, up to a maximum depth <code>m</code>:</p>
+<ul>
+<li>If depth equals <code>m</code> choose a terminal at random,</li>
+<li>Else select a function or terminal at random.<ul>
+<li>If the node type is a function, choose a random function. Each function has a specific number of children (e.g. the + function has two children); for each child node, repeat the algorithm with depth increased by one.</li>
+</ul>
+</li>
+</ul>
+<p>An alternative algorithm for linear GP, with <code>n</code> operations:</p>
+<ul>
+<li>Loop from 1 to <code>n</code>:<ul>
+<li>If <code>n</code> is less than the maximum number of arguments (typically 2 or 3), create a random terminal node.</li>
+<li>Else create a random terminal or a random function.<ul>
+<li>If the node type is a function, use a randomly selected previous node for each of the function arguments.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The root (result) node is node <code>n</code>. </li>
+</ul>
+<h3>Variation</h3>
+<p>For a linearized genotype representation, the genetic mutations and crossover operators are similar to other sequence-based evolutionary systems. </p>
+<p>For tree-like representations it becomes more complex and interesting: Mutations on a tree can include modifcation of instruction arguments, replacement of sub-trees, function mutation, etc. Cross-over can be implemented as swapping sub-trees of parents. </p>
+<h3>Discussion</h3>
+<p>Karl Sims used GP for his genetic images, and for his evolving virtual creaturs.</p>
+<p>Jurgen Schmidhuber proposed using GP to evolve GP (Meta-GP), since things like chromosomes, crossover etc. are themselves phenomena that have evolved. </p>
+<p><a href="http://dces.essex.ac.uk/staff/rpoli/gp-field-guide/A_Field_Guide_to_Genetic_Programming.pdf">A field guide to GP</a></p>
+<p><a href="http://www.pawfal.org/Software/fastbreeder/">An example for audio</a></p>
+<hr>
 <h2>Discussion examples</h2>
 <p><img src="http://www.karlsims.com/papers/ksf11.gif" alt="Karl Sims">
 See <a href="http://www.karlsims.com/genetic-images.html">Karl Sims&#39; Genetic Images</a>.

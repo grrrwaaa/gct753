@@ -115,6 +115,96 @@ Some projects have also proposed a form of artificial co-evolution, where one po
 
 ----
 
+## Genetic Programming
+
+Genetic Programming was invented by Nigel Cramer in 1985, but greatly expanded through the work of John Koza. GP evolves programs; it is an example of **metaprogramming**.
+
+GP has been used to generate programs to solve hard problems, and to evolve control systems for artificial agents and robots. The central concept is that the generating a phenotype is a process of generating *code*. Populations of generated programs can then be selected and evolved as usual. 
+
+Typically the programs for GP follow a tree-like structure. The leaves of the tree are *terminals* and the branches are *functions*. Terminals have no inputs; typical terminals are constant numbers and global variable names. Non-terminal functions are specified according to their operator (such as mathematical addition, multiplication, cosine, etc.); they have one or more inputs, which maybe terminals or other functions. This structure is natural to LISP programs:
+
+```lisp
+(* 6 (sin (+ x 2)))
+```
+
+The above would be represented in Lua code as follows:
+
+```lua
+return 6 * (math.sin(x + 2))
+```
+
+The **Linear Genetic Programming** variant which represents programs as sequences of instructions rather than trees. It more closely resembles the procedural nature of widely-used programming languages, virtual machines, assembly and machine code. Each instruction uses a single function, with zero or more arguments (constants or registers), and assigns to a register. 
+
+The above program could be linearized to normal form in Lua as follows:
+
+```lua
+local r1 = 2
+local r2 = x
+local r3 = r1 + r2
+local r4 = math.sin(r3)
+local r5 = 6
+local r6 = r5 * r4
+return r6
+```
+
+The linear structure may appear more flexible, since it allows branches to reconnect; however the functional programming interpretation of the tree is provably equivalent. Ultimately the choice depends on practical rather than theoretical questions.
+
+### Genetic representation
+
+It is convenient to represent these programs as a data structure, from which the phenotype code is generated. Doing so makes crossover and mutation much easier.
+
+For example, integers can be used to specify which function or terminal type a node contains, and which nodes are used as arguments. Tree structures can nest their data directly, while linear structures can refer to nodes by integer register id (or register stack offset). 
+
+For example, here is the above program as a list of instruction codes:
+
+```lua
+-- operator IDs: { [1] = "constant", [2] = "global", [3] = "add", [4] = "mul", [5] = "sin" }
+-- global IDs: { [1] = "x", }
+
+local geno = {
+	{ 1, 2 },
+	{ 2, 1 },
+	{ 3, 1, 2 },
+	{ 5, 3 },
+	{ 1, 6 },
+	{ 4, 5, 4 },
+}
+```
+
+### Initialization 
+
+Generating a seed tree can follow a recursive structure, starting from the root at depth 0, up to a maximum depth ```m```:
+
+- If depth equals ```m``` choose a terminal at random,
+- Else select a function or terminal at random.
+	- If the node type is a function, choose a random function. Each function has a specific number of children (e.g. the + function has two children); for each child node, repeat the algorithm with depth increased by one.
+
+An alternative algorithm for linear GP, with ```n``` operations:
+
+- Loop from 1 to ```n```:
+	- If ```n``` is less than the maximum number of arguments (typically 2 or 3), create a random terminal node.
+	- Else create a random terminal or a random function.
+		- If the node type is a function, use a randomly selected previous node for each of the function arguments.
+- The root (result) node is node ```n```. 
+
+### Variation
+
+For a linearized genotype representation, the genetic mutations and crossover operators are similar to other sequence-based evolutionary systems. 
+
+For tree-like representations it becomes more complex and interesting: Mutations on a tree can include modifcation of instruction arguments, replacement of sub-trees, function mutation, etc. Cross-over can be implemented as swapping sub-trees of parents. 
+
+### Discussion
+
+Karl Sims used GP for his genetic images, and for his evolving virtual creaturs.
+
+Jurgen Schmidhuber proposed using GP to evolve GP (Meta-GP), since things like chromosomes, crossover etc. are themselves phenomena that have evolved. 
+
+[A field guide to GP](http://dces.essex.ac.uk/staff/rpoli/gp-field-guide/A_Field_Guide_to_Genetic_Programming.pdf)
+
+[An example for audio](http://www.pawfal.org/Software/fastbreeder/)
+
+----
+
 ## Discussion examples
 
 ![Karl Sims](http://www.karlsims.com/papers/ksf11.gif)
