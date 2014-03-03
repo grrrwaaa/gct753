@@ -3,11 +3,11 @@ title: Index
 
 #GCT753: Topics in Computational Design (Artificial Natures)
 
-KAIST GSCT Spring 2013  
+KAIST GSCT Spring 2013 / Spring 2014  
 Instructor: Dr. Graham Wakefield ([grrrwaaa@gmail.com](http://www.grahamwakefield.net))  
-Hours: Tue/Thu 10:30 - 12:00  
-Location: N25 3239  
-Office hours: Wed 11am-12pm, 2pm-3pm, N25 3228
+TA: Sunga Jang   
+Hours: Tue/Thu 2.30pm - 4pm
+Location: N25 3239   
 Language: English   
 Credit: 3  
 Web: http://grrrwaaa.github.com/gct753/
@@ -153,3 +153,4 @@ Implementations: stigmergy, pheromone trails.
 
 Project development labs, final project presentation & critique.
 
+[![urban jungle](http://24.media.tumblr.com/ed9e8856194f3d0d9e3211afe0cf2f27/tumblr_miff0wyJ921rpcrx8o1_500.jpg)](http://www.flickr.com/photos/idogu/167497705/)

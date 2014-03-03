@@ -124,7 +124,6 @@ field:set(function(x, y)
 end)
 ```
 
-
 We've learned almost enough now to implement Conway's *Game of Life*.
 
 ```lua

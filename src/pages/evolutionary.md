@@ -219,3 +219,5 @@ Scott Draves, “Evolution and Collective Intelligence of the Electric Sheep,”
 [Evolving 2D cars](http://boxcar2d.com/)
 
 [Evolving soft robots](https://www.youtube.com/watch?feature=player_embedded&v=z9ptOeByLA4)
+
+An excellent discussion of [the genetic algorithm in art and its relation to Deleuze, by Manuel Delanda](http://www.youtube.com/watch?v=50-d_J0hKz0)
