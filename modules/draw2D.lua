@@ -1,4 +1,5 @@
 --- Draw2D: simple drawing primitives for 2D graphics
+-- @module draw2D
 
 local gl = require "gl"
 local GL = gl
