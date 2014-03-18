@@ -3,6 +3,7 @@
 npm install -g browserify
 npm install -g minify
 npm install ndarray zeros
+// etc.
 
 browserify js/al.libs.js -o al.js && minify al.js al.min.js
 */
@@ -73,8 +74,12 @@ al.stop = function() {
 var canvas, ctx;
 var offscreen_canvas, offscreen_ctx, offscreen_image, offscreen_data;
 
-al.init = function (canvas_id) {
-	canvas = document.getElementById("canvas1");
+al.init = function () {
+	canvas = document.createElement("canvas");
+	canvas.setAttribute("width", 512);
+	canvas.setAttribute("height", 256);
+	document.body.appendChild(canvas);
+	
 	ctx = canvas.getContext('2d');
 	
 	// create an off-screen rendering context (should this be per-field?)
