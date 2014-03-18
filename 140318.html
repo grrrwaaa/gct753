@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="http://grrrwaaa.github.io/gct753/al.min.js"></script>
+<style>
+body {
+	background: #eee;
+	width: 512px;
+	min-height: 100%;
+	margin: 50px auto 50px auto;
+}
+</style>
+</head>
+<body>
+<script>
+al.init();
+
+/// put your code here /////////////////////////////////////////////////////////
+
+var width = 64;
+var height = 32;
+
+// define a new cellular automaton state:
+var game = new field2D(width, height);
+// and a second one for double-buffering:
+var past = new field2D(width, height);
+
+function init_game_cell(x, y) {
+	// about 90 % of the time return 0:
+	if (random() < 0.9) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+function reset() {
+	game.set(init_game_cell);
+}
+
+reset();
+
+function update_game_cell(x, y) {
+	// get the neighbor states:
+	var N = past.get(x, y+1);
+	var E = past.get(x+1, y);
+	var S = past.get(x, y-1);
+	var W = past.get(x-1, y);
+	var NE = past.get(x+1, y+1);
+	var NW = past.get(x-1, y+1);
+	var SE = past.get(x+1, y-1);
+	var SW = past.get(x-1, y-1);
+	// get total number of alive neighbors
+	var total = N + S + E + W + NE + NW + SE + SW;
+	// get my own previous state
+	var C = past.get(x, y);
+	
+	// if alive:
+	if (C == 1) {
+		// currently alive:
+		if (total < 2) {
+			return 0;
+		} else if (total > 3) {
+			return 0;
+		} else {
+			return 1;
+		}
+	} else {
+		// currently dead:
+		if (total == 3) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+}
+
+function update() {
+	// put code here to update the state of the game
+	
+	// flip a random cell:
+	game.set(random(2), random(width), random(height));
+	
+	// first, do the double-buffer swap:
+	var tmp = past;
+	past = game;
+	game = tmp;
+	
+	// then update every cell:
+	game.set(update_game_cell);
+}
+
+function draw() {
+	// put code here to render the game to the screen
+	game.draw();
+}
+
+/// end of user code ///////////////////////////////////////////////////////////
+
+al.start();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

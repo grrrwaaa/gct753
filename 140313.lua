@@ -11,7 +11,7 @@ function init_game_cell(x, y)
 		return 1
 	end
 end
---game:set(init_game_cell)
+game:set(init_game_cell)
 
 function update_game_cell(x, y)
 	local N = past:get(x, y+1)
@@ -26,13 +26,9 @@ function update_game_cell(x, y)
 	local total = N + S + E + W + NE + NW + SE + SW	
 	local C = past:get(x, y)
 	
-	if math.random() < 0.01 then
-		return math.random(2)-1
-	end
-	
 	if C == 1 then
 		-- currently alive:
-		if total < 2 then
+		if total < 2 and math.random() < 0.9 then
 			return 0
 		elseif total > 3 then
 			return 0
@@ -68,5 +64,21 @@ end
 function draw()
 	game:draw()
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
