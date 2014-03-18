@@ -81,6 +81,7 @@ One complication is that the states of the whole lattice must update synchronous
 
 > This technique is called *double-buffering*, and is widely used in software systems where a parallel process interacts with a serial machine. It is used to render graphics to the screen, for example.
 
+[Here is a version of the Game of Life CA using JavaScript](js.life.html)
 
 ## Variations
 
