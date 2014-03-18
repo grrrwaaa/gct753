@@ -205,17 +205,11 @@ The first assignment is to construct a new cellular system. You can start from o
 
 If you had an idea that seemed interesting but was difficult to implement or did not lead to interesting results, submit that too (with an explanation of why you think it did not work or did not do what you expected); this is just as important a part of research (akin to disproving a hypothesis in science).
 
-Document your work using comments in the code. Note that in Lua, you can write long multi-line comments like this:
+You can use any programming language that you prefer. However if you do not use the Lua or JavaScript frameworks provided in the class, you will need to also submit a video along with the code (in case we are unable to make it run on our machines). 
 
-```lua
---[[
-This is a long comment
-that runs over
-several lines
---]]
-```
-
-At the top of your code, there should be a long comment including:
+Regardless of the language used, you must document your work using comments in the code. 
+ 
+At the top of your code, there should be comments including:
 
 - Your **name**
 - The **date**
@@ -227,7 +221,7 @@ At the top of your code, there should be a long comment including:
 
 Please also comment all the important operations in the code. Please also try to use helpful variable names, e.g. ```width``` is more communicative than ```var3```.
 
-Send your final project as one (or more) Lua script(s) to my email address, on or before **Sunday 31 March**. 
+Send your final project code to the TA, on or before **Friday 28 March**.  
 
 Your assignment will be evaluted by these criteria:
 
