@@ -7,10 +7,10 @@ browserify js/al.libs.js -o al.js && minify al.js al.min.js
 */
 
 ndarray = require("ndarray");
-ndarray.normalize = require("ndarray-normalize");
-ndarray.distance = require("distance-transform");	// create a distance field from an array
+//ndarray.normalize = require("ndarray-normalize");
+//ndarray.distance = require("distance-transform");	// create a distance field from an array
 zeros = require("zeros");
-codemirror = require("codemirror");
+//codemirror = require("codemirror");
 
 var seedrandom = require("seedrandom");
 
@@ -83,6 +83,28 @@ al.init = function (canvas_id) {
 	offscreen_ctx = offscreen_canvas.getContext("2d");
 	offscreen_image = offscreen_ctx.getImageData(0, 0, offscreen_canvas.width, offscreen_canvas.height);
 	offscreen_data = offscreen_image.data;
+	
+	// add a bit of UI:
+	
+	var b = document.createElement('button');
+	b.innerHTML = 'start';
+	b.onclick = function(){ al.start(); return false; };
+	document.body.appendChild(b);
+	
+	var b = document.createElement('button');
+	b.innerHTML = 'stop';
+	b.onclick = function(){ al.stop(); return false; };
+	document.body.appendChild(b);
+	
+	var b = document.createElement('button');
+	b.innerHTML = 'once';
+	b.onclick = function(){ al.once(); return false; };
+	document.body.appendChild(b);
+	
+	var b = document.createElement('button');
+	b.innerHTML = 'reset';
+	b.onclick = function(){ reset(); draw(); return false; };
+	document.body.appendChild(b);
 }
 
 field2D = function (width, height) {
@@ -118,14 +140,14 @@ field2D.prototype.draw = function() {
 }
 
 field2D.prototype.set = function(value, x, y) {
-	if (x && y) {
+	if (x != null && y != null) {
 		x = wrap(x, this.width);
 		y = wrap(y, this.height);
 		if (typeof value === "function") {
 			var v = value(x, y);
-			if (v != null && v != undefined) data.set(i,j,v);
+			if (v != null) this.data.set(i,j,v);
 		} else {
-			data.set(x,y,value);
+			this.data.set(x,y,value);
 		}
 	} else {
 		var data = this.data;
@@ -135,7 +157,7 @@ field2D.prototype.set = function(value, x, y) {
 			for(var y=0; y<h; ++y) {
 				for(var x=0; x<w; ++x) {
 					var v = value(x, y);
-					if (v != null && v != undefined) data.set(x, y, v);
+					if (v != null) data.set(x, y, v);
 				}
 			}
 		} else {

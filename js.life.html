@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<script src="al.min.js"></script>
+<script src="al.js"></script>
 <style>
 body {
 	background: #eee;
@@ -22,7 +22,7 @@ var game = new field2D(w, h);
 var past = new field2D(w, h);
 
 function init_game_cell(x, y) {
-	if (Math.random() < 0.5) {
+	if (random() < 0.5) {
 		return 0;
 	} else {
 		return 1;
@@ -45,8 +45,6 @@ function update_game_cell(x, y) {
 	var SW = past.get(x-1, y-1);
 	var total = N + S + E + W + NE + NW + SE + SW;	
 	var C = past.get(x, y);
-	
-	// if (Math.random() < 0.01) { return random(2); }
 	
 	if (C == 1) {
 		// currently alive:
@@ -72,6 +70,9 @@ function update() {
 	past = game;
 	game = tmp;
 	
+	// random noise:
+	game.set(random(2), random(w), random(h));
+	
 	game.set(update_game_cell);
 } 
 
@@ -81,9 +82,5 @@ function draw() {
 
 al.start();
 </script>
-<button onclick="al.start()">Start</button>
-<button onclick="al.stop()">Stop</button>
-<button onclick="al.once()">Once</button>
-<button onclick="reset()">Reset</button>
 </body>
 </html>
