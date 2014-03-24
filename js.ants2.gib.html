@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<!--<script src="http://grrrwaaa.github.io/gct753/al.min.js"></script>-->
+<script src="al.min.js"></script>
+<style>
+body {
+	background: #eee;
+	width: 512px;
+	min-height: 100%;
+	margin: 50px auto 50px auto;
+}
+</style>
+</head>
+<body>
+<script>
+
+var ringidx = 0;
+
+/*
+var audioContext;
+if( typeof webkitAudioContext !== 'undefined' ) {
+	audioContext = webkitAudioContext
+} else if ( typeof AudioContext !== 'undefined' ) {
+	audioContext = AudioContext
+}
+
+var tableSize = 1024;
+
+var al_audio = {
+	bufferSize: 2048,
+	sampleRate: 44100,
+	sampleRateInverse: 1/44100,
+	outchannels: 2,
+	context: null,
+	node: null,
+	
+	samples2radians: Math.PI * 2 / 44100,
+	hz2table: tableSize / 44100,
+	
+	playbackTime: 0,
+}
+
+var twopi = Math.PI * 2;
+
+var amp = .5;
+
+
+
+var ring = new Float32Array(tableSize);
+// number of ring steps to play per second:
+var sequence_rate = 600;
+
+// The frequncy of the sine wave tone
+var frequency = 440;
+var phase = 0;
+var tableSine = new Float32Array(tableSize);
+for (var i = 0; i < 1024; i++) { tableSine[i] = Math.sin((Math.PI * 2.0 * i)/tableSize); }
+
+var ringphase = 0;
+
+al_audio.audioProcess = function(event) {
+
+	var outDataL = event.outputBuffer.getChannelData(0),
+		outDataR = event.outputBuffer.getChannelData(1);
+	var bufferSize = event.outputBuffer.length;
+	
+	var sampleRateInverse = al_audio.sampleRateInverse;
+	
+	//var samples2radians = al_audio.samples2radians;
+	var hz2table = al_audio.hz2table;
+	
+	var floor = Math.floor;
+	var table = tableSine;
+	
+	//console.log("bs", bufferSize);
+	
+	// Loop through the samples
+	for (var i = 0; i < bufferSize; i++) {
+	
+		// get new frequency:
+		if (ringphase < ringidx) {
+			ringphase += sequence_rate * sampleRateInverse;
+		}
+		if (ringphase > tableSize) ringphase -= tableSize;
+		var idx = floor(ringphase);
+		
+		var frequency = ring[idx];
+		
+		var pincr = frequency * hz2table;
+		phase += pincr;
+		if (phase >= 1024.0) phase = (phase - 1024.0); 
+		
+		index = floor(phase);
+      	frac = phase - index;
+      	 
+      	// linear interp:
+		var index2, index1 = (~~index);
+		if((index1 | 0) == (1024 | 0)) {
+			index2 = 0
+		} else { 
+			index2 = (index1 + 1) | 0;
+		}
+		val1 = table[ index1 ];
+      	val2 = table[ index2 ];
+		var v = amp * (val1 + (frac * (val2 - val1)));
+
+		// Set the data in the output buffer for each sample
+		outDataL[i] = v;
+		outDataR[i] = v;
+		
+		
+	}
+	
+	al_audio.playbackTime += bufferSize * sampleRateInverse;
+},
+
+// returns false if audio is not supported.
+// audio might not start immediately however; check al_audio.context != null
+al_audio_init = function() {
+
+	// this would need to be deferred for iOS devices, since audio can only be started in response to a user event
+	al_audio_start = function() {
+		if( typeof audioContext !== 'undefined' ) {
+			document.getElementsByTagName('body')[0].removeEventListener('touchstart', al_audio_start);
+			al_audio.context = new audioContext();
+			al_audio.sampleRate = al_audio.context.sampleRate;
+			al_audio.node = al_audio.context.createScriptProcessor(al_audio.bufferSize, 0, al_audio.outchannels, al_audio.context.sampleRate);	
+			al_audio.node.onaudioprocess = al_audio.audioProcess;
+			al_audio.node.connect(al_audio.context.destination);
+			
+			al_audio.sampleRateInverse = 1 / al_audio.context.sampleRate;
+			al_audio.samples2radians = Math.PI * 2 / al_audio.context.sampleRate;
+			al_audio.hz2table = tableSize / al_audio.context.sampleRate;
+
+			if('ontouchstart' in document.documentElement) { // required to start audio under iOS 6
+				var mySource = al_audio.context.createBufferSource();
+				mySource.connect(al_audio.context.destination);
+				mySource.noteOn(0);
+			}
+			return true;
+			
+		} else if ( navigator.userAgent.indexOf( 'Firefox' ) === -1 ) {
+			al_audio.AudioDataDestination(44100, Gibberish.audioProcessFirefox);
+			al_audio.context = { sampleRate: 44100 }; // needed hack to determine samplerate in ugens
+			return true;
+			
+		} else {
+			alert('Your browser does not support javascript audio synthesis. Please try downloading a recent Chrome, FireFox or Safari (for example).');
+			return false;
+		}
+	}
+	
+	if('ontouchstart' in document.documentElement) {
+		document.getElementsByTagName('body')[0].addEventListener('touchstart', al_audio_start);
+		return true;
+		
+	} else {
+		return al_audio_start();
+	}
+}
+*/
+
+al.init();
+
+//console.log("audio", al_audio_init());
+
+console.log("gibberish", Gibberish.init());
+Gibberish.Time.export();
+Gibberish.Binops.export();
+
+sin = new Gibberish.Sine( 440, .25 ).connect();
+
+seq = new Gibberish.Sequencer({
+  target:sin, 
+  key:'frequency',
+  values:[],
+  durations:[ ms(250) ],
+}).start();
+
+for (var i=0; i<256; i++) {
+	seq.values.push[0];
+}
+
+/// put your code here /////////////////////////////////////////////////////////
+
+var dimx = 128, dimy = 64;
+var field = new field2D(dimx, dimy);
+
+// turn it white:
+field.set(1);
+
+var ants = [];
+
+// define an ant:
+function ant(x, y, spin) {
+	this.x = x;
+	this.y = y;
+	this.direction = 0;
+	// which direction the ant should turn when it finds an active cell:
+	this.spin = spin;
+}
+
+// make some ants!
+ants = [
+	new ant(64 + random(2), 30 + random(3), random(2) ? 1 : -1),
+	new ant(64, 30 + random(3), random(2) ? 1 : -1),	
+];
+
+// how to render the scene
+function draw()	{
+	// draw the field:
+	field.draw()
+}
+
+// try turning this up to 10, 100, 1000... 
+var iterations_per_frame = 1;
+
+// update the state of the scene.
+function update(dt) {
+	// update 
+	seq.durations[0] = ms(1000 * dt * iterations_per_frame);
+	
+	// cache our current rate in order to know how fast to play the sequence:
+	sequence_rate = iterations_per_frame/dt;
+	
+	for (var i = 1; i <= iterations_per_frame; i++) {
+	
+		for (var j in ants) {
+			var ant = ants[j];
+		
+			// move the ant.
+			if (ant.direction == 0) {
+				// North
+				ant.y = (ant.y + 1) % field.height;
+			} else if (ant.direction == 1) {
+				// West
+				ant.x = (ant.x - 1) % field.width;
+			} else if (ant.direction == 2) {
+				// South
+				ant.y = (ant.y - 1) % field.height;
+			} else {
+				// East
+				ant.x = (ant.x + 1) % field.width;
+			}
+			
+			// apply the rule.
+			var state = field.get(ant.x, ant.y);
+			if (state == 1) {
+				// change the cell state:
+				field.set(0, ant.x, ant.y);
+				// turn in the preferred direction:
+				ant.direction = wrap(ant.direction + ant.spin, 4);
+			} else {
+				// change the cell state:
+				field.set(1, ant.x, ant.y);
+				// turn in the opposite direction:
+				ant.direction = wrap(ant.direction - ant.spin, 4);
+			}
+			
+			//frequency = 1000 * (1 - ant.y / dimy); 
+			if (j == 0) {
+				frequency = 110 * (1 + ant.direction);
+				
+				seq.values[ringidx] = frequency;
+				ringidx++;
+				if (ringidx >= seq.values.length) { ringidx = 0; }
+				
+			}
+		}
+	}	
+}
+
+function reset() {
+	field.set(1);
+}
+
+/// end of user code ///////////////////////////////////////////////////////////
+
+al.start();
+</script>
+<a href="js.ants.html">See also ants1</a>
+</body>
+</html>
