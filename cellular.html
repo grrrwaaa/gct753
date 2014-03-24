@@ -1,39 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset='utf-8'>
-<title>Cellular systems and lattice models</title>
-    
-<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
-  
-<script src="js/jquery.js"></script>
-<script src="js/socket.io.js"></script>
-<script src="js/main.js" type="text/javascript"></script>
-
-<link rel="icon" type="image/x-icon" href="favicon.ico" />
-</head>
-<body>
-<div id="wrapper">
-	
-	<div class="header">
-		<h1>GCT 753</h1>
-		<a href="index.html">Overview</a><br/>
-		<a href="software.html">Software</a><br/>
-		<a href="lua.html">Lua Tutorial</a><br/>
-		&gt;&gt; <a href="https://github.com/grrrwaaa/gct753">GitHub</a><br/>
-		&gt;&gt; <a href="http://grrrwaaa.github.com/gct753/docs/reference.html">Reference</a><br/>
-		<br>
-		<a href="introduction.html">Themes</a><br/>
-		<a href="artificial_life.html">Artificial Life</a><br/>
-		<a href="generative_art.html">Generative Art</a><br/>
-		<a href="cellular.html">Cellular Systems</a><br/>
-		<a href="agent.html">Agent Systems</a><br/>
-		<a href="symbol.html">Symbol Systems</a><br/>
-		<a href="evolutionary.html">Evolutionary Systems</a><br/>
-		
-	</div>
-	<div class="section"><h1>Cellular systems and lattice models</h1>
+<h1>Cellular systems and lattice models</h1>
 <p>Provides an interesting continuum between non-living (such as molecules in crystal and metalline structures) and living (such as cells of a multi-cellular organism). The main difference is that, although both begin with more or less &#39;the same program&#39;, in living material the individual behavior of each cell specializes according to early conditions. This is important for <em>developmental biology</em>. Of course, computational cellular systems are far, far simpler than biological cells; but still draw from this inpsiration. The CA model was propsed by Stanislaw Ulam and used by von Neumann to demonstrate machines that can reproduce themselves; a more concise example being proposed by <a href="http://www.youtube.com/watch?v=2iDc4C6vbcc">Christopher Langton</a> decades later, itself later <a href="http://www.youtube.com/watch?v=vbpoTZlNTiw&amp;NR=1&amp;feature=endscreen">improved upon using artificial evolutionary techniques</a>.</p>
 <p><a href="http://www.interciencia.es/PDF/WikipediaBooks/CellAutomata.pdf">The wikibooks on CA</a>.</p>
 <p>The essential components that define a cellular system:</p>
@@ -154,6 +119,7 @@
 <p><strong>Continuous neighborhood:</strong> Instead of accumulating whole neighbor cells, apply a <em>kernel</em> region. Perhaps give different weights to cells according to the degree that they fall under a radius, or by distance.</p>
 <h4>SmoothLife</h4>
 <p><a href="http://www.youtube.com/playlist?list=PL69EDA11384365494">SmoothLife</a> still uses a discrete grid, but both the kernel and transition functions are adjusted for smooth, continuous values. A disc around the cell is integrated and normalized (i.e. averaged) for the cell&#39;s state, and a ring around this is integrated &amp; normalized (averaged) for the neighbor state. Cell transition functions are expressed in terms of continuous sigmoid thresholds over the [0, 1] range, and re-expressed in terms of differential functions (velocities of change) to approximate continuous time. <a href="http://arxiv.org/pdf/1111.1567v2.pdf">Paper here</a>. By doing so, it removes the discrete bias and leads to fascinating results. <a href="http://www.youtube.com/watch?v=l7t8LtdBAV8">Another implementaton</a>. <a href="http://www.youtube.com/watch?v=zA857JdUn9o&amp;list=PL69EDA11384365494&amp;index=46">Taken to 3D</a>. In effect, by making all components continuous, it is essentially a simulation of differential equations.</p>
+<p><a href="http://0fps.net/2012/11/19/conways-game-of-life-for-curved-surfaces-part-1/">Here is a great explanation of the SmoothLife implementation, with a jsfiddle demo</a></p>
 <h4>Reaction Diffusion</h4>
 <p>The reaction-diffusion model was proposed by Turing to describe embryo development and pattern-generation (<a href="http://www.dna.caltech.edu/courses/cs191/paperscs191/turing.pdf">Turing, A. The Chemical Basic for Morphogenesis.</a>); it is still used today in CG (<a href="http://www.cc.gatech.edu/~turk/my_papers/reaction_diffusion.pdf">Greg Turk&#39;s famous paper</a>). RD systems and other differential equation systems can be approximated using continuous automata.</p>
 <p><img src="img/xmorphia-parameter-map.jpg" alt="The Gray-Scott parameter map"></p>
@@ -200,12 +166,3 @@
 <li><strong>Aesthetic qualities</strong> (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting. If it doesn&#39;t work as expected or produce interesting results, then the evaluation here will be on how well you can articulate what you had hoped for, what aspects of that you think are missing, why you think they are missing, what you can suggest to resolve it, etc.</li>
 <li><strong>Novel contribution</strong> (33%). This means creating something that we haven&#39;t built together in class, perhaps even something that has never been made before. The key aspects here are the creative qualities of the idea. Your ideas for future extensions will be evaluated too.</li>
 </ul>
-</div>
-	
-	<div class="footer">
-	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
-	Graham Wakefield, 2013</div>
-	
-</div>
-</body>
-</html>

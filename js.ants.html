@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="http://grrrwaaa.github.io/gct753/al.min.js"></script>
+<style>
+body {
+	background: #eee;
+	width: 512px;
+	min-height: 100%;
+	margin: 50px auto 50px auto;
+}
+</style>
+</head>
+<body>
+<script>
+al.init();
+
+/// put your code here /////////////////////////////////////////////////////////
+
+var dimx = 256, dimy = 128;
+var field = new field2D(dimx, dimy);
+
+// turn it white:
+field.set(1);
+
+// starting position:
+var antx = dimx/2;
+var anty = dimy/2;
+var direction = 0;
+
+// how to render the scene
+function draw()	{
+	// draw the field:
+	field.draw()
+}
+
+// try turning this up to 10, 100, 1000... 
+var speed = 100;
+
+// update the state of the scene.
+function update(dt) {
+
+	for (var i = 1; i <= speed; i++) {
+	
+		// apply the rule.
+		var state = field.get(antx, anty);
+		if (state == 1) {
+			direction = wrap(direction + 1, 4);
+			field.set(0, antx, anty);
+		} else {
+			direction = wrap(direction - 1, 4);
+			field.set(1, antx, anty);
+		}
+		
+		// move the ant.
+		if (direction == 0) {
+			// North
+			anty = (anty + 1) % field.height;
+		} else if (direction == 1) {
+			// West
+			antx = (antx - 1) % field.width;
+		} else if (direction == 2) {
+			// South
+			anty = (anty - 1) % field.height;
+		} else {
+			// East
+			antx = (antx + 1) % field.width;
+		}
+	}	
+}
+
+function reset() {
+	field.set(1);
+}
+
+/// end of user code ///////////////////////////////////////////////////////////
+
+al.start();
+</script>
+<a href="js.ants2.html">See also ants2</a>
+</body>
+</html>

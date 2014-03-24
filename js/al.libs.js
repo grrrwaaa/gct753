@@ -4,7 +4,7 @@ npm install -g minify
 npm install ndarray zeros
 // etc.
 
-browserify js/al.libs.js -o al.js && minify al.js al.min.js
+browserify js/gibberish_2.0.min.js js/al.libs.js  -o al.js && minify al.js al.min.js
 */
 
 ndarray = require("ndarray");
@@ -51,7 +51,7 @@ al.once = function() {
 
 var al_render = function() {
 	var now = Date.now();
-	al_dt = now - al_now;
+	al_dt = (now - al_now) * 0.001;
 	al_now = now;
 	// wrap in a try/catch?
 	if (al_rendering) {

@@ -1,39 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset='utf-8'>
-<title>Vectors</title>
-    
-<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
-  
-<script src="js/jquery.js"></script>
-<script src="js/socket.io.js"></script>
-<script src="js/main.js" type="text/javascript"></script>
-
-<link rel="icon" type="image/x-icon" href="favicon.ico" />
-</head>
-<body>
-<div id="wrapper">
-	
-	<div class="header">
-		<h1>GCT 753</h1>
-		<a href="index.html">Overview</a><br/>
-		<a href="software.html">Software</a><br/>
-		<a href="lua.html">Lua Tutorial</a><br/>
-		&gt;&gt; <a href="https://github.com/grrrwaaa/gct753">GitHub</a><br/>
-		&gt;&gt; <a href="http://grrrwaaa.github.com/gct753/docs/reference.html">Reference</a><br/>
-		<br>
-		<a href="introduction.html">Themes</a><br/>
-		<a href="artificial_life.html">Artificial Life</a><br/>
-		<a href="generative_art.html">Generative Art</a><br/>
-		<a href="cellular.html">Cellular Systems</a><br/>
-		<a href="agent.html">Agent Systems</a><br/>
-		<a href="symbol.html">Symbol Systems</a><br/>
-		<a href="evolutionary.html">Evolutionary Systems</a><br/>
-		
-	</div>
-	<div class="section"><h1>(Euclidean) Vectors</h1>
+<h1>(Euclidean) Vectors</h1>
 <p>A <strong>vector</strong> is one way of describing a direction with a magnitude. Vectors can describe spatial properties such as locations, but also properties that change over time such as velocities, accelerations, forces of attraction and repulsion, local wind speed and direction, etc. A magnitude without direction (such as a regular number) is called a <strong>scalar</strong>.</p>
 <p>In a 2D space, a vector has two components (X, Y), in a 3D space, it has three (X, Y, Z). Programming with vectors is easier if these components are combined into a single abstraction of a <em>vector object</em>. We can also treat a position in space as a vector: <em>the vector from the origin (0, 0) to the position</em>. </p>
 <p>Adding two vectors is like applying their movements in series. </p>
@@ -136,12 +101,3 @@ A = agent()</code></pre>
     <span class="title">vec2_add</span><span class="params">(self.pos, self.vel)</span>
 <span class="title">end</span></code></pre>
 <p>We might also want to place limits on velocity / acceleration... or let these limits emerge by also including friction or other dissipative forces that counter the current velocity. Attraction (like gravitation) can be applied in the directions between objects and inversely proportional to the distance squared. And for life-like agents, we also introduce <em>forces from within</em>.</p>
-</div>
-	
-	<div class="footer">
-	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
-	Graham Wakefield, 2013</div>
-	
-</div>
-</body>
-</html>

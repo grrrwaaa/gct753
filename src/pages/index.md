@@ -5,11 +5,12 @@ title: Index
 
 KAIST GSCT Spring 2013 / Spring 2014  
 Instructor: Dr. Graham Wakefield ([grrrwaaa@gmail.com](http://www.grahamwakefield.net))  
-TA: Sunga Jang   
 Hours: Tue/Thu 2.30pm - 4pm
 Location: N25 3239   
 Language: English   
 Credit: 3  
+TA: Sunga Jang   
+(Office / Hours: N5 #2339 / Monday, Wednesday 4pm-6pm)   
 Web: http://grrrwaaa.github.com/gct753/
 
 ## Overview
