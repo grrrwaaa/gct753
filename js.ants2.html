@@ -16,9 +16,11 @@ body {
 <body>
 <script>
 
+// sequence of events timestamped
+var seq = [];
+
 var ringidx = 0;
 
-/*
 var audioContext;
 if( typeof webkitAudioContext !== 'undefined' ) {
 	audioContext = webkitAudioContext
@@ -39,7 +41,10 @@ var al_audio = {
 	samples2radians: Math.PI * 2 / 44100,
 	hz2table: tableSize / 44100,
 	
+	latency: 0.1,
+	
 	playbackTime: 0,
+	schedulerTime: 0,
 }
 
 var twopi = Math.PI * 2;
@@ -74,19 +79,18 @@ al_audio.audioProcess = function(event) {
 	var floor = Math.floor;
 	var table = tableSine;
 	
-	//console.log("bs", bufferSize);
+	var t = al_audio.playbackTime;
+	
+	var e = seq.shift();
 	
 	// Loop through the samples
 	for (var i = 0; i < bufferSize; i++) {
 	
-		// get new frequency:
-		if (ringphase < ringidx) {
-			ringphase += sequence_rate * sampleRateInverse;
+		// process events:
+		while (e != null && e.t <= t) {
+			frequency = e.frequency;
+			e = seq.shift();
 		}
-		if (ringphase > tableSize) ringphase -= tableSize;
-		var idx = floor(ringphase);
-		
-		var frequency = ring[idx];
 		
 		var pincr = frequency * hz2table;
 		phase += pincr;
@@ -110,10 +114,12 @@ al_audio.audioProcess = function(event) {
 		outDataL[i] = v;
 		outDataR[i] = v;
 		
-		
+		t += sampleRateInverse;
+		al_audio.schedulerTime = t;
 	}
 	
 	al_audio.playbackTime += bufferSize * sampleRateInverse;
+	al_audio.schedulerTime = al_audio.playbackTime;
 },
 
 // returns false if audio is not supported.
@@ -160,28 +166,10 @@ al_audio_init = function() {
 		return al_audio_start();
 	}
 }
-*/
 
 al.init();
 
-//console.log("audio", al_audio_init());
-
-console.log("gibberish", Gibberish.init());
-Gibberish.Time.export();
-Gibberish.Binops.export();
-
-sin = new Gibberish.Sine( 440, .25 ).connect();
-
-seq = new Gibberish.Sequencer({
-  target:sin, 
-  key:'frequency',
-  values:[],
-  durations:[ ms(250) ],
-}).start();
-
-for (var i=0; i<256; i++) {
-	seq.values.push[0];
-}
+console.log("audio", al_audio_init());
 
 /// put your code here /////////////////////////////////////////////////////////
 
@@ -204,8 +192,11 @@ function ant(x, y, spin) {
 
 // make some ants!
 ants = [
-	new ant(64 + random(2), 30 + random(3), random(2) ? 1 : -1),
-	new ant(64, 30 + random(3), random(2) ? 1 : -1),	
+	new ant(64, 30, 1),
+	new ant(64, 31, 1),
+	
+	//new ant(64 + random(2), 30 + random(3), random(2) ? 1 : -1),
+	//new ant(64, 30 + random(3), random(2) ? 1 : -1),	
 ];
 
 // how to render the scene
@@ -217,16 +208,33 @@ function draw()	{
 // try turning this up to 10, 100, 1000... 
 var iterations_per_frame = 1;
 
+var t0 = 0;
+
+var adt = 1/30;
+var adt1 = 1/30;
+var smooth = 0.1;
+
 // update the state of the scene.
 function update(dt) {
-	// update 
-	seq.durations[0] = ms(1000 * dt * iterations_per_frame);
+	
+	// current audio clock time:
+	var t = al_audio.schedulerTime;
+	var dt1 = t - t0;
+	t0 = t;
+	
+	adt += smooth*(dt - adt);
+	adt1 += smooth*(dt1 - adt1);
+	//console.log(adt, adt1);
 	
 	// cache our current rate in order to know how fast to play the sequence:
 	sequence_rate = iterations_per_frame/dt;
 	
 	for (var i = 1; i <= iterations_per_frame; i++) {
 	
+		// distributed clock time:	
+		//t += adt1 / iterations_per_frame;
+	
+		
 		for (var j in ants) {
 			var ant = ants[j];
 		
@@ -259,17 +267,21 @@ function update(dt) {
 				ant.direction = wrap(ant.direction - ant.spin, 4);
 			}
 			
-			//frequency = 1000 * (1 - ant.y / dimy); 
 			if (j == 0) {
 				frequency = 110 * (1 + ant.direction);
 				
-				seq.values[ringidx] = frequency;
-				ringidx++;
-				if (ringidx >= seq.values.length) { ringidx = 0; }
+				// schedule at t + latency:
+				seq.push({
+					t: t + al_audio.latency,
+					frequency: frequency,
+				});
 				
 			}
 		}
 	}	
+	
+	// in theory this should be correct, so long as update() and audioprocess() cannot interleave.
+	al_audio.schedulerTime += adt1;
 }
 
 function reset() {
