@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>JavaScript</title>
+    
+<link href="css/site.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="css/highlight.default.css" media="screen" rel="stylesheet" type="text/css" />
+  
+<script src="js/jquery.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/main.js" type="text/javascript"></script>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+<body>
+<div id="wrapper">
+	
+	<div class="header">
+		<h1>GCT 753</h1>
+		<a href="index.html">Overview</a><br/>
+		<a href="software.html">Software</a><br/>
+		&gt; <a href="lua.html">Lua</a> (<a href="https://github.com/grrrwaaa/gct753">GitHub</a>, <a href="http://grrrwaaa.github.com/gct753/docs/reference.html">Reference</a>)<br/>
+		&gt; <a href="lua.html">JavaScript</a> (<a href="https://github.com/grrrwaaa/gct753/tree/gh-pages">GitHub</a>)<br/>
+		
+		<br>
+		<a href="introduction.html">Themes</a><br/>
+		<a href="artificial_life.html">Artificial Life</a><br/>
+		<a href="generative_art.html">Generative Art</a><br/>
+		<a href="cellular.html">Cellular Systems</a><br/>
+		<a href="agent.html">Agent Systems</a><br/>
+		<a href="symbol.html">Symbol Systems</a><br/>
+		<a href="evolutionary.html">Evolutionary Systems</a><br/>
+		
+	</div>
+	<div class="section"><h1>Using JavaScript and al.js</h1>
+<p>Since 2014 we are also offering class material using a browser-based JavaScript implementation. Most of the library code is in <a href="http://grrrwaaa.github.io/gct753/al.min.js"><a href="http://grrrwaaa.github.io/gct753/al.min.js">http://grrrwaaa.github.io/gct753/al.min.js</a></a> (or, for an uncompressed version, see <a href="http://grrrwaaa.github.io/gct753/al.js"><a href="http://grrrwaaa.github.io/gct753/al.js">http://grrrwaaa.github.io/gct753/al.js</a></a>). This library replicates many of the capabilities of last year&#39;s Lua based system, and adds a few new ones. Graphical rendering uses HTML5 Canvas API and sound is built on the ScriptProcessingNode API, so a recent version of Chrome, FireFox or Safari is recommended (IE probably won&#39;t work). </p>
+<p>Please look at <a href="js.life.html">the Game of Life example</a> and <strong>view source</strong> to get an idea of the template:</p>
+<pre><code><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span>&gt;</span>
+<span class="tag">&lt;<span class="title">head</span>&gt;</span>
+<span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"content-type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=UTF-8"</span>&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://grrrwaaa.github.io/gct753/al.min.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+<span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css">
+<span class="tag">body</span> <span class="rules">{
+    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#eee</span>;</span></span>
+    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">512</span>px;</span></span>
+    <span class="rule"><span class="attribute">min-height</span>:<span class="value"> <span class="number">100</span>%;</span></span>
+    <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">50</span>px auto <span class="number">50</span>px auto;</span></span>
+<span class="rule">}</span></span>
+</span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+<span class="tag">&lt;<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
+al.init();
+
+<span class="comment">/// put your JavaScript code here ///</span>
+
+</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+<p>The html, head, body etc. structure is standard. The class library code is pulled in by the line <code>&lt;script src=&quot;http://grrrwaaa.github.io/gct753/al.min.js&quot;&gt;&lt;/script&gt;</code>. The following <code>&lt;style&gt;</code> section is just to make the page a little prettier. The body contains a <code>&lt;script&gt;</code> tag for JavaScript code, the first line of which should be <code>al.init();</code>. This call creates a <code>&lt;canvas&gt;</code> object, sets up a rendering loop, and creates the <em>start, stop, once, reset</em> buttons underneath it. </p>
+<h2>Globals</h2>
+<p>The al.js library adds a few global functions to the JavaScript envrionment, to make it easier to port examples from Lua. The <code>random()</code> function can be used to generate random numbers. The <code>wrap()</code> applies a Euclidean modulo (remainder after division) in such a way that the result is always positive and without reflections:</p>
+<pre><code>random();         // a floating-point <span class="type">number</span> <span class="keyword">between</span> <span class="number">0</span> <span class="keyword">and</span> <span class="number">1</span>
+random(<span class="number">6</span>);        // an <span class="type">integer</span> <span class="keyword">between</span> <span class="number">0</span> <span class="keyword">and</span> <span class="number">5</span>
+wrap(-<span class="number">1</span>, <span class="number">4</span>);    // returns <span class="number">3</span> (whereas -<span class="number">1</span> % <span class="number">4</span> would <span class="constant">return</span> -<span class="number">1</span>)</code></pre>
+<h2>Callbacks</h2>
+<p>To define how the canvas renders, implement a function called <code>draw()</code>. The <code>draw</code> function receives the canvas context as its first argument, so any HTML5 canvas API calls can be used. For simulation updates, implement a function called <code>update()</code>. This function will receive a delta-time argument, representing the time in seconds since the last time it was called. For example:</p>
+<pre><code>var <span class="built_in">x</span> = <span class="number">0</span><span class="comment">;</span>
+
+draw = function(ctx) {
+    ctx<span class="preprocessor">.fillStyle</span> = <span class="string">"green"</span><span class="comment">;</span>
+    ctx<span class="preprocessor">.fillRect</span>(<span class="built_in">x</span>, <span class="number">10</span>, <span class="number">100</span>, <span class="number">100</span>)<span class="comment">;</span>
+}
+
+update = function(dt) {
+    <span class="built_in">x</span> = <span class="built_in">x</span> + dt<span class="comment">;</span>
+}</code></pre>
+<h2>field2D</h2>
+<p>We have a <code>field2D</code> type to represent grids of cells, where each cell holds a floating point number (typically but not necessarily in the range of zero to one). You can create a field like this:</p>
+<pre><code><span class="keyword">var</span> field = <span class="keyword">new</span> field2D(width, height);</code></pre>
+<p>By default field cells will be zero. You can get and set individual field cells this way:</p>
+<pre><code><span class="keyword">var</span> <span class="keyword">value</span> = field.<span class="keyword">get</span>(x, y);
+field.<span class="keyword">set</span>(<span class="keyword">value</span>, x, y);</code></pre>
+<p>Note that if x or y is out of bounds for the field, it will wrap around from the other side. So you are always guaranteed it will return or set a value. </p>
+<p>To set the value of all cells at once, omit the x and y:</p>
+<pre><code>// <span class="operator"><span class="keyword">set</span> <span class="keyword">all</span> field cells <span class="keyword">to</span> <span class="number">1</span>:
+field.<span class="keyword">set</span>(<span class="number">1</span>);</span></code></pre>
+<p>A more powerful feature of <code>field2D.set()</code> is that it can take a function instead of a number. It calls this function to derive a new value for each cell in the field. The function receives as arguments the x and y position of the cell, so for example, this code initializes the field with a horizontal gradient:</p>
+<pre><code>field<span class="preprocessor">.set</span>(function(<span class="built_in">x</span>, <span class="built_in">y</span>) {
+    return <span class="built_in">x</span> / field<span class="preprocessor">.width</span><span class="comment">;</span>
+)<span class="comment">;</span></code></pre>
+<p>Typically we will render the field in the <code>draw()</code> callback by calling the field&#39;s draw method:</p>
+<pre><code>draw = function(ctx) {
+    field<span class="preprocessor">.draw</span>()<span class="comment">;</span>
+}</code></pre>
+<h2>Audio</h2>
+<p>Audio will be enabled if any audio objects are created. If that occurs, the <code>update()</code> function will be triggered by audio processing rather than graphical rendering. </p>
+<p>You can create a sine oscillator like this:</p>
+<pre><code>// <span class="operator"><span class="keyword">create</span> the oscillator <span class="keyword">and</span> <span class="keyword">start</span> it playing:
+var osc = new al.audio.SinOsc().<span class="keyword">connect</span>();</span></code></pre>
+<p>The oscillator includes several parameters that can be modified:</p>
+<pre><code>osc.freq = <span class="number">440</span>;     <span class="regexp">//</span> frequency <span class="keyword">in</span> <span class="constant">Hz</span>
+osc.amp = <span class="number">0</span>.<span class="number">1</span>;        <span class="regexp">//</span> amplitude. linear range between <span class="number">0</span> (silent) <span class="keyword">and</span> <span class="number">1</span> (loud)
+osc.pan = <span class="number">0</span>.<span class="number">5</span>;        <span class="regexp">//</span> spatial position. linear range between <span class="number">0</span> (left) <span class="keyword">and</span> <span class="number">1</span> (right)</code></pre>
+<p>More audio capabilities will be added soon.</p>
+<h2>Why JavaScript?</h2>
+<p>JavaScript (JS) is a language of growing importance at the intersection of media/culture technology. </p>
+<blockquote>
+<p>Note: Despite the similarity of name, JavaScript has no particular relation to Java. JavaScript is however also known as <a href="http://en.wikipedia.org/wiki/ECMAScript">ECMAScript</a>, JScript, and ActionScript.</p>
+</blockquote>
+<h3>JS is everywhere:</h3>
+<ul>
+<li>It has become the de facto &#39;language of the web&#39;, having evolved from lightweight scripting roots to a full-fledged application language with powerful capabilities in HTML5. </li>
+<li>Not only is it used pervasively in client browser-based applications, it is also used for high-performance server applications, particularly using the <a href="http://nodejs.org/">node.js</a> system. </li>
+<li>JS has also been used as an embedded scripting language for desktop applications by Google, Adobe, OpenOffice, Apple, MicroSoft, Qt, GNOME, etc., including many media-oriented applications such as Max/MSP/Jitter, <a href="http://en.wikipedia.org/wiki/Processing.js">Processing</a>, Logic Pro, Unity, DX Studio, Maxwell Render, Flash, etc., and many games/game engines.</li>
+</ul>
+<h3>For media/culture technology purposes:</h3>
+<ul>
+<li>A browser-based JS application will run on Windows, OSX, Linux, Android, iOS etc., so long as browser applications are up to date. In recent years this has meant that even low-level audio signal processing and 3D OpenGL are available for use. </li>
+<li>Browser and server-based applications open up easy possibilities to reach out to vast audiences and connect to social and other media networks, to explore collaborative interfaces, to interact with the increasing number of devices supporting websocket APIs, etc.</li>
+</ul>
+<h3>Flexible, fast, well-supported:</h3>
+<ul>
+<li><p>JS is a primarily imperative, procedural language (just like C, Java, Python, etc.), however it also supports functional programming features such as first-class functions. It is dynamically-typed and object-based, but uses a more flexible, dynamic <a href="http://en.wikipedia.org/wiki/Prototype-based_programming">prototype-based</a> rather than static class-based inheritance. </p>
+</li>
+<li><p>Although it is a dynamic language, JS virtual machines such as <a href="http://en.wikipedia.org/wiki/V8_(JavaScript_engine">Google&#39;s V8</a>) can achieve remarkably high performance through implicit Just-In-Time compilation to machine code.  </p>
+</li>
+<li><p>The JS community is vast, and the available libraries, modules, frameworks, extensions, etc. are correspondingly huge. For example <a href="https://www.npmjs.org/">npm</a> lists almost 60,000 (at time of writing) libraries for node.js desktop/server-side applications. </p>
+</li>
+<li><p>JS has become the language of choice for several Introduction to Computer Science (CS101) courses, including at <a href="http://www.stanford.edu/class/cs101/">Stanford University</a> (also <a href="https://www.coursera.org/course/cs101">here</a>). The Khan Academy also offers <a href="https://www.khanacademy.org/cs">a free, online course</a>.</p>
+</li>
+</ul>
+<h2>Additional learning resources:</h2>
+<ul>
+<li><a href="http://eloquentjavascript.net/contents.html">Eloquent JavaScript</a></li>
+<li><a href="http://www.w3schools.com/js/">W3C JavaScript Guide</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide">Mozilla JavaScript Guide</a></li>
+<li><a href="http://www.codecademy.com/tracks/javascript">Codecadamy</a></li>
+<li><a href="https://www.khanacademy.org/cs/programming">Khan Academy</a></li>
+<li><a href="https://www.coursera.org/course/cs101">Stanford CS101</a></li>
+<li><a href="http://www.nodebeginner.org/">The Node handbook</a></li>
+<li><a href="http://howtonode.org/">How to Node</a></li>
+</ul>
+</div>
+	
+	<div class="footer">
+	<img src="img/snake6_small.jpg" alt="Artificial Natures"><br/>
+	Graham Wakefield, 2013</div>
+	
+</div>
+</body>
+</html>
