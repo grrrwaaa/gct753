@@ -98,8 +98,6 @@ al.audio.SinOsc.prototype.connect = function() {
 }
 
 al.audio.SinOsc.prototype.next = function() {
-
-
 	var phase = this.phase;
 	var table = this.table;
 	var amp = this.amp;

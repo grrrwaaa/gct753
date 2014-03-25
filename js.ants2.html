@@ -2,7 +2,8 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<script src="http://grrrwaaa.github.io/gct753/al.min.js"></script>
+<!--<script src="http://grrrwaaa.github.io/gct753/al.min.js"></script>-->
+<script src="al.min.js"></script>
 <style>
 body {
 	background: #eee;
@@ -21,6 +22,11 @@ al.init();
 
 var dimx = 128, dimy = 64;
 var field = new field2D(dimx, dimy);
+
+// computes frequency for a chromatic equal-temperament semitone distance from a center frequency
+function chromatic(semitone, centerfreq) {
+	return centerfreq * Math.pow(2, semitone/12);
+}
 
 // turn it white:
 field.set(1);
@@ -41,12 +47,12 @@ function ant(x, y, spin) {
 
 // make some ants!
 ants = [
-	new ant(64, 30, 1),
-	new ant(64, 31, 1),
-	new ant(32, 30 + random(3), random(2) ? 1 : -1),	
-	new ant(32, 30 + random(3), random(2) ? 1 : -1),	
-	new ant(96, 30 + random(3), random(2) ? 1 : -1),	
-	new ant(96, 30 + random(3), random(2) ? 1 : -1),	
+	new ant(32, 20, 1),
+	new ant(32, 21, 1),
+	new ant(64, 40 + random(3), random(2) ? 1 : -1),	
+	new ant(64, 40 + random(3), random(2) ? 1 : -1),	
+	new ant(94 + random(3), 20, random(2) ? 1 : -1),
+	new ant(94 + random(3), 20, random(2) ? 1 : -1),	
 ];
 
 // how to render the scene
@@ -66,7 +72,7 @@ function draw(ctx)	{
 }
 
 // how often update() will be called per second:
-al.fps = 30;
+al.fps = 20;
 
 function update(dt) {
 	for (var j = 0; j < ants.length; j++) {
@@ -101,10 +107,14 @@ function update(dt) {
 			ant.direction = wrap(ant.direction - ant.spin, 4);
 		}
 	
-		// update the ant oscillator frequency according to direction:
-		ant.osc.frequency = (110 + j) * (2 + ant.direction);
+		// update the ant oscillator frequency according to 
+		// vertical position and direction:
+		ant.osc.frequency = chromatic(dimy - ant.y, 40) 
+						  * (1 + ant.direction);
 		// update the ant spatial position:
 		ant.osc.pan = ant.x / dimx;
+		
+		// ant.osc.amp
 	}
 }
 
