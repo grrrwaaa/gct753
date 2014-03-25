@@ -33,7 +33,31 @@
 		<a href="evolutionary.html">Evolutionary Systems</a><br/>
 		
 	</div>
-	<div class="section"><h1>Lua 5.1 quick tutorial</h1>
+	<div class="section"><h2>Lua</h2>
+<p>We will be using the <a href="www.lua.org">Lua</a> language (and the <a href="www.luajit.org">LuaJIT</a> implementation) for lecture and lab sessions. Lua is very easy to learn, fast, flexible and powerful. It also scales well with abstraction, which is exactly what we will need as the course progresses. By itself, Lua is lightweight, with very few built-in libraries, and certainly no graphical or audio capabilities. For these purposes I am providing runtime implementation binaries that add audiovisual capabilities. </p>
+<h2>Download</h2>
+<p>The code and pre-compiled binaries are in the github repository at the links below. From time to time this repo will be updated with more examples and features, so please make sure to grab these changes. You can grab the zip directly or clone (or fork) the git repo and pull the changes:</p>
+<ul>
+<li><a href="https://github.com/grrrwaaa/gct753/zipball/master">Download</a> <strong>ZIP file</strong></li>
+<li><a href="https://github.com/grrrwaaa/gct753/tarball/master">Download</a> <strong>TAR ball</strong></li>
+<li><a href="https://github.com/grrrwaaa/gct753">Clone from</a> <strong>Github</strong></li>
+<li><a href="https://github.com/grrrwaaa/gct753/fork_select">Fork from</a> <strong>Github</strong></li>
+</ul>
+<h2>Running</h2>
+<ul>
+<li><strong>Windows:</strong> drag a <code>.lua</code> file onto the <code>av.exe</code> application.</li>
+<li><strong>OSX / Linux:</strong> open a terminal window, <code>cd</code> to the downloaded folder, then run <code>av_osx &lt;filename&gt;</code> or <code>av_linux &lt;filename&gt;</code> where <filename> is the <code>.lua</code> file to run (e.g. <code>draw.lua</code>).</li>
+</ul>
+<p>While running, the <strong>Esc</strong> key will toggle full-screen mode, and the <strong>Space</strong> key will toggle the <code>update</code> function on and off. </p>
+<p>Also while the script is running it will monitor the <code>.lua</code> file for changes, and reload the script automatically if this file is updated on disk. To edit <code>.lua</code> files, any text editor will do. Freely available editors with Lua syntax highlighting include:</p>
+<ul>
+<li><strong>Windows:</strong> <a href="http://notepad-plus-plus.org/download/v6.3.html">Notepad++</a></li>
+<li><strong>OSX:</strong> <a href="http://www.barebones.com/products/textwrangler/">TextWrangler</a></li>
+<li><strong>Linux:</strong> Most distributions already include a suitable text editor (such as Gedit), or can install one through apt-get.</li>
+</ul>
+<h2>Reference</h2>
+<p>Most of the available functions and modules (both from Lua and AV) are <a href="docs/reference.html">documented in the reference pages</a>.</p>
+<h1>Lua 5.1 quick tutorial</h1>
 <p>Commonly compared to: JavaScript, Ruby, Python, Scheme. Notable characteristics:</p>
 <ul>
 <li>Fast (used widely for game engines). <a href="www.luajit.org">LuaJIT</a> can approach and sometimes exceed C. </li>
@@ -296,6 +320,184 @@ c2()  <span class="comment">-- prints: 2</span>
 
 <span class="comment">-- the two function's upvalues are independent of each other:</span>
 c1()  <span class="comment">-- prints: 4</span></code></pre>
+<h2>Tutorial: Drawing with fields</h2>
+<p>See <a href="lua.html">Lua 5.1 quick tutorial</a> for a quick introduction to the Lua language itself. </p>
+<p>Most scripts start with a bunch of <code>require</code> statements, which pull in needed functionality from external library <em>modules</em>. For example:</p>
+<pre><code class="lang-lua"><span class="keyword">local</span> field2D = <span class="built_in">require</span> <span class="string">"field2D"</span></code></pre>
+<p>This code loads the <em>field2D</em> module (from /modules/field2D.lua), which gives us a bunch of utilities for working with 2D dense arrays. These could be useful for making cellular automata, for example. Modules usually return a table of functions. For example, the <em>field2D</em> module contains a function called <em>new</em>, which we can use to create a new field <em>object</em>:</p>
+<pre><code class="lang-lua"><span class="comment">-- allocate a field with default size:</span>
+<span class="keyword">local</span> field = field2D.new()
+
+<span class="comment">-- allocate a field that is 64 cells wide and 48 cells high:</span>
+<span class="keyword">local</span> field = field2D.new(<span class="number">64</span>, <span class="number">48</span>)</code></pre>
+<p>Objects usually have internal state, and methods to read and modify that state or perform other behaviors. For example, we can set data in the field using the <em>:set</em> method:</p>
+<pre><code class="lang-lua"><span class="comment">-- set all cells to the value 0.2:</span>
+field:set(<span class="number">0.2</span>)
+
+<span class="comment">-- set the cell at position (10,10) to the value 0.5:</span>
+field:set(<span class="number">0.5</span>, <span class="number">10</span>, <span class="number">10</span>)</code></pre>
+<p>The <em>av</em> application looks at the script for specially named functions in order to know how to render the screen or handle mouse and keyboard input. For example, all graphical drawing should be put inside the global <em>draw</em> function. We can use another method of the <em>field2D</em> type object here:</p>
+<pre><code class="lang-lua"><span class="comment">-- the global function for rendering</span>
+<span class="function"><span class="keyword">function</span> <span class="title">draw</span><span class="params">()</span></span>
+    <span class="comment">-- use the :draw method of field2D to render the data stored in field:</span>
+    field:draw()
+<span class="keyword">end</span></code></pre>
+<p>There are other functions like this; the <em>update</em> function is called frequently to update the state of the program (e.g. for animations); the <em>mouse</em> function is called whenever the mouse moves and clicks; and the <em>keydown</em> and <em>keyup</em> functions are called when keys are pressed. There are also some built-in key bindings: the Esc key will toggle full-screen, and the spacebar key will toggle updating on and off.</p>
+<p>We can use the <em>mouse</em> function for example to draw into the field, whenever the mouse is down or dragging. The <em>mouse</em> function passes the kind of event, the button pressed, and the X and Y position of the mouse; but we will need to scale that position to the size of the field:</p>
+<pre><code class="lang-lua"><span class="comment">-- called whenever there is mouse activity:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">mouse</span><span class="params">(event, button, x, y)</span></span>
+    <span class="keyword">if</span> event == <span class="string">"down"</span> <span class="keyword">or</span> event == <span class="string">"drag"</span> <span class="keyword">then</span>
+        <span class="comment">-- convert the mouse position from 0..1 range to the size of the field:</span>
+        <span class="keyword">local</span> fieldx = x * field.width
+        <span class="keyword">local</span> fieldy = y * field.height
+        <span class="comment">-- write a random number into the field at this point:</span>
+        field:set(<span class="built_in">math</span>.random(), fieldx, fieldy)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- called whenver a key is pressed:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">keydown</span><span class="params">(key)</span></span>
+    <span class="comment">-- if the key pressed was "c"</span>
+    <span class="keyword">if</span> key == <span class="string">"c"</span> <span class="keyword">then</span>
+        <span class="comment">-- set all cells of the field to zero:</span>
+        field:clear()
+    <span class="keyword">end</span>
+<span class="keyword">end</span></code></pre>
+<p>If we wanted to add a continual behavior to the field, we could use the <em>update</em> global function. For example, this function copies the value from one randomly chosen cell to another randomly chosen cell:</p>
+<pre><code class="lang-lua"><span class="comment">-- called continually in the background:</span>
+<span class="comment">-- (the argument is the time in seconds between updates)</span>
+<span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">(dt)</span></span>
+    <span class="comment">-- pick a cell at random:</span>
+    <span class="keyword">local</span> x = <span class="built_in">math</span>.random(field.width)
+    <span class="keyword">local</span> y = <span class="built_in">math</span>.random(field.height)
+    <span class="comment">-- get the value at this cell:</span>
+    <span class="keyword">local</span> value = field:get(x, y)
+    <span class="comment">-- pick another cell at random:</span>
+    <span class="keyword">local</span> x = <span class="built_in">math</span>.random(field.width)
+    <span class="keyword">local</span> y = <span class="built_in">math</span>.random(field.height)
+    <span class="comment">-- set this cell to the value of the first:</span>
+    field:set(value, x, y)
+<span class="keyword">end</span></code></pre>
+<p>Another useful feature of <em>field2D:set</em> is that it can take a function as its argument, instead of a value. It calls this function to derive a new value for each cell in the field. The function receives as arguments the x and y position of the cell, so for example, this code initializes the field with a horizontal gradient:</p>
+<pre><code class="lang-lua">field:set(function(x, y)
+    <span class="keyword">return</span> x / field.width
+<span class="keyword">end</span>)</code></pre>
+<p>We&#39;ve learned almost enough now to implement Conway&#39;s <em>Game of Life</em>.</p>
+<pre><code class="lang-lua"><span class="comment">-- load in the "field2D" library module (from /modules/field2D.lua):</span>
+<span class="keyword">local</span> field2D = <span class="built_in">require</span> <span class="string">"field2D"</span>
+
+<span class="comment">-- choose the size of the field</span>
+<span class="keyword">local</span> dimx = <span class="number">128</span>
+<span class="keyword">local</span> dimy = dimx * <span class="number">3</span>/<span class="number">4</span> <span class="comment">-- (with a 4:3 aspect ratio)</span>
+
+<span class="comment">-- allocate the field</span>
+<span class="keyword">local</span> field = field2D.new(dimx, dimy)
+
+<span class="comment">-- create a second field, to store the previous states of the cells:</span>
+<span class="keyword">local</span> field_old = field2D.new(dimx, dimy)
+
+<span class="comment">-- create a function to return either 0 or 1</span>
+<span class="comment">-- with a 50% chance of either (like flipping a coin)</span>
+<span class="function"><span class="keyword">function</span> <span class="title">coin</span><span class="params">()</span></span> 
+    <span class="keyword">if</span> <span class="built_in">math</span>.random() &lt; <span class="number">0.5</span> <span class="keyword">then</span> 
+        <span class="keyword">return</span> <span class="number">0</span>
+    <span class="keyword">else</span>
+        <span class="keyword">return</span> <span class="number">1</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">-- use this to initialize the field with random values:</span>
+<span class="comment">-- (applies 'coin' to each cell of the field)</span>
+field:set(coin)
+
+<span class="comment">-- how to render the scene (toggle fullscreen with the Esc key):</span>
+<span class="function"><span class="keyword">function</span> <span class="title">draw</span><span class="params">()</span></span>    
+    <span class="comment">-- draw the field:</span>
+    field:draw()
+<span class="keyword">end</span>
+
+<span class="comment">-- the rule for an individual cell (at position x, y) in the field:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">game_of_life</span><span class="params">(x, y)</span></span>
+
+    <span class="comment">-- check out the neighbors' previous states:</span>
+    <span class="keyword">local</span> N  = field_old:get(x  , y+<span class="number">1</span>)
+    <span class="keyword">local</span> NE = field_old:get(x+<span class="number">1</span>, y+<span class="number">1</span>)
+    <span class="keyword">local</span> E  = field_old:get(x+<span class="number">1</span>, y  )
+    <span class="keyword">local</span> SE = field_old:get(x+<span class="number">1</span>, y-<span class="number">1</span>)
+    <span class="keyword">local</span> S  = field_old:get(x  , y-<span class="number">1</span>)
+    <span class="keyword">local</span> SW = field_old:get(x-<span class="number">1</span>, y-<span class="number">1</span>)
+    <span class="keyword">local</span> W  = field_old:get(x-<span class="number">1</span>, y  )
+    <span class="keyword">local</span> NW = field_old:get(x-<span class="number">1</span>, y+<span class="number">1</span>)
+    <span class="keyword">local</span> near = N + E + S + W + NE + NW + SE + SW
+
+    <span class="comment">-- check my own previous state:</span>
+    <span class="keyword">local</span> C = field_old:get(x, y)
+
+    <span class="comment">-- apply the rule:</span>
+    <span class="keyword">if</span> C == <span class="number">1</span> <span class="keyword">then</span>
+        <span class="comment">-- live cell</span>
+        <span class="keyword">if</span> near &lt; <span class="number">2</span> <span class="keyword">then</span>
+            <span class="comment">-- loneliness</span>
+            C = <span class="number">0</span>
+        <span class="keyword">elseif</span> near &gt; <span class="number">3</span> <span class="keyword">then</span>
+            <span class="comment">-- overcrowding</span>
+            C = <span class="number">0</span>
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        <span class="comment">-- dead cell</span>
+        <span class="keyword">if</span> near == <span class="number">3</span> <span class="keyword">then</span>
+            <span class="comment">-- reproduction</span>
+            C = <span class="number">1</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment">-- return the new state:</span>
+    <span class="keyword">return</span> C
+<span class="keyword">end</span>
+
+<span class="comment">-- update the state of the scene (toggle this on and off with spacebar):</span>
+<span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">(dt)</span></span>
+    <span class="comment">-- swap field and field_old:</span>
+    <span class="comment">-- (field now becomes old, and the new field is ready to be written)</span>
+    field, field_old = field_old, field
+
+    <span class="comment">-- apply the game_of_life function to each cell of the field: </span>
+    field:set(game_of_life)
+<span class="keyword">end</span>
+
+<span class="comment">-- handle keypress events:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">keydown</span><span class="params">(k)</span></span>
+    <span class="keyword">if</span> k == <span class="string">"c"</span> <span class="keyword">then</span>
+        <span class="comment">-- set all cells to zero:</span>
+        field:clear()
+    <span class="keyword">elseif</span> k == <span class="string">"r"</span> <span class="keyword">then</span>
+        <span class="comment">-- apply the coin rule to all cells of the field (randomizes)</span>
+        field:set(coin)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+
+<span class="comment">-- handle mouse events:</span>
+<span class="function"><span class="keyword">function</span> <span class="title">mouse</span><span class="params">(event, btn, x, y)</span></span>
+    <span class="comment">-- clicking &amp; dragging should draw values into the field:</span>
+    <span class="keyword">if</span> event == <span class="string">"down"</span> <span class="keyword">or</span> event == <span class="string">"drag"</span> <span class="keyword">then</span>
+
+        <span class="comment">-- scale window coords (0..1) up to the size of the field:</span>
+        <span class="keyword">local</span> x = x * field.width
+        <span class="keyword">local</span> y = y * field.height
+
+        <span class="comment">-- spread the updates over a wide area:</span>
+        <span class="keyword">for</span> i = <span class="number">1</span>, <span class="number">10</span> <span class="keyword">do</span>
+            <span class="comment">-- pick a random cell near to the mouse position:</span>
+            <span class="keyword">local</span> span = <span class="number">3</span>
+            <span class="keyword">local</span> fx = x + <span class="built_in">math</span>.random(span) - <span class="built_in">math</span>.random(span)
+            <span class="keyword">local</span> fy = y + <span class="built_in">math</span>.random(span) - <span class="built_in">math</span>.random(span)
+
+            <span class="comment">-- set this cell to either 0 or 1:</span>
+            field:set(coin(), fx, fy)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span></code></pre>
 <h2>Going deeper</h2>
 <p>We will address more complex topics of metatables, coroutines, the C API, the LuaJIT FFI and so on as we need them.</p>
 <h2>Help</h2>
