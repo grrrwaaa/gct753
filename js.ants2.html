@@ -43,15 +43,27 @@ function ant(x, y, spin) {
 // make some ants!
 ants = [
 	new ant(64, 30, 1),
-	//new ant(64, 31, 1),
-	new ant(64, 30 + random(3), random(2) ? 1 : -1),	
-	//new ant(64, 30 + random(3), random(2) ? 1 : -1),	
+	new ant(64, 31, 1),
+	new ant(32, 30 + random(3), random(2) ? 1 : -1),	
+	new ant(32, 30 + random(3), random(2) ? 1 : -1),	
+	new ant(96, 30 + random(3), random(2) ? 1 : -1),	
+	new ant(96, 30 + random(3), random(2) ? 1 : -1),	
 ];
 
 // how to render the scene
-function draw()	{
-	// draw the field:
-	field.draw()
+function draw(ctx)	{
+	// draw the field (by default it fills the canvas):
+	field.draw();
+	
+	for (var j = 0; j < ants.length; j++) {
+		var ant = ants[j];
+		if (ant.spin == 1) {
+			ctx.fillStyle = "red";
+		} else {
+			ctx.fillStyle = "green";
+		}
+		ctx.fillRect(ant.x*4,ant.y*4,4,4);
+	}
 }
 
 // how often update() will be called per second:

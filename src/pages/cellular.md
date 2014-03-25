@@ -144,6 +144,8 @@ There could be more than one 'active cell'. What happens if two active cells occ
 
 [See the script](https://github.com/grrrwaaa/gct753/blob/master/ca_2D_langtons_ant.lua) in the repo, and the [original video by Christopher Langton](http://www.youtube.com/watch?v=w6XQQhCgq5c), including examples of multiple ants (and music by the Vasulkas). Note that Langton's Ant, and other related Turmites, are closely related to the turtle graphics often used for L-systems.
 
+[See a browser-based example here](js.ants2.html)
+
 #### Statistical and unbounded state models
 
 The *Ising model* of ferromagnetism in statistical mechanics can also be simulated in a *Monte Carlo* fashion. Each site (cell) has either positive or negative spin (we can encode that as 0 or 1 value). At each time step, consider a site at random, and evaluate the probability of changing state. If changing state moves the site toward energetic equilibrium with neighbors (determined according to the Hamiltonian of the site), then the change is made. Otherwise, the change is made only with a small probability that is dependent on the energetic difference and overall temperature. Thus at high temperatures, the system remains noisy, while at low temperatures it gradually self-organizes into all sites with equal spin.

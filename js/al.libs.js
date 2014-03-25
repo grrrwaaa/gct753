@@ -42,7 +42,7 @@ al = {};
 
 al.fps = 30;
 
-var al_rendering = false;
+var al_updating = false;
 var al_update_in_audio = false;
 var al_now = Date.now();
 var al_dt = 1/al.fps;
@@ -171,7 +171,9 @@ al.audio.audioProcess = function(event) {
 		t += sampleRateInverse;
 	}
 	
-	al.audio.t += bufferSize * sampleRateInverse;
+	if (al_updating) {
+		al.audio.t += bufferSize * sampleRateInverse;
+	}
 }
 
 var audioContext;
@@ -231,11 +233,10 @@ al.audio_init = function() {
 }
 
 al.once = function() {
-	if ((!al_update_in_audio) && update && typeof update === "function") {
+	if (update && typeof update === "function") {
 		update(al_dt);
-		console.log("render update");
 	}
-	if (draw && typeof draw === "function") draw();
+	if (draw && typeof draw === "function") draw(ctx);
 }
 
 var al_render = function() {
@@ -243,20 +244,23 @@ var al_render = function() {
 	al_dt = (now - al_now) * 0.001;
 	al_now = now;
 	// wrap in a try/catch?
-	if (al_rendering) {
-		al.once();
+	if (al_updating) {
+		if ((!al_update_in_audio) && update && typeof update === "function") {
+			update(al_dt);
+		}
+		if (draw && typeof draw === "function") draw(ctx);
 		requestAnimationFrame(al_render);
 	}
 }
 
 al.start = function() {
 	al_now = Date.now();
-	al_rendering = true;
+	al_updating = true;
 	al_render();
 }
 
 al.stop = function() {
-	al_rendering = false;
+	al_updating = false;
 }
 
 var canvas, ctx;
@@ -297,7 +301,7 @@ al.init = function (options) {
 	
 	var b = document.createElement('button');
 	b.innerHTML = 'reset';
-	b.onclick = function(){ reset(); draw(); return false; };
+	b.onclick = function(){ reset(); draw(ctx); return false; };
 	document.body.appendChild(b);
 	
 	if (options) {
