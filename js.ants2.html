@@ -44,9 +44,8 @@ function ant(x, y, spin) {
 ants = [
 	new ant(64, 30, 1),
 	//new ant(64, 31, 1),
-	
-	//new ant(64 + random(2), 30 + random(3), random(2) ? 1 : -1),
 	new ant(64, 30 + random(3), random(2) ? 1 : -1),	
+	//new ant(64, 30 + random(3), random(2) ? 1 : -1),	
 ];
 
 // how to render the scene
@@ -58,49 +57,44 @@ function draw()	{
 // how often update() will be called per second:
 al.fps = 30;
 
-// how many ant steps per update:
-var iterations_per_frame = 1;
-
 function update(dt) {
-	for (var i = 0; i < iterations_per_frame; i++) {
-		for (var j = 0; j < ants.length; j++) {
-			var ant = ants[j];
-	
-			// move the ant.
-			if (ant.direction == 0) {
-				// North
-				ant.y = (ant.y + 1) % field.height;
-			} else if (ant.direction == 1) {
-				// West
-				ant.x = (ant.x - 1) % field.width;
-			} else if (ant.direction == 2) {
-				// South
-				ant.y = (ant.y - 1) % field.height;
-			} else {
-				// East
-				ant.x = (ant.x + 1) % field.width;
-			}
-		
-			// apply the rule.
-			var state = field.get(ant.x, ant.y);
-			if (state == 1) {
-				// change the cell state:
-				field.set(0, ant.x, ant.y);
-				// turn in the preferred direction:
-				ant.direction = wrap(ant.direction + ant.spin, 4);
-			} else {
-				// change the cell state:
-				field.set(1, ant.x, ant.y);
-				// turn in the opposite direction:
-				ant.direction = wrap(ant.direction - ant.spin, 4);
-			}
-		
-			// update the ant oscillator frequency according to direction:
-			ant.osc.frequency = (110 + j) * (2 + ant.direction);
-			ant.osc.pan = ant.x / dimx;
-			
-			ant.osc.smooth = 0.005;
+	for (var j = 0; j < ants.length; j++) {
+		var ant = ants[j];
+
+		// move the ant.
+		if (ant.direction == 0) {
+			// North
+			ant.y = (ant.y + 1) % field.height;
+		} else if (ant.direction == 1) {
+			// West
+			ant.x = (ant.x - 1) % field.width;
+		} else if (ant.direction == 2) {
+			// South
+			ant.y = (ant.y - 1) % field.height;
+		} else {
+			// East
+			ant.x = (ant.x + 1) % field.width;
 		}
+	
+		// apply the rule.
+		var state = field.get(ant.x, ant.y);
+		if (state == 1) {
+			// change the cell state:
+			field.set(0, ant.x, ant.y);
+			// turn in the preferred direction:
+			ant.direction = wrap(ant.direction + ant.spin, 4);
+		} else {
+			// change the cell state:
+			field.set(1, ant.x, ant.y);
+			// turn in the opposite direction:
+			ant.direction = wrap(ant.direction - ant.spin, 4);
+		}
+	
+		// update the ant oscillator frequency according to direction:
+		ant.osc.frequency = (110 + j) * (2 + ant.direction);
+		ant.osc.pan = ant.x / dimx;
+		
+		ant.osc.smooth = 0.005;
 	}
 }
 
