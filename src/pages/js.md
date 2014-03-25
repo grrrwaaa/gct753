@@ -39,7 +39,7 @@ The html, head, body etc. structure is standard. The class library code is pulle
 
 The al.js library adds a few global functions to the JavaScript envrionment, to make it easier to port examples from Lua. The ```random()``` function can be used to generate random numbers. The ```wrap()``` applies a Euclidean modulo (remainder after division) in such a way that the result is always positive and without reflections:
 
-```
+```javascript
 random(); 		// a floating-point number between 0 and 1
 random(6);		// an integer between 0 and 5
 wrap(-1, 4);	// returns 3 (whereas -1 % 4 would return -1)
@@ -48,9 +48,9 @@ wrap(-1, 4);	// returns 3 (whereas -1 % 4 would return -1)
 
 ## Callbacks
 
-To define how the canvas renders, implement a function called ```draw()```. The ```draw``` function receives the canvas context as its first argument, so any HTML5 canvas API calls can be used. For simulation updates, implement a function called ```update()```. This function will receive a delta-time argument, representing the time in seconds since the last time it was called. For example:
+To define how the canvas renders, implement a function called ```draw()```. The ```draw``` function receives the canvas context as its first argument, so any [HTML5 canvas API](http://www.w3schools.com/tags/ref_canvas.asp) calls can be used. For simulation updates, implement a function called ```update()```. This function will receive a delta-time argument, representing the time in seconds since the last time it was called. For example:
 
-```
+```javascript
 var x = 0;
 
 draw = function(ctx) {
@@ -67,13 +67,13 @@ update = function(dt) {
 
 We have a ```field2D``` type to represent grids of cells, where each cell holds a floating point number (typically but not necessarily in the range of zero to one). You can create a field like this:
 
-```
+```javascript
 var field = new field2D(width, height);
 ```
 
 By default field cells will be zero. You can get and set individual field cells this way:
 
-```
+```javascript
 var value = field.get(x, y);
 field.set(value, x, y);
 ```
@@ -82,14 +82,14 @@ Note that if x or y is out of bounds for the field, it will wrap around from the
 
 To set the value of all cells at once, omit the x and y:
 
-```
+```javascript
 // set all field cells to 1:
 field.set(1);
 ```
 
 A more powerful feature of ```field2D.set()``` is that it can take a function instead of a number. It calls this function to derive a new value for each cell in the field. The function receives as arguments the x and y position of the cell, so for example, this code initializes the field with a horizontal gradient:
 
-```
+```javascript
 field.set(function(x, y) {
 	return x / field.width;
 );
@@ -97,7 +97,7 @@ field.set(function(x, y) {
 
 Typically we will render the field in the ```draw()``` callback by calling the field's draw method:
 
-```
+```javascript
 draw = function(ctx) {
 	field.draw();
 }
@@ -109,14 +109,14 @@ Audio will be enabled if any audio objects are created. If that occurs, the ```u
 
 You can create a sine oscillator like this:
 
-```
+```javascript
 // create the oscillator and start it playing:
 var osc = new al.audio.SinOsc().connect();
 ```
 
 The oscillator includes several parameters that can be modified:
 
-```
+```javascript
 osc.freq = 440; 	// frequency in Hz
 osc.amp = 0.1;		// amplitude. linear range between 0 (silent) and 1 (loud)
 osc.pan = 0.5;		// spatial position. linear range between 0 (left) and 1 (right)

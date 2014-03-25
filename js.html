@@ -62,48 +62,48 @@ al.init();
 <p>The html, head, body etc. structure is standard. The class library code is pulled in by the line <code>&lt;script src=&quot;http://grrrwaaa.github.io/gct753/al.min.js&quot;&gt;&lt;/script&gt;</code>. The following <code>&lt;style&gt;</code> section is just to make the page a little prettier. The body contains a <code>&lt;script&gt;</code> tag for JavaScript code, the first line of which should be <code>al.init();</code>. This call creates a <code>&lt;canvas&gt;</code> object, sets up a rendering loop, and creates the <em>start, stop, once, reset</em> buttons underneath it. </p>
 <h2>Globals</h2>
 <p>The al.js library adds a few global functions to the JavaScript envrionment, to make it easier to port examples from Lua. The <code>random()</code> function can be used to generate random numbers. The <code>wrap()</code> applies a Euclidean modulo (remainder after division) in such a way that the result is always positive and without reflections:</p>
-<pre><code>random();         // a floating-point <span class="type">number</span> <span class="keyword">between</span> <span class="number">0</span> <span class="keyword">and</span> <span class="number">1</span>
-random(<span class="number">6</span>);        // an <span class="type">integer</span> <span class="keyword">between</span> <span class="number">0</span> <span class="keyword">and</span> <span class="number">5</span>
-wrap(-<span class="number">1</span>, <span class="number">4</span>);    // returns <span class="number">3</span> (whereas -<span class="number">1</span> % <span class="number">4</span> would <span class="constant">return</span> -<span class="number">1</span>)</code></pre>
+<pre><code class="lang-javascript">random();         <span class="comment">// a floating-point number between 0 and 1</span>
+random(<span class="number">6</span>);        <span class="comment">// an integer between 0 and 5</span>
+wrap(-<span class="number">1</span>, <span class="number">4</span>);    <span class="comment">// returns 3 (whereas -1 % 4 would return -1)</span></code></pre>
 <h2>Callbacks</h2>
-<p>To define how the canvas renders, implement a function called <code>draw()</code>. The <code>draw</code> function receives the canvas context as its first argument, so any HTML5 canvas API calls can be used. For simulation updates, implement a function called <code>update()</code>. This function will receive a delta-time argument, representing the time in seconds since the last time it was called. For example:</p>
-<pre><code>var <span class="built_in">x</span> = <span class="number">0</span><span class="comment">;</span>
+<p>To define how the canvas renders, implement a function called <code>draw()</code>. The <code>draw</code> function receives the canvas context as its first argument, so any <a href="http://www.w3schools.com/tags/ref_canvas.asp">HTML5 canvas API</a> calls can be used. For simulation updates, implement a function called <code>update()</code>. This function will receive a delta-time argument, representing the time in seconds since the last time it was called. For example:</p>
+<pre><code class="lang-javascript"><span class="keyword">var</span> x = <span class="number">0</span>;
 
-draw = function(ctx) {
-    ctx<span class="preprocessor">.fillStyle</span> = <span class="string">"green"</span><span class="comment">;</span>
-    ctx<span class="preprocessor">.fillRect</span>(<span class="built_in">x</span>, <span class="number">10</span>, <span class="number">100</span>, <span class="number">100</span>)<span class="comment">;</span>
+draw = <span class="keyword">function</span>(ctx) {
+    ctx.fillStyle = <span class="string">"green"</span>;
+    ctx.fillRect(x, <span class="number">10</span>, <span class="number">100</span>, <span class="number">100</span>);
 }
 
-update = function(dt) {
-    <span class="built_in">x</span> = <span class="built_in">x</span> + dt<span class="comment">;</span>
+update = <span class="keyword">function</span>(dt) {
+    x = x + dt;
 }</code></pre>
 <h2>field2D</h2>
 <p>We have a <code>field2D</code> type to represent grids of cells, where each cell holds a floating point number (typically but not necessarily in the range of zero to one). You can create a field like this:</p>
-<pre><code><span class="keyword">var</span> field = <span class="keyword">new</span> field2D(width, height);</code></pre>
+<pre><code class="lang-javascript"><span class="keyword">var</span> field = <span class="keyword">new</span> field2D(width, height);</code></pre>
 <p>By default field cells will be zero. You can get and set individual field cells this way:</p>
-<pre><code><span class="keyword">var</span> <span class="keyword">value</span> = field.<span class="keyword">get</span>(x, y);
-field.<span class="keyword">set</span>(<span class="keyword">value</span>, x, y);</code></pre>
+<pre><code class="lang-javascript"><span class="keyword">var</span> value = field.get(x, y);
+field.set(value, x, y);</code></pre>
 <p>Note that if x or y is out of bounds for the field, it will wrap around from the other side. So you are always guaranteed it will return or set a value. </p>
 <p>To set the value of all cells at once, omit the x and y:</p>
-<pre><code>// <span class="operator"><span class="keyword">set</span> <span class="keyword">all</span> field cells <span class="keyword">to</span> <span class="number">1</span>:
-field.<span class="keyword">set</span>(<span class="number">1</span>);</span></code></pre>
+<pre><code class="lang-javascript"><span class="comment">// set all field cells to 1:</span>
+field.set(<span class="number">1</span>);</code></pre>
 <p>A more powerful feature of <code>field2D.set()</code> is that it can take a function instead of a number. It calls this function to derive a new value for each cell in the field. The function receives as arguments the x and y position of the cell, so for example, this code initializes the field with a horizontal gradient:</p>
-<pre><code>field<span class="preprocessor">.set</span>(function(<span class="built_in">x</span>, <span class="built_in">y</span>) {
-    return <span class="built_in">x</span> / field<span class="preprocessor">.width</span><span class="comment">;</span>
-)<span class="comment">;</span></code></pre>
+<pre><code class="lang-javascript">field.set(<span class="keyword">function</span>(x, y) {
+    <span class="keyword">return</span> x / field.width;
+);</code></pre>
 <p>Typically we will render the field in the <code>draw()</code> callback by calling the field&#39;s draw method:</p>
-<pre><code>draw = function(ctx) {
-    field<span class="preprocessor">.draw</span>()<span class="comment">;</span>
+<pre><code class="lang-javascript">draw = <span class="keyword">function</span>(ctx) {
+    field.draw();
 }</code></pre>
 <h2>Audio</h2>
 <p>Audio will be enabled if any audio objects are created. If that occurs, the <code>update()</code> function will be triggered by audio processing rather than graphical rendering. </p>
 <p>You can create a sine oscillator like this:</p>
-<pre><code>// <span class="operator"><span class="keyword">create</span> the oscillator <span class="keyword">and</span> <span class="keyword">start</span> it playing:
-var osc = new al.audio.SinOsc().<span class="keyword">connect</span>();</span></code></pre>
+<pre><code class="lang-javascript"><span class="comment">// create the oscillator and start it playing:</span>
+<span class="keyword">var</span> osc = <span class="keyword">new</span> al.audio.SinOsc().connect();</code></pre>
 <p>The oscillator includes several parameters that can be modified:</p>
-<pre><code>osc.freq = <span class="number">440</span>;     <span class="regexp">//</span> frequency <span class="keyword">in</span> <span class="constant">Hz</span>
-osc.amp = <span class="number">0</span>.<span class="number">1</span>;        <span class="regexp">//</span> amplitude. linear range between <span class="number">0</span> (silent) <span class="keyword">and</span> <span class="number">1</span> (loud)
-osc.pan = <span class="number">0</span>.<span class="number">5</span>;        <span class="regexp">//</span> spatial position. linear range between <span class="number">0</span> (left) <span class="keyword">and</span> <span class="number">1</span> (right)</code></pre>
+<pre><code class="lang-javascript">osc.freq = <span class="number">440</span>;     <span class="comment">// frequency in Hz</span>
+osc.amp = <span class="number">0.1</span>;        <span class="comment">// amplitude. linear range between 0 (silent) and 1 (loud)</span>
+osc.pan = <span class="number">0.5</span>;        <span class="comment">// spatial position. linear range between 0 (left) and 1 (right)</span></code></pre>
 <p>More audio capabilities will be added soon.</p>
 <h2>Why JavaScript?</h2>
 <p>JavaScript (JS) is a language of growing importance at the intersection of media/culture technology. </p>
