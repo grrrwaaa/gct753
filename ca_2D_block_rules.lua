@@ -532,8 +532,8 @@ function tron (NW, NE, SE, SW)
 	end
 end
 
---rule = bbm; boundaryvalue = 1
-rule = critters; boundaryvalue = 1
+rule = tron; boundaryvalue = 0
+--rule = critters; boundaryvalue = 1
 --rule = stringthing; boundaryvalue = 1
 --rule = stringthing2; boundaryvalue = 1
 --rule = tron; boundaryvalue = 0

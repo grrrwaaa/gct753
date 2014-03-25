@@ -1,4 +1,6 @@
 local field2D = require("field2D")
+local draw2D = require "draw2D"
+local gl = require "gl"
 
 local dim = 256
 local game = field2D.new(dim, dim)
@@ -62,7 +64,13 @@ function update()
 end 
 
 function draw()
+	gl.Disable(gl.DEPTH_TEST)
+
+	draw2D.color(1, 0, 0)
 	game:draw()
+	
+	draw2D.color(0, 1, 0)
+	past:draw()
 end
 
 
