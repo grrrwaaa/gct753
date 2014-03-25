@@ -16,160 +16,7 @@ body {
 <body>
 <script>
 
-// sequence of events timestamped
-var seq = [];
-
-var ringidx = 0;
-
-var audioContext;
-if( typeof webkitAudioContext !== 'undefined' ) {
-	audioContext = webkitAudioContext
-} else if ( typeof AudioContext !== 'undefined' ) {
-	audioContext = AudioContext
-}
-
-var tableSize = 1024;
-
-var al_audio = {
-	bufferSize: 2048,
-	sampleRate: 44100,
-	sampleRateInverse: 1/44100,
-	outchannels: 2,
-	context: null,
-	node: null,
-	
-	samples2radians: Math.PI * 2 / 44100,
-	hz2table: tableSize / 44100,
-	
-	latency: 0.1,
-	
-	playbackTime: 0,
-	schedulerTime: 0,
-}
-
-var twopi = Math.PI * 2;
-
-var amp = .5;
-
-
-
-var ring = new Float32Array(tableSize);
-// number of ring steps to play per second:
-var sequence_rate = 600;
-
-// The frequncy of the sine wave tone
-var frequency = 440;
-var phase = 0;
-var tableSine = new Float32Array(tableSize);
-for (var i = 0; i < 1024; i++) { tableSine[i] = Math.sin((Math.PI * 2.0 * i)/tableSize); }
-
-var ringphase = 0;
-
-al_audio.audioProcess = function(event) {
-
-	var outDataL = event.outputBuffer.getChannelData(0),
-		outDataR = event.outputBuffer.getChannelData(1);
-	var bufferSize = event.outputBuffer.length;
-	
-	var sampleRateInverse = al_audio.sampleRateInverse;
-	
-	//var samples2radians = al_audio.samples2radians;
-	var hz2table = al_audio.hz2table;
-	
-	var floor = Math.floor;
-	var table = tableSine;
-	
-	var t = al_audio.playbackTime;
-	
-	var e = seq.shift();
-	
-	// Loop through the samples
-	for (var i = 0; i < bufferSize; i++) {
-	
-		// process events:
-		while (e != null && e.t <= t) {
-			frequency = e.frequency;
-			e = seq.shift();
-		}
-		
-		var pincr = frequency * hz2table;
-		phase += pincr;
-		if (phase >= 1024.0) phase = (phase - 1024.0); 
-		
-		index = floor(phase);
-      	frac = phase - index;
-      	 
-      	// linear interp:
-		var index2, index1 = (~~index);
-		if((index1 | 0) == (1024 | 0)) {
-			index2 = 0
-		} else { 
-			index2 = (index1 + 1) | 0;
-		}
-		val1 = table[ index1 ];
-      	val2 = table[ index2 ];
-		var v = amp * (val1 + (frac * (val2 - val1)));
-
-		// Set the data in the output buffer for each sample
-		outDataL[i] = v;
-		outDataR[i] = v;
-		
-		t += sampleRateInverse;
-		al_audio.schedulerTime = t;
-	}
-	
-	al_audio.playbackTime += bufferSize * sampleRateInverse;
-	al_audio.schedulerTime = al_audio.playbackTime;
-},
-
-// returns false if audio is not supported.
-// audio might not start immediately however; check al_audio.context != null
-al_audio_init = function() {
-
-	// this would need to be deferred for iOS devices, since audio can only be started in response to a user event
-	al_audio_start = function() {
-		if( typeof audioContext !== 'undefined' ) {
-			document.getElementsByTagName('body')[0].removeEventListener('touchstart', al_audio_start);
-			al_audio.context = new audioContext();
-			al_audio.sampleRate = al_audio.context.sampleRate;
-			al_audio.node = al_audio.context.createScriptProcessor(al_audio.bufferSize, 0, al_audio.outchannels, al_audio.context.sampleRate);	
-			al_audio.node.onaudioprocess = al_audio.audioProcess;
-			al_audio.node.connect(al_audio.context.destination);
-			
-			al_audio.sampleRateInverse = 1 / al_audio.context.sampleRate;
-			al_audio.samples2radians = Math.PI * 2 / al_audio.context.sampleRate;
-			al_audio.hz2table = tableSize / al_audio.context.sampleRate;
-
-			if('ontouchstart' in document.documentElement) { // required to start audio under iOS 6
-				var mySource = al_audio.context.createBufferSource();
-				mySource.connect(al_audio.context.destination);
-				mySource.noteOn(0);
-			}
-			return true;
-			
-		} else if ( navigator.userAgent.indexOf( 'Firefox' ) === -1 ) {
-			al_audio.AudioDataDestination(44100, Gibberish.audioProcessFirefox);
-			al_audio.context = { sampleRate: 44100 }; // needed hack to determine samplerate in ugens
-			return true;
-			
-		} else {
-			alert('Your browser does not support javascript audio synthesis. Please try downloading a recent Chrome, FireFox or Safari (for example).');
-			return false;
-		}
-	}
-	
-	if('ontouchstart' in document.documentElement) {
-		document.getElementsByTagName('body')[0].addEventListener('touchstart', al_audio_start);
-		return true;
-		
-	} else {
-		return al_audio_start();
-	}
-}
-
 al.init();
-
-console.log("audio", al_audio_init());
 
 /// put your code here /////////////////////////////////////////////////////////
 
@@ -188,15 +35,18 @@ function ant(x, y, spin) {
 	this.direction = 0;
 	// which direction the ant should turn when it finds an active cell:
 	this.spin = spin;
+	
+	// add a sinewave osccilator to the ant:
+	this.osc = new al.audio.SinOsc().connect();
 }
 
 // make some ants!
 ants = [
 	new ant(64, 30, 1),
-	new ant(64, 31, 1),
+	//new ant(64, 31, 1),
 	
 	//new ant(64 + random(2), 30 + random(3), random(2) ? 1 : -1),
-	//new ant(64, 30 + random(3), random(2) ? 1 : -1),	
+	new ant(64, 30 + random(3), random(2) ? 1 : -1),	
 ];
 
 // how to render the scene
@@ -205,39 +55,17 @@ function draw()	{
 	field.draw()
 }
 
-// try turning this up to 10, 100, 1000... 
+// how often update() will be called per second:
+al.fps = 30;
+
+// how many ant steps per update:
 var iterations_per_frame = 1;
 
-var t0 = 0;
-
-var adt = 1/30;
-var adt1 = 1/30;
-var smooth = 0.1;
-
-// update the state of the scene.
 function update(dt) {
-	
-	// current audio clock time:
-	var t = al_audio.schedulerTime;
-	var dt1 = t - t0;
-	t0 = t;
-	
-	adt += smooth*(dt - adt);
-	adt1 += smooth*(dt1 - adt1);
-	//console.log(adt, adt1);
-	
-	// cache our current rate in order to know how fast to play the sequence:
-	sequence_rate = iterations_per_frame/dt;
-	
-	for (var i = 1; i <= iterations_per_frame; i++) {
-	
-		// distributed clock time:	
-		//t += adt1 / iterations_per_frame;
-	
-		
-		for (var j in ants) {
+	for (var i = 0; i < iterations_per_frame; i++) {
+		for (var j = 0; j < ants.length; j++) {
 			var ant = ants[j];
-		
+	
 			// move the ant.
 			if (ant.direction == 0) {
 				// North
@@ -252,7 +80,7 @@ function update(dt) {
 				// East
 				ant.x = (ant.x + 1) % field.width;
 			}
-			
+		
 			// apply the rule.
 			var state = field.get(ant.x, ant.y);
 			if (state == 1) {
@@ -266,22 +94,14 @@ function update(dt) {
 				// turn in the opposite direction:
 				ant.direction = wrap(ant.direction - ant.spin, 4);
 			}
+		
+			// update the ant oscillator frequency according to direction:
+			ant.osc.frequency = (110 + j) * (2 + ant.direction);
+			ant.osc.pan = ant.x / dimx;
 			
-			if (j == 0) {
-				frequency = 110 * (1 + ant.direction);
-				
-				// schedule at t + latency:
-				seq.push({
-					t: t + al_audio.latency,
-					frequency: frequency,
-				});
-				
-			}
+			ant.osc.smooth = 0.005;
 		}
-	}	
-	
-	// in theory this should be correct, so long as update() and audioprocess() cannot interleave.
-	al_audio.schedulerTime += adt1;
+	}
 }
 
 function reset() {
