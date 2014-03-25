@@ -109,8 +109,8 @@ function update(dt) {
 	
 		// update the ant oscillator frequency according to 
 		// vertical position and direction:
-		ant.osc.frequency = chromatic(dimy - ant.y, 40) 
-						  * (1 + ant.direction);
+		ant.osc.freq = chromatic(dimy - ant.y, 40) 
+					 * (1 + ant.direction);
 		// update the ant spatial position:
 		ant.osc.pan = ant.x / dimx;
 		
