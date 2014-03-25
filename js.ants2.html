@@ -92,9 +92,8 @@ function update(dt) {
 	
 		// update the ant oscillator frequency according to direction:
 		ant.osc.frequency = (110 + j) * (2 + ant.direction);
+		// update the ant spatial position:
 		ant.osc.pan = ant.x / dimx;
-		
-		ant.osc.smooth = 0.005;
 	}
 }
 

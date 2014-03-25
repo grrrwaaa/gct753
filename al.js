@@ -84,8 +84,7 @@ al.audio.SinOsc = function() {
 	this.table = tableSine;
 	this.pan = 0.5;
 	
-	this.smooth = 0.1;
-	
+	this.parameter_smooth = 0.005;
 	this.freqsmooth = this.frequency;
 	this.last = 0;
 	
@@ -105,7 +104,7 @@ al.audio.SinOsc.prototype.next = function() {
 	var table = this.table;
 	var amp = this.amp;
 	
-	this.freqsmooth += this.smooth * (this.frequency - this.freqsmooth);
+	this.freqsmooth += this.parameter_smooth * (this.frequency - this.freqsmooth);
 	
 	var pincr = this.freqsmooth * hz2table;
 	
@@ -161,6 +160,7 @@ al.audio.audioProcess = function(event) {
 			var v = ugen.next();
 			
 			// pan: 
+			// TODO: equal power pan!
 			r += ugen.pan * v;
 			l += (1.0 - ugen.pan) * v;
 		}
