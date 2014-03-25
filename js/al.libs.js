@@ -71,7 +71,7 @@ var tableSine = new Float32Array(al.audio.tableSize + 1);
 for (var i = 0; i <= al.audio.tableSize; i++) { tableSine[i] = Math.sin((Math.PI * 2.0 * i)/al.audio.tableSize); }
 
 var floor = Math.floor;
-
+var piover2 = Math.PI/2.;
 var ugens = [];
 
 al.audio.SinOsc = function() {
@@ -85,6 +85,8 @@ al.audio.SinOsc = function() {
 	
 	this.parameter_smooth = 0.005;
 	this.freqsmooth = this.frequency;
+	this.ampsmooth = this.amp;
+	this.pansmooth = this.pan;
 	this.last = 0;
 	
 	// start playing immediately
@@ -99,14 +101,17 @@ al.audio.SinOsc.prototype.connect = function() {
 al.audio.SinOsc.prototype.next = function() {
 	var phase = this.phase;
 	var table = this.table;
-	var amp = this.amp;
 	
 	this.freqsmooth += this.parameter_smooth * (this.frequency - this.freqsmooth);
+	this.pansmooth += this.parameter_smooth * (this.pan - this.pansmooth);
+	this.ampsmooth += this.parameter_smooth * (this.amp - this.ampsmooth);
 	
+	var amp = this.ampsmooth;
 	var pincr = this.freqsmooth * hz2table;
 	
 	phase += pincr;
 	if (phase >= 1024.0) phase = (phase - 1024.0); 
+	this.phase = phase;
 	
 	var index = floor(phase);
 	var frac = phase - index;
@@ -120,9 +125,7 @@ al.audio.SinOsc.prototype.next = function() {
 	}
 	var val1 = table[ index1 ];
 	var val2 = table[ index2 ];
-	this.last = amp * (val1 + (frac * (val2 - val1)));
-	this.phase = phase;
-	return this.last;
+	return this.ampsmooth * (val1 + (frac * (val2 - val1)));
 }
 
 al.audio.audioProcess = function(event) {
@@ -136,7 +139,8 @@ al.audio.audioProcess = function(event) {
 	//var samples2radians = al.audio.samples2radians;
 	var hz2table = hz2table;
 	
-	var table = tableSine;
+	var tableSize = al.audio.tableSize;
+	var tableSizeHalf = tableSize/2;
 	
 	var t = al.audio.t;
 
@@ -155,11 +159,12 @@ al.audio.audioProcess = function(event) {
 		for (var u = 0, ul = ugens.length; u < ul; u++) {
 			var ugen = ugens[u];
 			var v = ugen.next();
+			var p = floor(ugen.pansmooth * tableSizeHalf);
 			
 			// pan: 
 			// TODO: equal power pan!
-			r += ugen.pan * v;
-			l += (1.0 - ugen.pan) * v;
+			r += tableSine[p] * v;
+			l += tableSine[p + tableSizeHalf] * v;
 		}
 		
 		// Set the data in the output buffer for each sample
