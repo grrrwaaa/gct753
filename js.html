@@ -135,10 +135,10 @@ field.diffuse(field_previous, diffusion_rate, accuracy);</code></pre>
 <p>There are also a couple of classic functional programming methods. The <code>map(function)</code> method applies a function to each cell of the field in turn. The function arguments will be the current value of the cell and the x and y position, and the return value should be the new value of the cell (or nil to indicate no change). </p>
 <p>The <code>reduce(function, initial)</code> method is used to reduce a field to a single value, such as calculating the total of all cells. This value is defined by the <code>initial</code> argument, passed to the function for each cell, and updated by its return value. Easier to explain by example:</p>
 <pre><code class="lang-javascript"><span class="comment">// multiply all cells by 2: </span>
-field:map(<span class="keyword">function</span>(value, x, y) { <span class="keyword">return</span> value * <span class="number">2</span>; });
+field.map(<span class="keyword">function</span>(value, x, y) { <span class="keyword">return</span> value * <span class="number">2</span>; });
 
 <span class="comment">// find the sum total of all cell values:</span>
-<span class="keyword">var</span> total = field:reduce(<span class="keyword">function</span>(sum, value, x, y) {
+<span class="keyword">var</span> total = field.reduce(<span class="keyword">function</span>(sum, value, x, y) {
     <span class="keyword">return</span> sum + value;
 }, <span class="number">0</span>);</code></pre>
 <h2>Audio</h2>

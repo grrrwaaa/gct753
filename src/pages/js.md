@@ -158,10 +158,10 @@ The ```reduce(function, initial)``` method is used to reduce a field to a single
 
 ```javascript
 // multiply all cells by 2: 
-field:map(function(value, x, y) { return value * 2; });
+field.map(function(value, x, y) { return value * 2; });
 
 // find the sum total of all cell values:
-var total = field:reduce(function(sum, value, x, y) {
+var total = field.reduce(function(sum, value, x, y) {
 	return sum + value;
 }, 0);
 ```
