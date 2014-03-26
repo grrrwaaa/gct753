@@ -5,7 +5,7 @@ title: JavaScript
 
 - [Game of Life](js.life.html)
 - [Langton's ant](js.ants.html)
-- [Langton's ant (multiple ants + sound](js.ants2.html)
+- [Langton's ant (multiple ants + sound)](js.ants2.html)
 
 # Using JavaScript and al.js
 
