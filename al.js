@@ -79,13 +79,13 @@ al.audio.SinOsc = function() {
 	al.audio_init();
 	
 	this.amp = 0.1;
-	this.phase = 0;
-	this.frequency = 440.0;
-	this.table = tableSine;
+	this.freq = 440.0;
 	this.pan = 0.5;
-	
 	this.parameter_smooth = 0.005;
-	this.freqsmooth = this.frequency;
+	
+	this.phase = 0;
+	this.table = tableSine;
+	this.freqsmooth = this.freq;
 	this.ampsmooth = this.amp;
 	this.pansmooth = this.pan;
 	this.last = 0;
@@ -103,7 +103,7 @@ al.audio.SinOsc.prototype.next = function() {
 	var phase = this.phase;
 	var table = this.table;
 	
-	this.freqsmooth += this.parameter_smooth * (this.frequency - this.freqsmooth);
+	this.freqsmooth += this.parameter_smooth * (this.freq - this.freqsmooth);
 	this.pansmooth += this.parameter_smooth * (this.pan - this.pansmooth);
 	this.ampsmooth += this.parameter_smooth * (this.amp - this.ampsmooth);
 	
