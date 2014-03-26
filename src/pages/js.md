@@ -1,6 +1,12 @@
 title: JavaScript
 
 
+# Examples
+
+- [Game of Life](js.life.html)
+- [Langton's ant](js.ants.html)
+- [Langton's ant (multiple ants + sound](js.ants2.html)
+
 # Using JavaScript and al.js
 
 Since 2014 we are also offering class material using a browser-based JavaScript implementation. Most of the library code is in [http://grrrwaaa.github.io/gct753/al.min.js](http://grrrwaaa.github.io/gct753/al.min.js) (or, for an uncompressed version, see [http://grrrwaaa.github.io/gct753/al.js](http://grrrwaaa.github.io/gct753/al.js)). This library replicates many of the capabilities of last year's Lua based system, and adds a few new ones. Graphical rendering uses HTML5 Canvas API and sound is built on the ScriptProcessingNode API, so a recent version of Chrome, FireFox or Safari is recommended (IE probably won't work). 
