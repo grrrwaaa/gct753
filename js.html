@@ -101,6 +101,46 @@ field.set(<span class="number">1</span>);</code></pre>
 <pre><code class="lang-javascript">draw = <span class="keyword">function</span>(ctx) {
     field.draw();
 }</code></pre>
+<p>More useful methods:</p>
+<pre><code class="lang-javascript">
+field.min();    <span class="comment">// returns the lowest cell value in the array</span>
+field.max();    <span class="comment">// returns the highest cell value in the array</span>
+field.sum();    <span class="comment">// adds up all cell values and returns the total</span>
+
+field.clear();         <span class="comment">// set all field cells to zero</span>
+field.normalize();     <span class="comment">// re-scales the field into a 0..1 range</span></code></pre>
+<p>There are some methods for interpolated reading/writing/modifying fields. These methods use x and y indices in a normalized 0..1 floating-point range rather than 0..width or 0..height integer range:</p>
+<pre><code class="lang-javascript"><span class="comment">// returns interpolated value at the normalized position x,y</span>
+field.sample(x, y);            
+
+<span class="comment">// set the field at position x,y to value v </span>
+<span class="comment">// (the four nearest cells will be interpolated)</span>
+<span class="comment">// if v is a function, it is evaluated for each cell. The function arguments are cellvalue, x, y.</span>
+field.update(v, x, y);
+
+<span class="comment">// adds v to a field at position x, y</span>
+<span class="comment">// (interpolated addition to nearest four cells)</span>
+field.splat(v, x, y);
+
+<span class="comment">// scale a field at x,y by factor v</span>
+<span class="comment">// (interpolated scale over nearest four cells)</span>
+field.scale(v, x, y);
+<span class="comment">// if x and y are ommitted, the scale factor is applied to the whole field:</span>
+field.scale(v);</code></pre>
+<p>The field2D type also includes a diffusion method, which can be used to smoothly distribute values over time. It requires a second (previous) copy of the field to diffuse from:</p>
+<pre><code class="lang-javascript"><span class="comment">// field_previous is another field2D of equal dimensions</span>
+<span class="comment">// diffusion_rate is a value between 0 and 1; a rate of 0 means no diffusion.</span>
+<span class="comment">// accuracy is an optional integer for the number of diffusion steps; the default is 10.</span>
+field.diffuse(field_previous, diffusion_rate, accuracy);</code></pre>
+<p>There are also a couple of classic functional programming methods. The <code>map(function)</code> method applies a function to each cell of the field in turn. The function arguments will be the current value of the cell and the x and y position, and the return value should be the new value of the cell (or nil to indicate no change). </p>
+<p>The <code>reduce(function, initial)</code> method is used to reduce a field to a single value, such as calculating the total of all cells. This value is defined by the <code>initial</code> argument, passed to the function for each cell, and updated by its return value. Easier to explain by example:</p>
+<pre><code class="lang-javascript"><span class="comment">// multiply all cells by 2: </span>
+field:map(<span class="keyword">function</span>(value, x, y) { <span class="keyword">return</span> value * <span class="number">2</span>; });
+
+<span class="comment">// find the sum total of all cell values:</span>
+<span class="keyword">var</span> total = field:reduce(<span class="keyword">function</span>(sum, value, x, y) {
+    <span class="keyword">return</span> sum + value;
+}, <span class="number">0</span>);</code></pre>
 <h2>Audio</h2>
 <p>Audio will be enabled if any audio objects are created. If that occurs, the <code>update()</code> function will be triggered by audio processing rather than graphical rendering. </p>
 <p>You can create a sine oscillator like this:</p>

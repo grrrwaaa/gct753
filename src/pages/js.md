@@ -109,6 +109,63 @@ draw = function(ctx) {
 }
 ```
 
+More useful methods:
+
+```javascript
+
+field.min();	// returns the lowest cell value in the array
+field.max();	// returns the highest cell value in the array
+field.sum();	// adds up all cell values and returns the total
+
+field.clear(); 		// set all field cells to zero
+field.normalize();	 // re-scales the field into a 0..1 range
+```
+
+There are some methods for interpolated reading/writing/modifying fields. These methods use x and y indices in a normalized 0..1 floating-point range rather than 0..width or 0..height integer range:
+
+```javascript
+// returns interpolated value at the normalized position x,y
+field.sample(x, y);			
+
+// set the field at position x,y to value v 
+// (the four nearest cells will be interpolated)
+// if v is a function, it is evaluated for each cell. The function arguments are cellvalue, x, y.
+field.update(v, x, y);
+
+// adds v to a field at position x, y
+// (interpolated addition to nearest four cells)
+field.splat(v, x, y);
+
+// scale a field at x,y by factor v
+// (interpolated scale over nearest four cells)
+field.scale(v, x, y);
+// if x and y are ommitted, the scale factor is applied to the whole field:
+field.scale(v);
+```
+
+The field2D type also includes a diffusion method, which can be used to smoothly distribute values over time. It requires a second (previous) copy of the field to diffuse from:
+
+```javascript
+// field_previous is another field2D of equal dimensions
+// diffusion_rate is a value between 0 and 1; a rate of 0 means no diffusion.
+// accuracy is an optional integer for the number of diffusion steps; the default is 10.
+field.diffuse(field_previous, diffusion_rate, accuracy);
+```
+
+There are also a couple of classic functional programming methods. The ```map(function)``` method applies a function to each cell of the field in turn. The function arguments will be the current value of the cell and the x and y position, and the return value should be the new value of the cell (or nil to indicate no change). 
+
+The ```reduce(function, initial)``` method is used to reduce a field to a single value, such as calculating the total of all cells. This value is defined by the ```initial``` argument, passed to the function for each cell, and updated by its return value. Easier to explain by example:
+
+```javascript
+// multiply all cells by 2: 
+field:map(function(value, x, y) { return value * 2; });
+
+// find the sum total of all cell values:
+var total = field:reduce(function(sum, value, x, y) {
+	return sum + value;
+}, 0);
+```
+
 ## Audio
 
 Audio will be enabled if any audio objects are created. If that occurs, the ```update()``` function will be triggered by audio processing rather than graphical rendering. 

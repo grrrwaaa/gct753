@@ -35,6 +35,13 @@ wrap = function (n, m) {
 	return ((n%m)+m)%m;
 }
 
+var floor = Math.floor;
+var ceil = Math.ceil;
+var min = Math.min;
+var max = Math.max;
+
+var piover2 = Math.PI/2.;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // the exported module:
@@ -70,8 +77,6 @@ al.audio = {
 var tableSine = new Float32Array(al.audio.tableSize + 1);
 for (var i = 0; i <= al.audio.tableSize; i++) { tableSine[i] = Math.sin((Math.PI * 2.0 * i)/al.audio.tableSize); }
 
-var floor = Math.floor;
-var piover2 = Math.PI/2.;
 var ugens = [];
 
 al.audio.SinOsc = function() {
@@ -319,20 +324,20 @@ field2D = function (width, height) {
 	this.dim = [ width, height ];
 	this.width = width;
 	this.height = height;
-	this.data = zeros(this.dim);
+	this.array = zeros(this.dim);
 }
 
 field2D.prototype.draw = function() {
 	var x, y, i = 0;
 	var w = offscreen_canvas.width, h = offscreen_canvas.height;
-	var W = this.data.shape[0], H = this.data.shape[1];
+	var W = this.array.shape[0], H = this.array.shape[1];
 	var dx = W/w, dy = H/h;
 	
 	for (y = 0; y < h; y++) {
 		var y1 = Math.floor(y * dy);
 		for (x = 0; x < w; x++, i += 4) {
 			var x1 = Math.floor(x * dx);
-			var r = this.data.get(x1, y1) * 255;
+			var r = this.array.get(x1, y1) * 255;
 			offscreen_data[i  ] = r;
 			offscreen_data[i+1] = r;
 			offscreen_data[i+2] = r;
@@ -345,6 +350,7 @@ field2D.prototype.draw = function() {
 		0,0,offscreen_canvas.width,offscreen_canvas.height,
 		0,0,canvas.width,canvas.height
 	);
+	return this;
 }
 
 field2D.prototype.set = function(value, x, y) {
@@ -353,12 +359,12 @@ field2D.prototype.set = function(value, x, y) {
 		y = wrap(y, this.height);
 		if (typeof value === "function") {
 			var v = value(x, y);
-			if (v != null) this.data.set(i,j,v);
+			if (v != null) this.array.set(i,j,v);
 		} else {
-			this.data.set(x,y,value);
+			this.array.set(x,y,value);
 		}
 	} else {
-		var data = this.data;
+		var data = this.array;
 		var w = this.width;
 		var h = this.height;
 		if (typeof value === "function") {
@@ -376,10 +382,278 @@ field2D.prototype.set = function(value, x, y) {
 			}
 		}
 	}
+	return this;
 }
 
+//- return the value of a cell
+// If x or y is out of range of the field, it wraps around (positive modulo)
+// If x or y are not integers, the fractional component is discarded (rounded down)
+// @tparam ?int x coordinate (row) to get a single cell
+// @tparam ?int y coordinate (column) to get a single cell
 field2D.prototype.get = function(x, y) {
 	x = wrap(x, this.width);
 	y = wrap(y, this.height);
-	return this.data.get(x, y);
+	return this.array.get(x, y);
+}
+
+//- return the value at a normalized index (0..1 range maps to field dimensions)
+// Uses linear interpolation between nearest cells.
+// Indices out of range will wrap.
+// @param x coordinate (0..1) to sample
+// @param y coordinate (0..1) to sample
+field2D.prototype.sample = function(x, y) {
+	//assert(x, "missing x coordinate for sampling")
+	//assert(y, "missing y coordinate for sampling")
+	var array = this.array;
+	var x = wrap(((x * this.width) - 0.5), this.width);
+	var y = wrap(((y * this.height) - 0.5), this.height);
+	var x0 = floor(x);
+	var y0 = floor(y);
+	var x1 = wrap(x0 + 1, this.width);
+	var y1 = wrap(y0 + 1, this.height);
+	var xb = x - x0;
+	var yb = y - y0;
+	var xa = 1 - xb;
+	var ya = 1 - yb;
+	var v00 = array.get(x0, y0);
+	var v10 = array.get(x1, y0);
+	var v01 = array.get(x0, y1);
+	var v11 = array.get(x1, y1);
+	return v00 * xa * ya
+		 + v10 * xb * ya
+		 + v01 * xa * yb
+		 + v11 * xb * yb;
+}
+
+
+//- Update the field at a normalized (0..1) index
+// Like field2D:set(), but uses linear interpolation to distribute the update between nearest cells (thus it is an inverse of field:sample()). If the index falls exactly in the center of one cell, it is equivalent to field:set(). Otherwise, the four nearest cells will be updated as a weighted average of their current and the new value.
+// If the value is a function, this function is called for each nearby cell to generate a new value. The function argument is the old value of the cell. 
+// Indices out of range will wrap.
+// @param value (number or function) the value to update the field
+// @param x coordinate (0..1) to update
+// @param y coordinate (0..1) to update
+// @return this
+field2D.prototype.update = function(value, x, y) {
+	//assert(value, "missing value for update")
+	//assert(x, "missing x coordinate for update")
+	//assert(y, "missing y coordinate for update")
+	var array = this.array;
+	var x = wrap(((x * this.width) - 0.5), this.width);
+	var y = wrap(((y * this.height) - 0.5), this.height);
+	var x0 = floor(x);
+	var y0 = floor(y);
+	var x1 = wrap(x0 + 1, this.width);
+	var y1 = wrap(y0 + 1, this.height);
+	var xb = x - x0;
+	var yb = y - y0;
+	var xa = 1 - xb;
+	var ya = 1 - yb;
+	// old value
+	var v00 = array.get(x0, y0);
+	var v10 = array.get(x1, y0);
+	var v01 = array.get(x0, y1);
+	var v11 = array.get(x1, y1);
+	// new value
+	var o00, o10, o01, o11;
+	if (typeof value == "function") {
+		o00 = value(v00, x, y);
+		o10 = value(v10, x, y);
+		o01 = value(v01, x, y);
+		o11 = value(v11, x, y);
+	} else {
+		o00 = value;
+		o10 = value;
+		o01 = value;
+		o11 = value;
+	}
+	// interpolated application:
+	array.set(x0, y0, v00 + xa*ya*(o00 - v00));
+	array.set(x1, y0, v10 + xb*ya*(o10 - v10));
+	array.set(x0, y1, v01 + xa*yb*(o01 - v01));
+	array.set(x1, y1, v11 + xb*yb*(o11 - v11));
+	return this;
+}
+
+//- Add a value to the field at a normalized (0..1) index
+// Uses linear interpolation to distribute the value between nearest cells, for accumulation.
+// Indices out of range will wrap.
+// @param value the value to add to the field
+// @param x coordinate (0..1) to update
+// @param y coordinate (0..1) to update
+// @return this
+field2D.prototype.splat = function(value, x, y) {
+	//assert(value, "missing value for splat")
+	//assert(x, "missing x coordinate for splat")
+	//assert(y, "missing y coordinate for splat")
+	var array = this.array;
+	var x = wrap(((x * this.width) - 0.5), this.width);
+	var y = wrap(((y * this.height) - 0.5), this.height);
+	var x0 = floor(x);
+	var y0 = floor(y);
+	var x1 = wrap(x0 + 1, this.width);
+	var y1 = wrap(y0 + 1, this.height);
+	var xb = x - x0;
+	var yb = y - y0;
+	var xa = 1 - xb;
+	var ya = 1 - yb;
+	array.set(x0, y0, array.get(x0, y0) + value * xa * ya);
+	array.set(x1, y0, array.get(x1, y0) + value * xb * ya);
+	array.set(x0, y1, array.get(x0, y1) + value * xa * yb);
+	array.set(x1, y1, array.get(x1, y1) + value * xb * yb);
+	return this;
+}
+
+//- Multiply the field by a value, optionally at a normalized (0..1) index
+// If indices are not given, all cells are multipled by the value.
+// Otherwise, uses linear interpolation to distribute the value between nearest cells, for multiplication. If the position index is exactly in the center of a cell, it performs a normal multiplcation. Otherwise the four nearest cells are updated according to a weighted average of their current and modified value.
+// Indices out of range will wrap.
+// @param value the value to scale to the field
+// @param x coordinate (0..1) to update (optional)
+// @param y coordinate (0..1) to update (optional)
+// @return this
+field2D.prototype.scale = function(value, x, y) {
+	var array = this.array;
+	//assert(value, "missing value for scale")
+	if (x != null && y != null) {
+		var x = wrap(((x * this.width) - 0.5), this.width);
+		var y = wrap(((y * this.height) - 0.5), this.height);
+		var x0 = floor(x);
+		var y0 = floor(y);
+		var x1 = wrap(x0 + 1, this.width);
+		var y1 = wrap(y0 + 1, this.height);
+		var xb = x - x0;
+		var yb = y - y0;
+		var xa = 1 - xb;
+		var ya = 1 - yb;
+		// old value
+		var v00 = array.get(x0, y0); 
+		var v10 = array.get(x1, y0); 
+		var v01 = array.get(x0, y1); 
+		var v11 = array.get(x1, y1); 
+		// new value
+		var o00 = v00 * value;
+		var o10 = v10 * value;
+		var o01 = v01 * value;
+		var o11 = v11 * value;
+		// interpolated application:
+		array.set(x0, y0, v00 + xa*ya*(o00 - v00));
+		array.set(x1, y0, v10 + xb*ya*(o10 - v10));
+		array.set(x0, y1, v01 + xa*yb*(o01 - v01));
+		array.set(x1, y1, v11 + xb*yb*(o11 - v11));
+	} else {
+		for (var i = 0, l = array.data.length; i < l; i++) {
+			array.data[i] *= value;
+		}
+	}
+	return this;
+}
+
+field2D.prototype.clear = function() {
+	var array = this.array;
+	for (var i = 0, l = array.data.length; i < l; i++) {
+		array.data[i] = 0;
+	}
+	return this;
+}
+
+//- fill the field with a diffused (blurred) copy of another
+// @param sourcefield the field to be diffused
+// @param diffusion the rate of diffusion
+// @param passes ?int the number of iterations to improve numerical accuracy (default 10)
+field2D.prototype.diffuse = function(sourcefield, diffusion, passes) {
+	var array = this.array;
+	passes = passes || 10;
+	var input = sourcefield.array;
+	var div = 1.0/((1.+4.*diffusion));
+	var w = sourcefield.width, h = sourcefield.height;	
+	// Gauss-Seidel relaxation scheme:
+	for (var n = 1; n < passes; n++) {
+		for (var y = 0; y < h; y++) {
+			for (var x = 0; x < w; x++) {
+				var pre =	input.get(x,  y  );
+				var va0 =	array.get(wrap(x-1,w),y  );
+				var vb0 =	array.get(wrap(x+1,w),y  );
+				var v0a =	array.get(x,  wrap(y-1,h));
+				var v0b =	array.get(x,  wrap(y+1, h));
+				array.set(x, y, div*(
+					pre +
+					diffusion * (
+						va0 + vb0 +
+						v0a + v0b
+					)
+				));
+			}
+		}
+	}
+	return this;
+}
+
+//- Apply a function to each cell of the field in turn
+// The function arguments will be the current value of the cell and the x and y position, and the return value should be the new value of the cell (or nil to indicate no change). E.g. to multiply all cells by 2: field:map(function(value, x, y) return value * 2 })
+// @param func the function to apply
+// @return this
+field2D.prototype.map = function(func) {
+	var array = this.array;
+	var w = this.width, h = this.height;	
+	for (var y = 0; y < h; y++) {
+		for (var x = 0; x < w; x++) {
+			var old = array.get(x, y);
+			var v = func(old, x, y);
+			array.set(x, y, v != null ? v : old);
+		}
+	}
+	return this;
+}
+
+field2D.prototype.reduce = function(func, result) {
+	var array = this.array;
+	var w = this.width, h = this.height;	
+	for (var y = 0; y < h; y++) {
+		for (var x = 0; x < w; x++) {
+			result = func(result, array.get(x, y), x, y);
+		}
+	}
+	return result;
+}
+
+
+//- normalize the field values to a 0..1 range
+// @return this
+field2D.prototype.normalize = function() {
+	var array = this.array;
+	var data = array.data;
+	var w = this.width, h = this.height;
+	var lo = data[0];
+	var hi = lo;
+	for (var i = 1, l = data.length; i < l; i++) {
+		lo = min(lo, data[i]);
+		hi = max(hi, data[i]);
+	}
+	var range = hi - lo;
+	var scale = 1/range;
+	for (var i = 1, l = data.length; i < l; i++) {
+		data[i] = scale * (data[i] - lo);
+	}
+	return this;
+}
+
+//- return the sum of all cells
+// @return sum
+field2D.prototype.sum = function() {
+	return this.reduce(function(total, cell) {
+		return total + cell;
+	}, 0);
+}
+
+//- return the maximum value of all cells
+// @return max
+field2D.prototype.max = function() {
+	return this.reduce(Math.max, Number.NEGATIVE_INFINITY);
+}
+
+//- return the minimum value of all cells
+// @return min
+field2D.prototype.min = function() {
+	return this.reduce(Math.min, Number.MAX_VALUE);
 }
