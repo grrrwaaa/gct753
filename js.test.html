@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="al.js"></script>
+<style>
+body {
+	background: #eee;
+	width: 512px;
+	min-height: 100%;
+	margin: 50px auto 50px auto;
+}
+</style>
+</head>
+<body>
+<script>
+al.init();
+
+/// put your code here /////////////////////////////////////////////////////////
+
+var w = 256, h = 128;
+var game = new field2D(w, h);
+
+console.log(game);
+
+function reset() {
+	game.set(function(x, y) {
+		return x/game.width;
+	});
+}
+reset();
+
+
+console.log(game.sample(0, 0));
+
+
+function update() {
+	game.diffuse(game, 1, 10);
+} 
+
+function draw() {
+	game.draw()
+}
+
+/// end of user code ///////////////////////////////////////////////////////////
+
+al.start();
+</script>
+</body>
+</html>

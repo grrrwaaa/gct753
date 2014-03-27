@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="al.js"></script>
+<style>
+body {
+	background: #eee;
+	width: 512px;
+	min-height: 100%;
+	margin: 50px auto 50px auto;
+}
+</style>
+</head>
+<body>
+<script>
+al.init();
+
+/// put your code here /////////////////////////////////////////////////////////
+
+// inspired by http://www.jonathanmccabe.com/Cyclic_Symmetric_Multi-Scale_Turing_Patterns.pdf
+
+var w = 64, h = w/2;
+
+// In this model there is only one “substance”, which takes the role of pigmentation, activator and inhibitor
+// It is represented by a single floating point number for every element of a rectangular array. The elements of the array may be considered to be equivalent to the cells in the discrete model put forward by Turing in his paper.
+var field = new field2D(w, h);
+// (but we still need double-buffering)
+var field_old = new field2D(w, h);
+
+// "a small amount": the amount by which a cell can change per step:
+var rate = 0.5;
+
+// number of iterations per frame:
+var iterations = 3;
+
+var activator = 2;
+var inhibitor = 4;
+
+function reset() {
+	field.set(function(x, y) {
+		// initial states in 0..1 range:
+		return random();
+	});
+}
+reset();
+
+// a very poor implementation of averaging cell values over a radius:
+function average(x, y, range) {
+	var sum = 0, count = 0;
+	for (var y1 = y-range; y1 <= y+range; y1++) {
+		for (var x1 = x-range; x1 <= x+range; x1++) {
+			sum += field_old.get(x1, y1);	
+			count++;
+		}
+	}
+	return sum / count;
+}
+
+function field_update(x, y) {
+	
+	// Diffusion is simulated by taking an average of the values of a certain area around each element, a smaller area for the activator and a larger area for the inhibitor
+	var action = average(x, y, activator) - average(x, y, inhibitor) > 0 ? 1 : -1;
+	
+	// If the average concentration in the smaller area is greater than the average concentration in the larger area, increase the value by a small amount, otherwise decrease the value by a small amount. 
+	var current = field_old.get(x, y);
+	return current + rate * action
+}
+
+// The Turing instability of the scale with the least variation “wins” and “fires”, increasing slightly the variation at that scale. 
+
+function field_update1(x, y) {
+	var current = field_old.get(x, y);
+	
+	// get instabilities at several radii:
+	var action = 0;
+	for (var i = 2; i < 10; i+=2) {
+		var diff = average(x, y, i) - average(x, y, i*2);
+		if (Math.abs(diff) > Math.abs(action)) {
+			action = diff;
+		}
+	}
+	
+	if (action > 0) {
+		return current + rate * action;
+	} else {
+		return current - rate * action;
+	}
+}
+
+function update() {
+	for (var i = 1; i <= iterations; i++) 
+	{
+		// double buffer:
+		var tmp = field_old;
+		field_old = field;
+		field = tmp;
+		
+		// A simple rule is iteratively applied to all of the array elements 
+		field.set(field_update1);	
+		// At each time step the resulting values are re-normalised to avoid “run away”. 
+		field.normalize();
+	}
+} 
+
+function draw() {
+	// The floating point number representing the concentration of the substance becomes the pixel value in the resulting gray scale image.
+	field.draw();
+}
+
+/// end of user code ///////////////////////////////////////////////////////////
+
+al.start();
+</script>
+</body>
+</html>

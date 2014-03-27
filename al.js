@@ -633,7 +633,7 @@ field2D.prototype.normalize = function() {
 	}
 	var range = hi - lo;
 	var scale = 1/range;
-	for (var i = 1, l = data.length; i < l; i++) {
+	for (var i = 0, l = data.length; i < l; i++) {
 		data[i] = scale * (data[i] - lo);
 	}
 	return this;
