@@ -6,10 +6,16 @@ local field2D = require "field2D"
 math.randomseed(os.time())
 local floor = math.floor
 local min = math.min
+local abs = math.abs
+local random = math.random
+local twopi = math.pi * 2
+local sin, cos = math.sin, math.cos
 
 -- choose the size of the field
-local dimx = 400
+local dimx = 160
 local dimy = dimx * 3/4 -- (with a 4:3 aspect ratio)
+
+
 
 -- allocate the field
 local field = field2D.new(dimx, dimy)
@@ -17,8 +23,7 @@ local field = field2D.new(dimx, dimy)
 -- create a second field, to store the previous states of the cells:
 local field_old = field2D.new(dimx, dimy)
 
-local activation_rate = 0.01
-local inhibition_rate = 0.01
+local rate = 0.1
 
 local activation_radius = 1
 local inhibition_radius = 5
@@ -40,8 +45,32 @@ function normalize(x, y)
 end
 
 -- this is highly inaccurate; this measures a rectangular border, not a circular radius.
-function concentration_at_radius(x, y, r)
+function concentration_over_radius(x, y, r)
+	local count = 0
+	local sum = 0
+	for y1 = y-r, y+r do
+		for x1 = x-r, x+r do
+			sum = sum + field_old:get(x1, y1)
+			count = count + 1
+		end
+	end
+	return sum / count
+end	
 
+function concentration_around_radius(x, y, r)
+	-- get r samples:
+	local count = random(r*2)
+	local sum = 0
+	for i = 1, count do
+		local a = random() * twopi
+		local r1 = random() * r
+		local x1, y1 = x + r1*cos(a), y + r1*sin(a)
+		sum = sum + field_old:get(x1, y1)
+	end
+	return sum / count
+end
+
+function concentration_at_radius(x, y, r)
 	-- check out the neighbors' previous states:
 	local N  = field_old:get(x  , y+r)
 	local NE = field_old:get(x+r, y+r)
@@ -51,8 +80,12 @@ function concentration_at_radius(x, y, r)
 	local SW = field_old:get(x-r, y-r)
 	local W  = field_old:get(x-r, y  )
 	local NW = field_old:get(x-r, y+r)
-	
 	return (N + NE + E + SE + S + SW + W + NW) / 8
+end
+
+function diff_at_radius(x, y, r, c)
+	return concentration_around_radius(x, y, r) 
+		 - concentration_around_radius(x, y, r * 2)
 end
 
 -- the rule for an individual cell (at position x, y) in the field:
@@ -61,44 +94,39 @@ function reaction(x, y)
 	-- check my own previous state:
 	local C = field_old:get(x, y)
 	
-	local activator = concentration_at_radius(x, y, activation_radius)
-	local inhibitor = concentration_at_radius(x, y, inhibition_radius)
+	local action = 1
+	local r = 0
 	
-	if activator > inhibitor then
-		C = C + activation_rate
-	else
-		C = C - inhibition_rate
+	for i = random(5), 20, 5 do
+		local a = diff_at_radius(x, y, i)
+		if abs(a) < abs(action) then
+			action = a
+		end
 	end
+		
+	--return C + action * 0.1
 	
-	-- update min/max:
-	min = math.min(C, min)
-	max = math.max(C, max)
-	
-	-- return the new state:
-	return C
+	---[[
+	if action > 0 then
+		return C + rate
+	else
+		return C - rate
+	end
+	--]]
 end
 
 -- update the state of the scene (toggle this on and off with spacebar):
 function update(dt)
-	-- swap field and field_old:
-	-- (field now becomes old, and the new field is ready to be written)
-	field, field_old = field_old, field
+	for i = 1, 1 do
+		-- swap field and field_old:
+		-- (field now becomes old, and the new field is ready to be written)
+		field, field_old = field_old, field
 	
-	-- reset the min, max:
-	min = 0.5
-	max = 0.5
-	
-	--[[
-	-- add a probabilistic effect:
-	activation_radius = math.random(4)
-	inhibition_radius = activation_radius + math.random(4)
-	--]]
-	
-	-- run the simulation:
-	field:set(reaction)
-	
+		-- run the simulation:
+		field:set(reaction)
+	end	
 	-- make sure all cells are in the 0..1 range 
-	field:set(normalize)
+	field:normalize()
 end
 
 
