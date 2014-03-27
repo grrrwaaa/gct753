@@ -3,13 +3,14 @@ title: JavaScript
 
 # Examples
 
-- [Game of Life](js.life.html)
-- [Brian's Brain](js.brain.html)
-- [Forest fire](js.fire.html)
-- [Langton's ant](js.ants.html)
-- [Langton's ant (multiple ants + sound)](js.ants2.html)
-- [Block rules](js.block.html)
-- [Hodgepodge](js.hodgepodge.html)
+- Cellular Automata
+	- [Game of Life](js.life.html)
+	- [Brian's Brain](js.brain.html)
+	- [Forest fire](js.fire.html)
+	- [Langton's ant](js.ants.html)
+	- [Langton's ant (multiple ants + sound)](js.ants2.html)
+	- [Block rules](js.block.html)
+	- [Hodgepodge](js.hodgepodge.html)
 
 # Using JavaScript and al.js
 
