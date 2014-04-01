@@ -3,6 +3,16 @@ title: Multi-agent systems
 
 # Multi-agent systems (agent-based models)
 
+Some of the most beautiful, fascinating or strange phenomena of nature can be understood as emerging from the behaviors of interacting agents. Widely acknowledged examples include the flocking of birds (or swarming insects, schools of fish), and the societal 'superorganisms' of ant colonies. 
+
+![Flocking](http://americablog.com/wp-content/uploads/2014/01/flock-of-starlings.gif)
+
+We have come to understand that despite the obvious organization that we see at the macro-scale, there is no hierarchical center of coordination, but rather the whole emerges from simple interactions at local levels. These have been suggested as examples of emergence, or of self-organization. Which is to say, the whole is greater than a naive sum of its parts. 
+
+![Fish school](http://underthecblog.files.wordpress.com/2014/02/fishschool.gif)
+
+Agent-based models, or multi-agent systems, attempt to understand how non-trivial organized macro-behavior emerges from objects that interact primarily at a local-level. These objects are called **agents**. Besides modeling flocks and colonies, agent-based modeling has applications from microbiology to sociology, as well as video games and computer graphics. 
+
 ## What is an agent?
 
 An autonomous agent interacts within an environment populated by other agents, but behaves independently without taking direct commands from other agents nor a global planner or leader. Agent-based models typically operate in parallel within a spatial environment, in which interactions are usually limited to local distances, rather like cellular automata. But unlike CA, which roots a program in a particular spatial location (the cell), an agent-based program is typically mobile. 
@@ -19,9 +29,15 @@ As a biological approximation, an agent could refer to anything from individual 
 
 Just like CA, at times, the self-organizing behavior of systems of even relatively simple agents can be unpredictable, complex, and generate new emergent structures of order. 
 
-## Vehicles
+## Tortoises and Vehicles
 
-Braitenberg, V. (1984). Vehicles: Experiments in synthetic psychology. Cambridge, MA: MIT Press. 
+In the 1950's, Cyberneticist Grey Walter pioneered the engineering of agents, as early examples of autonomous robots, with his *"tortoises"*. Remarkably, this direction of research was largely forgotten as efforts in artificial intelligence concentrated on symbolic thinking. (Brief history [here](http://www.rutherfordjournal.org/article020101.html)).
+
+[![Machina Speculatrix](http://www.rutherfordjournal.org/images/020101-05.jpg) >> video](http://www.youtube.com/watch?v=lLULRlmXkKo)
+
+Nevertheless, Walter's tortoises inspired the turtle graphics of Logo, the situated robotics of Rodney Brooks, the flocking behaviors of Craig Reynolds, and Valentino Braitenberg's Vehicles.
+
+### Vehicles
 
 ![Vehicle](http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/Braitenberg%20Vehikels_files/BVinh.jpg)
 
@@ -29,25 +45,24 @@ Braitenberg, V. (1984). Vehicles: Experiments in synthetic psychology. Cambridge
 
 Cyberneticist Valentino Braitenberg argues that his extraordinarily simple mechanical vehicles manifest behaviors that appear identifiable as fear, aggression, love, foresight, and optimism. The vehicle idea was a thought experiment conceived to show that complex, apparently purposive behaviour did not need to depend on complex representations of the environment inside a creature or agents brain. In fact simply by reacting to the environment in a consistent manner was more than enough to explain the low level reactive behaviours exhibited by many animals.
 
+> Braitenberg, V. (1984). Vehicles: Experiments in synthetic psychology. Cambridge, MA: MIT Press. 
+
+
 Casey Reas (co-author of Processing), Yanni Loukissas, and many others have used populations of Braitenberg-inspired vehicles to create artworks based on their combined paths.
 
 ![Reas' Tissue](http://reas.com/tissue_p/reas_tissue_p_13.jpg)
 
-Vehicles have also been constructed in hardware of course -- see examples [here](http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/), [here](http://blog.electricbricks.com/en/2010/05/vehiculos-braitenberg-nxt-g/), [here](http://tinkerlog.com/2009/06/07/mini-braitenberg-vehicle/) -- and may even have been inspired by [Grey Walter](http://en.wikipedia.org/wiki/William_Grey_Walter)'s robotic tortoises from the 1950s. (Brief history [here](http://www.rutherfordjournal.org/article020101.html)).
-
-![Machina Speculatrix](img/machina_speculatrix.jpg) 
+Vehicles have also been constructed in hardware of course -- see examples [here](http://www.ini.uzh.ch/~conradt/research/BraitenbergVehicle/), [here](http://blog.electricbricks.com/en/2010/05/vehiculos-braitenberg-nxt-g/), [here](http://tinkerlog.com/2009/06/07/mini-braitenberg-vehicle/).
 
 ### Steering Behaviors
 
 Craig Reynolds' work with robotics is strongly inspired by Braitenberg's and Walter's vehicles, and became famous for his work on simulating flocking behavior (see below). His work has been widely used in robotics, game design, special effects and simulation. Reynolds' paper [Steering Behaviors for Autonomous Characters](http://www.red3d.com/cwr/steer/gdc99/) breaks agent movement into three layers:
 
 - **Action Selection**: selecting actions to perform according to environmental input and goals to achieve. 
-- **Steering**: path determination according to the action selected. Many different behaviors can be used; a simple particle-system model could be ```steering force = desired_velocity - current_velocity```.
+- **Steering**: path determination according to the action selected. Many different behaviors can be used; the essential strategy is ```steering force = desired_velocity - current_velocity```.
 - **Locomotion**: mechanisms of conversion of steering into actual movement.
 
 The paper is well worth exploring as a collection of patterns for autonomous agent movements; and presents the elements that make up his simulation of flocking behavior.
-
-
 
 ### Random walks in nature
 
@@ -61,11 +76,54 @@ In the late 1980s Reynolds proposed a model of animal motion to model flocks, he
 - **Copy**: Fly in the same general direction as other nearby boids
 - **Center**: Move toward the center of the flock (avoid exposure)
 
-(Gary Flake also recommends adding an influence for *View*: to move laterally away from any boid blocking the view.)
+In addition, if none of the conditions above apply, i.e. the boid cannot perceive any others, it may move by random walk. 
 
-To make this more realistic, we can consider that each boid can only perceive other boids within a certain distance and viewing angle. We should also restrict how quickly boids can change direction and speed (to account for momentum). Additionally, the avoidance rule may carry greater *weight* or take precedence over the other rules.
+To make this more realistic, we can consider that each boid can only perceive other boids within a certain distance and viewing angle. We should also restrict how quickly boids can change direction and speed (to account for momentum). Additionally, the avoidance rule may carry greater *weight* or take precedence over the other rules. Gary Flake also recommends adding an influence for *View*: to move laterally away from any boid blocking the view.
 
 Evidently the *properties* of a boid (apart from location) include direction and speed. It could be assumed that viewing angle and range are shared by all boids, or these could also vary per individual. The *sensors* of a boid include an ability to detect the density of boids in different directions (to detect the center of the flock), as well as the average speed and direction of boids, within a viewable area. The *actions* of a boid principally are to alter the direction and speed of flight. 
+
+#### Implementation
+
+The behavior of an agent depends on the other agents that it can perceive (the *neighborhood*). The simplest way to detect nearby agents is to simply iterate all agents and apply a distance condition (being careful to exclude the agent itself!). We can also include a view angle condition (easily calculated using vector dot product).
+
+```lua
+local view_range = 0.1 	-- how far an agent can see
+
+function agent_update_sensors(self)
+	-- create a list of nearby agents:
+	local neighbors = {}
+	-- test all agents:
+	for i, near in ipairs(agents) do
+		-- don't compare with ourself!
+		if near ~= self then		
+			-- near enough?
+			local rel = near.location - self.location
+			if rel:length() < view_range then
+				-- is the neighbor in front of us?
+				-- (use dot product of my velocity to determine this)
+				if self.velocity:dot(rel) > 0 then
+					-- add this to the set of neighbors:
+					neighbors[#neighbors+1] = near
+				end
+			end
+		end
+	end
+	
+	if #neighbors > 0 then
+		-- now calculate steering influence according to visible neighbors:
+		-- ...
+	else
+		-- no visible neighbors, so we can explore freely...
+		-- ...
+	end
+end
+```
+
+> This isn't especially efficient, but for small populations it is quite reasonable.
+
+Once a set of visible neighbors is calculated, it can be used to derive the steering influences of the agent. The center force depends on the average location of neighbors, relative to the agent. The copy force depends on the average velocity of neighbors. The avoidance force applies if a neighbor is too close.
+
+> Note that since the agents are dependent on each other, it also makes sense to perform movements and information processing in separate steps. Otherwise, the order in which the agent list is iterated may cause unwanted side-effects on the behavior. (This multi-pass approach is similar in motivation to the double buffering required in many cellular automata).
 
 ----
 
@@ -85,6 +143,8 @@ Over time, the termites begin to collect the woodchips into small piles, which g
 
 ### Chemotaxis
 
+When we look at microbiology, we find even simpler modes of steering behavior.
+
 > Chemotaxis is the phenomenon whereby somatic cells, bacteria, and other single-cell or multicellular organisms direct their movements according to certain chemicals in their environment. This is important for bacteria to find food (for example, glucose) by swimming towards the highest concentration of food molecules, or to flee from poisons (for example, phenol). In multicellular organisms, chemotaxis is critical to early development (e.g. movement of sperm towards the egg during fertilization) and subsequent phases of development (e.g. migration of neurons or lymphocytes) as well as in normal function. [wikipedia](https://en.wikipedia.org/wiki/Chemotaxis)
 
 A [video example of chemotaxis in E. coli](http://www.youtube.com/watch?v=ZV5CfOkV6ek).
@@ -100,7 +160,36 @@ Instead it uses chemical memory to detect sugar concentration *gradient*, that i
 
 With just a few tuning parameters, this can lead to a very rapid success in finding the higher concentrations of sugar (assuming the environment is smoothly varying). 
 
-A variety of other *taxes* worth exploring can be found on the [wikipedia page](http://en.wikipedia.org/wiki/Taxis#Aerotaxis). Note how chemotaxis (and other taxes) can be divided into positive (attractive) and negative (repulsive) characters, just like forces (directly seen in steering forces). This is closely related to the concepts of positive and negative feedback. 
+#### Implementation
+
+The first thing we need is an environment of varying sugar concentrations for the agents to explore. We can use the ```field2D``` module for this purpose. The behavior of the agents will depend on the spatial distribution of sugar in the field; a totally random space is both unrealistic and will defeat chemotactic strategies; a smoothly distributed landscape is needed. For example, we can use the distance from the center:
+
+```
+local field2D = require "field2D"
+local dim = 128
+local sugar = field2D(dim, dim)
+local center = vec2(0.5, 0.5)
+
+sugar:set(function(x, y)
+	-- convert x, y in to 0..1 range:
+	local p = vec2(x / dim, y / dim)
+	-- get distance from center:
+	local d = #(p - center)
+	-- make concentration higher at center, lower with increasing distance:
+	return 1 - d
+end)
+```
+
+Agents can then sample the local field during their update routine as follows:
+
+```lua
+	-- in agent_update:
+	local sugar_concentration = sugar:sample(self.location.x, self.location.y)
+```
+
+----
+
+A variety of other *taxes* worth exploring can be found on the [wikipedia page](http://en.wikipedia.org/wiki/Taxis#Aerotaxis). Note how chemotaxis (and other taxes) can be divided into positive (attractive) and negative (repulsive) characters, just like forces (directly seen in steering forces). This is closely related to the concepts of positive and negative feedback and the explorations of cybernetics.
 
 ### Stigmergy
 
@@ -111,6 +200,21 @@ Traces evidently lead to self-reinforcement and self-organization: complex and s
 Stigmergy has become a key concept in the field of [swarm intelligence](http://en.wikipedia.org/wiki/Swarm_intelligence), and the method of *ant colony optimization* in particular. In ACO, the landscape is a parameter space (possibly much larger than two or three dimensions) in which populations of virtual agents leave pheromone trails to high-scoring solutions.
 
 Related environmental communication strategies include social nest construction (e.g. termites) and territory marking.
+
+#### Implementation
+
+Being able to leave pheromones behind depends on the ability to write into as well as read from fields. This can be achieved using the ```splat``` method of the field:
+
+```lua
+	-- in agent update:
+	pheromone_field:splat(intensity, self.location.x, self.location.y)
+```
+
+To store different pheromones we might want to use different fields. These fields should also probably decay over time (using the ```field:decay()``` method), and possibly diffuse slightly (using the ```field:diffuse()``` method).
+
+To detect field intensites in different directions, we might want to sample with sensors further from the body center (similar to the sensors in the Vehicles model) and compare their results. 
+
+----
 
 ## Action selection systems
 

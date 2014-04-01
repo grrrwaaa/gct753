@@ -28,14 +28,17 @@
 		<a href="artificial_life.html">Artificial Life</a><br/>
 		<a href="generative_art.html">Generative Art</a><br/>
 		<a href="cellular.html">Cellular Systems</a><br/>
-		<a href="agent.html">Agent Systems</a><br/>
+		<a href="agent.html">Agent Systems</a> (<a href="vectors.html">vectors</a>)<br/>
 		<a href="symbol.html">Symbol Systems</a><br/>
 		<a href="evolutionary.html">Evolutionary Systems</a><br/>
 		
 	</div>
 	<div class="section"><h1>(Euclidean) Vectors</h1>
-<p>A <strong>vector</strong> is one way of describing a direction with a magnitude. Vectors can describe spatial properties such as locations, but also properties that change over time such as velocities, accelerations, forces of attraction and repulsion, local wind speed and direction, etc. A magnitude without direction (such as a regular number) is called a <strong>scalar</strong>.</p>
+<p>A <strong>vector</strong> is one way of describing a direction with a magnitude. (A magnitude without direction (such as a regular number) is called a <strong>scalar</strong>.) Vectors can describe spatial properties such as locations, but also properties that change over time such as velocities, accelerations, forces of attraction and repulsion, local wind speed and direction, etc. Vectors are also useful for representing relationships between points,  normals and tangents, vertices and other attributes of geometry, and many other spatial relationships. Most graphics languages have some kind of vector primitives. </p>
 <p>In a 2D space, a vector has two components (X, Y), in a 3D space, it has three (X, Y, Z). Programming with vectors is easier if these components are combined into a single abstraction of a <em>vector object</em>. We can also treat a position in space as a vector: <em>the vector from the origin (0, 0) to the position</em>. </p>
+<p>We have a library in our Lua software for working with 2D vectors:</p>
+<pre><code class="lang-lua"><span class="keyword">local</span> vec2 = <span class="built_in">require</span> <span class="string">"vec2"</span></code></pre>
+<h2>Operations on vectors</h2>
 <p>Adding two vectors is like applying their movements in series. </p>
 <p>The difference between two points can be obtained by subtraction; it also a vector. The <em>relative</em> position of B with respect to A is simply <code>B - A</code>. So the position of agent B relative to agent A is <code>B.position - A.position</code>. (For agent-oriented programming we often need to take the perspective <em>relative to an agent</em>, rather than the absolute, global perspective.)</p>
 <p>We can multiply (or divide) vectors by scalars to make them longer or shorter. So <code>A * 2</code> produces a copy of vector A which is twice as long.</p>
@@ -45,6 +48,8 @@
 <pre><code class="lang-lua"><span class="keyword">local</span> len = <span class="built_in">math</span>.sqrt(v.x*v.x + v.y*v.y)
 v.x = v.x / len
 v.y = v.y / len</code></pre>
+<p>Or simply:</p>
+<pre><code class="lang-lua">v:normalize()</code></pre>
 <p>The angle between two points can be derived using the <em>arctangent</em> of Y over X. We can calculate it as <code>math.atan2(y, x)</code>. (<code>math.atan(y/x)</code> would work, except that it could be satisfied by two different angles; <code>math.atan2</code> is more explicit and usually gives us the angle we require.)</p>
 <p>The length and angle of a vector form the <em>polar</em> representation. We can convert back to <em>Cartesian</em> form again just as easily:</p>
 <pre><code class="lang-lua"><span class="comment">-- Cartesian to polar:</span>
@@ -74,68 +79,248 @@ y1 = v.y * <span class="built_in">math</span>.cos(rotation) - v.x * <span class=
     self.y = self.y * n
     <span class="keyword">return</span> self
 <span class="keyword">end</span></code></pre>
-<p>Agents have spatial locations (positions), which we can store as vectors (direciton and magnitude from the world origin):</p>
-<pre><code class="lang-lua"><span class="function"><span class="keyword">function</span> <span class="title">agent</span><span class="params">()</span></span>
-    <span class="keyword">local</span> self = {
-        pos = vec2(<span class="built_in">math</span>.random(), <span class="built_in">math</span>.random())
-    }
-    <span class="keyword">return</span> self
-<span class="keyword">end</span>
-
-<span class="function"><span class="keyword">function</span> <span class="title">agent_draw</span><span class="params">(self)</span></span>
-    g.circle(self.pos.x, self.pos.y, <span class="number">0.01</span>)
-<span class="keyword">end</span>
-
-A = agent()</code></pre>
-<p>New location = old location plus velocity: <code>agent.pos = agent.pos + agent.velocity</code>. This is accumulation or <em>integration</em>, at the <em>first-order</em>. Velocity is the <em>rate of change</em> of position. Second-order integration could be expressed as <code>agent.velocity = agent.velocity + agent.acceleration</code>, since acceleration is the <em>rate of change of velocity</em>. </p>
-<p>Going the other way, we can take the <em>difference</em> of current and previous location to infer the velocity: <code>velocity = current_position - previous_position</code>, which is clearly a relative vector.</p>
-<pre><code class="lang-lua"><span class="function"><span class="keyword">function</span> <span class="title">agent</span><span class="params">()</span></span>
-    <span class="keyword">local</span> self = {
-        pos = vec2(<span class="built_in">math</span>.random(), <span class="built_in">math</span>.random()),
-        vel = vec2(<span class="number">0</span>, <span class="number">0</span>),
-        acc = vec2(<span class="number">0</span>, <span class="number">0</span>),
-    }
-    <span class="keyword">return</span> self
-<span class="keyword">end</span>
-
-<span class="function"><span class="keyword">function</span> <span class="title">agent_update</span><span class="params">(self)</span></span>
-    <span class="comment">-- update velocity by acceleration:</span>
-    vec2_add(self.vel, self.acc)
-    <span class="comment">-- update location by velocity:</span>
-    vec2_add(self.pos, self.vel)
-<span class="keyword">end</span>
-
-<span class="function"><span class="keyword">function</span> <span class="title">agent_draw</span><span class="params">(self)</span></span>
-    g.push()
-    g.translate(self.pos.x, self.pos.y)
-    g.rotate(vec2_angle(self.vel))
-    g.circle(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.01</span>)
-    g.line(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.02</span>, <span class="number">0</span>)
-    g.pop()
-<span class="keyword">end</span></code></pre>
-<p>Agent behavior gets intereseting now if we start modifying the velocity or acceleration over time, e.g. constant, random, mouse-following, etc. </p>
-<p>Some boundary options, if an agent position goes outside the world limits:</p>
+<h1>Movement, behavior, force and vectors</h1>
+<p>A vector can be used to store any property that has a magnitude and direction. It represents this in terms of components of principal axes. Examples include:</p>
 <ul>
-<li>Clip the position at the limits</li>
-<li>Wrap the position to the opposite boundary (e.g. using the modulo <code>%</code> operator)</li>
-<li>Reset at a new random location </li>
-<li>Change direction</li>
-<li>Add acceleration in the opposite direction</li>
+<li>absolute location (i.e. vector relative to the spatial origin)</li>
+<li>relative location (e.g. the path from object A to object B, or a line segment for drawing shapes)</li>
+<li>velocity</li>
+<li>acceleration, force</li>
 </ul>
-<p>By Newton&#39;s laws of motion, we know that accelerations can be determined by forces (divided by mass, since <code>F = ma</code>). Many different kinds forces can act on an agent, which can all be summed as influences on the acceleration. </p>
-<pre><code><span class="function"><span class="keyword">function</span> <span class="title">agent_update</span><span class="params">(self)</span>
-    <span class="title">local</span> <span class="title">force</span> = <span class="title">vec2</span><span class="params">(0, 0)</span>
-    -- <span class="title">add</span> <span class="title">the</span> <span class="title">various</span> <span class="title">forces</span>:
-    <span class="title">vec2_add</span><span class="params">(force, gravity)</span>;
-    <span class="title">vec2_add</span><span class="params">(force, wind)</span>;
-    -- <span class="title">from</span> <span class="title">F</span> = <span class="title">ma</span>:
-    <span class="title">self</span>.<span class="title">acc</span> = <span class="title">force</span> / <span class="title">self</span>.<span class="title">mass</span>
-    -- <span class="title">update</span> <span class="title">velocity</span> <span class="title">by</span> <span class="title">acceleration</span>:
-    <span class="title">vec2_add</span><span class="params">(self.vel, self.acc)</span>
-    -- <span class="title">update</span> <span class="title">location</span> <span class="title">by</span> <span class="title">velocity</span>:
-    <span class="title">vec2_add</span><span class="params">(self.pos, self.vel)</span>
+<h2>Position, velocity and acceleration</h2>
+<p>If an object has a location in space, we can move it by adding a relative motion vector to the location. </p>
+<p>If we add this motion vector repeatedly, e.g. on each frame or simulation update, we create the illusion of continuous movement. In this case the motion represents a stable <strong>velocity</strong>, and the repeated addition is called <strong>integration</strong>. Put another way, the velocity is a discrete approximation of the location&#39;s (first) <strong>derivative</strong>: modeling how it changes over time. </p>
+<pre><code>local vec2 = <span class="keyword">require</span> <span class="string">"vec2"</span>
+local draw2D = <span class="keyword">require</span> <span class="string">"draw2D"</span>
+
+local location = vec2(-<span class="number">1</span>, <span class="number">0</span>)
+local velocity = vec2(<span class="number">0.01</span>, <span class="number">0.01</span>)
+
+<span class="function"><span class="keyword">function</span> <span class="title">draw</span><span class="params">()</span>    
+    -- <span class="title">integrate</span> <span class="title">velocity</span> <span class="title">to</span> <span class="title">location</span>:
+    <span class="title">location</span>:<span class="title">add</span><span class="params">(velocity)</span>
+
+    <span class="title">print</span><span class="params">(location)</span>
+
+    <span class="title">draw2D</span>.<span class="title">point</span><span class="params">(location.x, location.y)</span>
 <span class="title">end</span></code></pre>
-<p>We might also want to place limits on velocity / acceleration... or let these limits emerge by also including friction or other dissipative forces that counter the current velocity. Attraction (like gravitation) can be applied in the directions between objects and inversely proportional to the distance squared. And for life-like agents, we also introduce <em>forces from within</em>.</p>
+<p>The <strong>second derivative</strong> of location is <strong>acceleration</strong>:</p>
+<pre><code>local location = vec2(-<span class="number">1</span>, <span class="number">0</span>)
+local velocity = vec2(<span class="number">0</span>, <span class="number">0</span>)
+local acceleration = vec2(<span class="number">0.01</span>, <span class="number">0.01</span>)
+
+<span class="function"><span class="keyword">function</span> <span class="title">draw</span><span class="params">()</span>    
+    -- <span class="title">integrate</span> <span class="title">acceleration</span> <span class="title">to</span> <span class="title">velocity</span>:
+    <span class="title">velocity</span>:<span class="title">add</span><span class="params">(acceleration)</span>
+    -- <span class="title">integrate</span> <span class="title">velocity</span> <span class="title">to</span> <span class="title">location</span>:
+    <span class="title">location</span>:<span class="title">add</span><span class="params">(velocity)</span>
+
+    <span class="title">draw2D</span>.<span class="title">push</span><span class="params">()</span>
+        <span class="title">draw2D</span>.<span class="title">translate</span><span class="params">(location.x, location.y)</span>
+        <span class="title">draw2D</span>.<span class="title">circle</span><span class="params">(0.05)</span>
+    <span class="title">draw2D</span>.<span class="title">pop</span><span class="params">()</span>
+<span class="title">end</span></code></pre>
+<h2>Constraints</h2>
+<p>Pretty soon the object leaves visible space. You might want to handle this in different ways:</p>
+<h3>Limit movement to the boundary</h3>
+<pre><code>    <span class="literal">-</span><span class="literal">-</span> <span class="comment">prevent</span> <span class="comment">location</span> <span class="comment">component</span> <span class="comment">going</span> <span class="comment">below</span> <span class="literal">-</span><span class="comment">1</span>
+    <span class="comment">if</span> <span class="comment">location</span>.<span class="comment">y</span> &lt; <span class="literal">-</span><span class="comment">1</span> <span class="comment">then</span>
+        <span class="comment">location</span>.<span class="comment">y</span> <span class="comment">=</span> <span class="literal">-</span><span class="comment">1</span>
+    <span class="comment">end</span>
+
+    <span class="literal">-</span><span class="literal">-</span> <span class="comment">or</span> <span class="comment">more</span> <span class="comment">simply</span> <span class="comment">apply</span> <span class="comment">to</span> <span class="comment">all</span> <span class="comment">limits:</span>
+    <span class="comment">location:min(1):max(</span>-<span class="comment">1)</code></pre>
+<h3>Limit movement to a distance (i.e. a circular space)</h3>
+<pre><code>    <span class="tag">location</span><span class="pseudo">:limit(1)</span></code></pre>
+<h3>Wrap movement at the boundary</h3>
+<p>Also known as <em>toroidal</em> space.</p>
+<pre><code>    -- wrap at x boundaries:
+    <span class="keyword">if</span> location.x &gt; <span class="number">1</span> <span class="keyword">then</span> 
+        location.x = location.x - <span class="number">2</span>
+    <span class="keyword">elseif</span> location.x &lt; -<span class="number">1</span> <span class="keyword">then</span>
+        location.x = location.x + <span class="number">2</span>
+    <span class="keyword">end</span>
+
+    -- <span class="keyword">or</span> more succintly, <span class="keyword">for</span> both x <span class="keyword">and</span> y:
+    -- <span class="keyword">to</span> wrap <span class="keyword">in</span> the range -<span class="number">1</span>,<span class="number">1</span>, first shift <span class="keyword">to</span> the range <span class="number">0</span>,<span class="number">2</span>, <span class="keyword">then</span> modulo the boundary, <span class="keyword">then</span> shift back <span class="keyword">to</span> -<span class="number">1</span>,<span class="number">1</span>:
+    location:add(<span class="number">1</span>):mod(<span class="number">2</span>):<span class="keyword">sub</span>(<span class="number">1</span>)</code></pre>
+<h3>Execute arbitrary code at boundaries</h3>
+<p>For example, switch the direction of the velocity to point back to the center:</p>
+<pre><code>    <span class="literal">-</span><span class="literal">-</span> <span class="comment">the</span> <span class="comment">fraction</span> <span class="comment">of</span> <span class="comment">energy</span> <span class="comment">retained</span> <span class="comment">when</span> <span class="comment">a</span> <span class="comment">bounce</span> <span class="comment">occurs:</span>
+    <span class="comment">local</span> <span class="comment">bounce_factor</span> <span class="comment">=</span> <span class="comment">0</span>.<span class="comment">9</span>
+    <span class="literal">-</span><span class="literal">-</span> <span class="comment">bounce</span> <span class="comment">at</span> <span class="comment">ground</span> <span class="comment">level:</span>
+    <span class="comment">if</span> <span class="comment">location</span>.<span class="comment">y</span> &lt; <span class="literal">-</span><span class="comment">1</span> <span class="comment">then</span>
+        <span class="literal">-</span><span class="literal">-</span> <span class="comment">force</span> <span class="comment">the</span> <span class="comment">Y</span> <span class="comment">velocity</span> <span class="comment">to</span> <span class="comment">be</span> <span class="comment">positive:</span>
+        <span class="literal">-</span><span class="literal">-</span> <span class="comment">and</span> <span class="comment">lose</span> <span class="comment">a</span> <span class="comment">bit</span> <span class="comment">of</span> <span class="comment">energy</span> <span class="comment">due</span> <span class="comment">to</span> <span class="comment">the</span> <span class="comment">collision:</span>
+        <span class="comment">velocity</span>.<span class="comment">y</span> <span class="comment">=</span> <span class="comment">math</span>.<span class="comment">abs(velocity</span>.<span class="comment">y)</span> <span class="comment">*</span> <span class="comment">bounce_factor</span>
+    <span class="comment">end</code></pre>
+<h3>Other constraints</h3>
+<p>Other forms of constraints can be limiting movement to a line, or path. In this case a new force can be applied toward the line of the path.</p>
+<p>Another very common constraint is to limit the velocity to an absolute maximum: <code>velocity:limit(max)</code>.</p>
+<h2>Forces</h2>
+<p>So far we have used a constant acceleration, which is physically unrealistic. Acceleration has to come from somewhere, and it can change magnitude and direction.</p>
+<p>Acceleration was defined by Newton in terms of <strong>force</strong>: <code>F = ma</code>, which means &quot;Force = mass * acceleration&quot;. Therefore &quot;acceleration = Force / mass&quot;. Let&#39;s wrap this into an object called &quot;agent&quot;:</p>
+<pre><code class="lang-lua"><span class="keyword">local</span> agent = {
+    location = vec2(<span class="number">0</span>, <span class="number">0</span>),
+    velocity = vec2(<span class="number">0</span>, <span class="number">0</span>),
+    acceleration = vec2(<span class="number">0</span>, <span class="number">0</span>),
+    force = vec2(<span class="number">0</span>, -<span class="number">0.1</span>),
+    mass = <span class="number">100</span>,
+}
+
+agent.move = function(self)
+    <span class="comment">-- calculate acceleration:</span>
+    self.acceleration = self.force / self.mass
+    <span class="comment">-- integrate velocity:</span>
+    self.velocity:add(self.acceleration)
+    <span class="comment">-- integrate location:</span>
+    self.location:add(self.velocity)
+    <span class="comment">-- limit position:</span>
+    location:min(<span class="number">1</span>):max(-<span class="number">1</span>)
+    <span class="comment">-- clear forces:</span>
+    self.force:set(<span class="number">0</span>, <span class="number">0</span>)
+<span class="keyword">end</span>
+
+agent.draw = function(self)
+    draw2D.push()
+        draw2D.translate(self.location.x, self.location.y)
+        draw2D.circle(<span class="number">0.05</span> * self.mass * <span class="number">0.01</span>)
+    draw2D.pop()
+<span class="keyword">end</span>
+
+<span class="function"><span class="keyword">function</span> <span class="title">draw</span><span class="params">()</span></span>    
+    agent:move()
+    agent:draw()
+<span class="keyword">end</span></code></pre>
+<p>In this case we have modeled an object that is continuously subject to a force of (0, -0.1). This would be something like the effect of gravity. Other continuous forces might be e.g. the effects of a force of wind. </p>
+<p>To make it more interesting, we could consider that the wind may change direction over time. So we can model wind as a function that returns a force vector:</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">wind</span><span class="params">()</span>
+    <span class="title">return</span> <span class="title">vec2</span>.<span class="title">random</span><span class="params">(<span class="number">0.1</span>)</span>
+<span class="title">end</span>
+
+    -- <span class="params">(in agent.move)</span>
+    <span class="title">self</span>.<span class="title">force</span>:<span class="title">add</span><span class="params">(wind<span class="params">()</span>)</span></code></pre>
+<p>We could also make the wind vary over space:</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">wind</span><span class="params">(location)</span>
+    <span class="title">return</span> <span class="title">location</span> * -0.1
+<span class="title">end</span>
+
+    -- <span class="params">(in agent.move)</span>
+    <span class="title">self</span>.<span class="title">force</span>:<span class="title">add</span><span class="params">(wind<span class="params">(self.location)</span>)</span></code></pre>
+<p>Other forces a body interacts may be approximately instantaneous, rather than continuous. For example, if mousepad is scrolled, we could add an instantaneous &quot;jump&quot; force:</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">mouse</span><span class="params">(event, button, x, y)</span>
+    <span class="title">if</span> <span class="title">event</span> == "<span class="title">scroll</span>" <span class="title">then</span>
+        <span class="title">agent</span>.<span class="title">force</span>:<span class="title">sub</span><span class="params">(vec2<span class="params">(x, y)</span>)</span>
+    <span class="title">end</span>
+<span class="title">end</span></code></pre>
+<h3>Friction</h3>
+<p>So far our agent moves in a perfect Newtonian world: until a force acts on it, the velocity remains constant. In the world we are familiar with this rarely occurs, and velocity gradually decreases due to friction.</p>
+<p>The simplest way we can model this is by scaling down the velocity on each frame:</p>
+<pre><code class="lang-lua">    <span class="comment">-- (in agent.move)</span>
+    self.velocity:mul(<span class="number">0.9</span>)</code></pre>
+<p>A crude simulation of air friction operates in the opposite direction to movement, with a constant magnitude. We can get the magnitude of a vector (it&#39;s length) by Pythagoras&#39;s theorem:</p>
+<pre><code>local len = <span class="transposed_variable">math.</span><span class="built_in">sqrt</span>(<span class="transposed_variable">v.</span>x*<span class="transposed_variable">v.</span>x + <span class="transposed_variable">v.</span>y*<span class="transposed_variable">v.</span>y)</code></pre>
+<p>Because this is so useful, there is a simpler method:</p>
+<pre><code><span class="keyword">local</span> len = v:<span class="keyword">length</span>()
+-- <span class="keyword">or</span> more simply:
+<span class="keyword">local</span> len = <span class="comment">#v</span></code></pre>
+<p>If we divide a vector by it&#39;s length, we get a vector whose length is 1. This is a <em>normalized</em> vector, also known as the <em>unit vector</em>. Again, methods to do this already exist:</p>
+<pre><code>-- set the <span class="built_in">length</span> of v to <span class="number">1</span>:
+v:<span class="built_in">normalize</span>()
+-- <span class="keyword">return</span> a new <span class="keyword">vector</span>: the normalized (<span class="built_in">length</span>==<span class="number">1</span>) copy of v:
+local direction = v:normalizenew()</code></pre>
+<p>So now we can calculate a friction force easily:</p>
+<pre><code>local frictionCoefficient = <span class="number">0.01</span>
+
+    -- (<span class="keyword">in</span> agent<span class="preprocessor">.move</span>)
+    local frictionForce = (-self<span class="preprocessor">.velocity</span>):normalize():<span class="keyword">mul</span>(frictionCoefficient)
+    self<span class="preprocessor">.force</span>:<span class="keyword">add</span>(frictionForce)</code></pre>
+<p>Of course we could also create a function to vary the amount of friction over space. </p>
+<h3>Drag</h3>
+<p>A drag force is similar to friction, but varies proportinally to the square of the object speed, and to the surface area in the direction of movement. (For a circle the surface area is equal in any direction.)</p>
+<pre><code>local dragCoefficient = <span class="number">1</span>
+
+    -- (<span class="keyword">in</span> agent<span class="preprocessor">.move</span>)
+    local len = <span class="preprocessor">#self.velocity</span>
+    local dragForce = (-self<span class="preprocessor">.velocity</span>):normalize():<span class="keyword">mul</span>(dragCoefficient * len * len)
+    self<span class="preprocessor">.force</span>:<span class="keyword">add</span>(dragForce)</code></pre>
+<h3>Gravitational attraction</h3>
+<p>Gravitational attraction applies in the direction from object A to object B. 
+The magnitude is the product of the two masses multiplied by a constant factor, and divided by the relative distance squared.</p>
+<pre><code><span class="comment">local</span> <span class="comment">gravitationCoefficient</span> <span class="comment">=</span> <span class="comment">1</span>
+
+    <span class="literal">-</span><span class="literal">-</span> <span class="comment">(in</span> <span class="comment">agent</span>.<span class="comment">move)</span>
+    <span class="literal">-</span><span class="literal">-</span> <span class="comment">get</span> <span class="comment">the</span> <span class="comment">relative</span> <span class="comment">vector</span> <span class="comment">from</span> <span class="comment">self</span> <span class="comment">to</span> <span class="comment">the</span> <span class="comment">source</span> <span class="comment">of</span> <span class="comment">gravity:</span>
+    <span class="comment">local</span> <span class="comment">relative</span> <span class="comment">=</span> <span class="comment">source</span>.<span class="comment">location</span> <span class="literal">-</span> <span class="comment">self</span>.<span class="comment">location</span>
+    <span class="literal">-</span><span class="literal">-</span> <span class="comment">get</span> <span class="comment">the</span> <span class="comment">length:</span>
+    <span class="comment">local</span> <span class="comment">distance</span> <span class="comment">=</span> <span class="comment">#relative</span>
+    <span class="literal">-</span><span class="literal">-</span> <span class="comment">get</span> <span class="comment">the</span> <span class="comment">direction</span> <span class="comment">as</span> <span class="comment">a</span> <span class="comment">unit</span> <span class="comment">vector:</span>
+    <span class="comment">local</span> <span class="comment">direction</span> <span class="comment">=</span> <span class="comment">relative:normalize()</span>
+    <span class="literal">-</span><span class="literal">-</span> <span class="comment">now</span> <span class="comment">calculate</span> <span class="comment">the</span> <span class="comment">force:</span>
+    <span class="comment">local</span> <span class="comment">gravitationForce</span> <span class="comment">=</span> <span class="comment">direction</span> <span class="comment">*</span> <span class="comment">gravitationCoefficient</span> <span class="comment">*</span> <span class="comment">self</span>.<span class="comment">mass</span> <span class="comment">*</span> <span class="comment">source</span>.<span class="comment">mass</span> <span class="comment">/</span> <span class="comment">(distance</span> <span class="comment">*</span> <span class="comment">distance)</code></pre>
+<p>Special care needs to be taken here: if the distance between objects is very low, then the force can become astronomical. It makes sense therefore to limit the distance to a safe minimum:</p>
+<pre><code>    local <span class="built_in">distance</span> = math.<span class="built_in">max</span>(<span class="number">0.01</span>, <span class="preprocessor">#relative)</span></code></pre>
+<p>If you want to simulate gravitational attraction between all agents, you could put this into a loop over all the agents. Be careful to not apply gravitation to the object itself!</p>
+<pre><code>    <span class="keyword">for</span> i = <span class="number">1</span>, #agents <span class="keyword">do</span>
+        <span class="keyword">local</span> source = agents[i]
+        <span class="keyword">if</span> source ~= self <span class="keyword">then</span>
+            <span class="comment">-- insert gravitational forces</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span></code></pre>
+<h3>Springs</h3>
+<p>The direction of a spring force is the same as the relative vector between the ends. </p>
+<p>The magnitude of a force of a spring is proportional to the deviation from it&#39;s resting length. So if a spring&#39;s natural length is 0.1, but the current length is actually 0.4, then the spring force is proportional to -0.3. The spring force also includes a scaling coefficient. </p>
+<blockquote>
+<p>Spring forces can quickly lead to oscillation. A damping filter is usually required to allow oscillation to fade away.</p>
+</blockquote>
+<h3>Intentional forces</h3>
+<p>So far we have concentrated on physical forces external to an agent, but we can also consider the agent&#39;s ability to apply forces to itself (locomotion). Different situations call for different strategies, and these lead to different forces being applied. Hunting, chasing, evading, random walk exploration, chemotaxis, avoidance, copying, centering, swarming... </p>
+<h2>Many agents</h2>
+<p>The way we have designed <code>agent.move</code> and <code>agent.draw</code> allows them to be applied to many agents. We could create a list of agents, and initialize them differently:</p>
+<pre><code>local agents = {}
+<span class="keyword">for</span> i = <span class="number">1</span>, <span class="number">100</span> <span class="keyword">do</span>
+    agents[i] = {
+        location = vec2<span class="variable">.random</span>(),
+        velocity = vec2(),
+        acceleration = vec2(),
+        force = vec2(),
+        mass = math<span class="variable">.random</span>(<span class="number">200</span>),
+
+        -- <span class="string">"inherit"</span> the move and draw methods from agent:
+        move = agent<span class="variable">.move</span>,
+        draw = agent<span class="variable">.draw</span>,
+    }
+<span class="keyword">end</span></code></pre>
+<p>Then all we need to do is update our <code>draw</code> routine to visit each one of them:</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">draw</span><span class="params">()</span>
+    <span class="title">for</span> <span class="title">i</span> = 1, #<span class="title">agents</span> <span class="title">do</span>
+        <span class="title">agents</span>[<span class="title">i</span>]:</span>move()
+    <span class="keyword">end</span>
+
+    <span class="keyword">for</span> i = <span class="number">1</span>, #agents <span class="keyword">do</span>
+        agents[i]:draw()
+    <span class="keyword">end</span>
+<span class="keyword">end</span></code></pre>
+<p>However, special care needs to be taken if the <code>agent.move()</code> function includes behavior between different agents (gravitation, spring forces, flocking, etc.). In order to make sure the effect of A on B is equal to the effect of B on A, you must separate the force calculation from the velocity/location integration into multiple passes:</p>
+<pre><code>agent.update = <span class="keyword">function</span>(self)
+    -- calculate forces <span class="keyword">and</span> acceleration here
+<span class="keyword">end</span>
+
+agent.move = <span class="keyword">function</span>(self)
+    -- update velocity, <span class="keyword">and</span> location here
+<span class="keyword">end</span>
+
+<span class="function"><span class="keyword">function</span> <span class="title">draw</span><span class="params">()</span>
+    <span class="title">for</span> <span class="title">i</span> = 1, #<span class="title">agents</span> <span class="title">do</span>
+        <span class="title">agents</span>[<span class="title">i</span>]:</span>update()
+    <span class="keyword">end</span>
+    <span class="keyword">for</span> i = <span class="number">1</span>, #agents <span class="keyword">do</span>
+        agents[i]:move()
+    <span class="keyword">end</span>
+    <span class="keyword">for</span> i = <span class="number">1</span>, #agents <span class="keyword">do</span>
+        agents[i]:draw()
+    <span class="keyword">end</span>
+<span class="keyword">end</span></code></pre>
 </div>
 	
 	<div class="footer">
