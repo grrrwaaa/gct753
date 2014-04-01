@@ -84,8 +84,8 @@ function concentration_at_radius(x, y, r)
 end
 
 function diff_at_radius(x, y, r, c)
-	return concentration_around_radius(x, y, r) 
-		 - concentration_around_radius(x, y, r * 2)
+	return concentration_over_radius(x, y, r) 
+		 - concentration_over_radius(x, y, r * 2)
 end
 
 -- the rule for an individual cell (at position x, y) in the field:
@@ -93,26 +93,13 @@ function reaction(x, y)
 	
 	-- check my own previous state:
 	local C = field_old:get(x, y)
+	local action = diff_at_radius(x, y, random(10))
 	
-	local action = 1
-	local r = 0
-	
-	for i = random(5), 20, 5 do
-		local a = diff_at_radius(x, y, i)
-		if abs(a) < abs(action) then
-			action = a
-		end
-	end
-		
-	--return C + action * 0.1
-	
-	---[[
 	if action > 0 then
 		return C + rate
 	else
 		return C - rate
 	end
-	--]]
 end
 
 -- update the state of the scene (toggle this on and off with spacebar):
