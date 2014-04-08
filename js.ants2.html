@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <!--<script src="http://grrrwaaa.github.io/gct753/al.min.js"></script>-->
-<script src="al.min.js"></script>
+<script src="al.js"></script>
 <style>
 body {
 	background: #eee;
@@ -20,7 +20,7 @@ al.init();
 
 /// put your code here /////////////////////////////////////////////////////////
 
-var dimx = 128, dimy = 64;
+var dimx = 64, dimy = dimx;
 var field = new field2D(dimx, dimy);
 
 // computes frequency for a chromatic equal-temperament semitone distance from a center frequency
@@ -60,6 +60,9 @@ function draw(ctx)	{
 	// draw the field (by default it fills the canvas):
 	field.draw();
 	
+	// scale context to field pixel size:
+	ctx.scale(1/dimx, 1/dimy);
+	
 	for (var j = 0; j < ants.length; j++) {
 		var ant = ants[j];
 		if (ant.spin == 1) {
@@ -67,7 +70,7 @@ function draw(ctx)	{
 		} else {
 			ctx.fillStyle = "green";
 		}
-		ctx.fillRect(ant.x*4,ant.y*4,4,4);
+		ctx.fillRect(ant.x,ant.y,1,1);
 	}
 }
 

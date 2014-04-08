@@ -11,6 +11,8 @@ title: JavaScript
 	- [Langton's ant (multiple ants + sound)](js.ants2.html)
 	- [Block rules](js.block.html)
 	- [Hodgepodge](js.hodgepodge.html)
+- Agent systems
+	- [Boids](js.boids.html)
 
 # Using JavaScript and al.js
 

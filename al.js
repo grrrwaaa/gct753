@@ -149,7 +149,6 @@ al.audio.audioProcess = function(event) {
 	var tableSizeHalf = tableSize/2;
 	
 	var t = al.audio.t;
-
 	
 	// Loop through the samples
 	for (var i = 0; i < bufferSize; i++) {
@@ -232,6 +231,7 @@ al.audio_init = function() {
 	}
 	
 	if('ontouchstart' in document.documentElement) {
+		console.log("touchstart");
 		document.getElementsByTagName('body')[0].addEventListener('touchstart', al.audio_start);
 		al_update_in_audio = true;
 	} else {
@@ -245,7 +245,13 @@ al.once = function() {
 	if (update && typeof update === "function") {
 		update(al_dt);
 	}
-	if (draw && typeof draw === "function") draw(ctx);
+	if (draw && typeof draw === "function") {
+		ctx.clearRect(0,0, canvas.width, canvas.height);
+		ctx.save();
+		ctx.scale(canvas.width, canvas.height);
+		draw(ctx);
+		ctx.restore();
+	}
 }
 
 var al_render = function() {
@@ -257,7 +263,13 @@ var al_render = function() {
 		if ((!al_update_in_audio) && update && typeof update === "function") {
 			update(al_dt);
 		}
-		if (draw && typeof draw === "function") draw(ctx);
+		if (draw && typeof draw === "function") {
+			ctx.clearRect(0,0, canvas.width, canvas.height);
+			ctx.save();
+			ctx.scale(canvas.width, canvas.height);
+			draw(ctx);
+			ctx.restore();
+		}
 		requestAnimationFrame(al_render);
 	}
 }
@@ -272,13 +284,10 @@ al.stop = function() {
 	al_updating = false;
 }
 
-var canvas, ctx;
-var offscreen_canvas, offscreen_ctx, offscreen_image, offscreen_data;
-
 al.init = function (options) {
 	canvas = document.createElement("canvas");
 	canvas.setAttribute("width", 512);
-	canvas.setAttribute("height", 256);
+	canvas.setAttribute("height", 512);
 	document.body.appendChild(canvas);
 	
 	ctx = canvas.getContext('2d');
@@ -346,10 +355,15 @@ field2D.prototype.draw = function() {
 		}
 	}
 	offscreen_ctx.putImageData(offscreen_image, 0, 0);
-		
+	/*
 	ctx.drawImage(offscreen_canvas,
 		0,0,offscreen_canvas.width,offscreen_canvas.height,
 		0,0,canvas.width,canvas.height
+	);
+	*/
+	ctx.drawImage(offscreen_canvas,
+		0,0,offscreen_canvas.width,offscreen_canvas.height,
+		0,0,1,1
 	);
 	return this;
 }
@@ -657,6 +671,402 @@ field2D.prototype.max = function() {
 // @return min
 field2D.prototype.min = function() {
 	return this.reduce(Math.min, Number.MAX_VALUE);
+}
+
+var cos = Math.cos,
+	sin = Math.sin,
+	pi = Math.PI,
+	pow = Math.pow,
+	sqrt = Math.sqrt,
+	atan2 = Math.atan2;
+
+vec2 = function(x, y) {
+	if (typeof x == "object") {
+		this.x = x.x;
+		this.y = x.y;
+	} else {
+		this.x = (x != undefined) ? x : 0;
+		this.y = (y != undefined) ? y : 0;
+	}
+	return this;
+}
+
+vec2.prototype.copy = function() {
+	return new vec2(this.x, this.y);
+}
+
+vec2.prototype.set = function(x, y) {
+	if (typeof x == "object") {
+		this.x = x.x;
+		this.y = x.y;
+	} else {
+		this.x = (x != undefined) ? x : 0;
+		this.y = (y != undefined) ? y : 0;
+	}
+	return this;
+}
+
+vec2.prototype.fromAngle = function(a) {
+	a = (a != undefined) ? a : 0;
+	return new vec2(cos(a), sin(a));
+}
+
+vec2.prototype.fromPolar = function(r, a) {
+	r = (r != undefined) ? r : 0;
+	a = (a != undefined) ? a : 0;
+	this.x = r*cos(a);
+	this.y = r*sin(a);
+	return this;
+}
+
+vec2.prototype.add = function(b) {
+	if (typeof b == "object") {
+		this.x += b.x;
+		this.y += b.y;
+	} else {
+		this.x += b;
+		this.y += b;
+	}
+	return this;
+}
+
+vec2.prototype.sub = function(b) {
+	if (typeof b == "object") {
+		this.x -= b.x;
+		this.y -= b.y;
+	} else {
+		this.x -= b;
+		this.y -= b;
+	}
+	return this;
+}
+
+vec2.prototype.mul = function(b) {
+	if (typeof b == "object") {
+		this.x *= b.x;
+		this.y *= b.y;
+	} else {
+		this.x *= b;
+		this.y *= b;
+	}
+	return this;
+}
+
+vec2.prototype.div = function(b) {
+	if (typeof b == "object") {
+		this.x /= b.x;
+		this.y /= b.y;
+	} else {
+		this.x /= b;
+		this.y /= b;
+	}
+	return this;
+}
+
+vec2.prototype.relativewrap = function(x, y) {
+	x = (x != undefined) ? x : 1;
+	y = (y != undefined) ? y : x;
+	var halfx = x * 0.5;
+	var halfy = y * 0.5;
+	this.x = wrap(this.x + halfx, x) - halfx;
+	this.y = wrap(this.x + halfy, y) - halfy;
+	return this;
+}
+
+vec2.prototype.normalize = function() {
+	var r = this.length();
+	if (r > 0) {
+		this.x /= r;
+		this.y /= r;
+	} else {
+		this.random();
+	}
+	return this;
+}
+
+vec2.prototype.limit = function(m) {
+	var r2 = this.dot(this);
+	if (r2 > m*m) {
+		this.mul(m / sqrt(r2));
+	}
+	return this;
+}
+
+vec2.prototype.setangle = function(a) {
+	var r = this.length();
+	this.x = r * cos(a);
+	this.b = r * sin(a);
+	return this;
+}
+
+vec2.prototype.setmag = function(m) {
+	return this.mul(m / this.length());
+}
+
+vec2.prototype.rotate = function(angle) {
+	var c = cos(angle);
+	var s = sin(angle);
+	var x = this.x, y = this.y;
+	this.x = x * c - y * s;
+	this.y = y * c + x * s;
+	return this;
+}
+
+vec2.prototype.length = function() {
+	return sqrt(this.x*this.x + this.y*this.y);
+}
+
+vec2.prototype.angle = function() {
+	return atan2(this.y, this.x);
+}
+
+vec2.prototype.dot = function(b) {
+	return this.x*b.x + this.y*b.y;
+}
+
+vec2.prototype.distance = function(b) {
+	return vec2.sub(this, b).length();
+}
+
+vec2.prototype.anglebetween = function(b) {
+	var am = this.length();
+	var bm = b.length();
+	return acos(this.dot(b) / (am*bm));
+}
+
+vec2.prototype.equals = function(a, b) {
+	return this.x == b.x && this.y == b.y;
+}
+
+var fold2 = function(f) {
+	return function(b) {
+		if (typeof b == "object") {
+			this.x = f(this.x, b.x);
+			this.y = f(this.y, b.y);
+		} else {
+			this.x = f(this.x, b);
+			this.y = f(this.y, b);
+		}
+		return this;
+	}
+}
+
+vec2.prototype.pow = fold2(Math.pow);
+vec2.prototype.wrap = fold2(wrap);
+vec2.prototype.min = fold2(Math.min);
+vec2.prototype.max = fold2(Math.max);
+
+vec2.prototype.clip = function(lo, hi) {
+	return this.min(hi).max(lo);
+}
+vec2.prototype.lerp = function(v, f) {
+	return this.add(this.copy().sub(v).mul(-f));
+}
+
+vec2.prototype.random = function(r) {
+	r = (r != undefined) ? r : 1;
+	var a = random() * pi * 2;
+	this.x = r * cos(a);
+	this.y = r * sin(a);
+	return this;
+}
+
+vec2.fromPolar = function(r, a) {
+	r = (r != undefined) ? r : 0;
+	a = (a != undefined) ? a : 0;
+	return new vec2(r*cos(a), r*sin(a));
+}
+
+vec2.add = function(a, b) {
+	if (typeof b == "object") {
+		return new vec2(a.x + b.x, a.y + b.y);
+	} else {
+		return new vec2(a.x + b, a.y + b);
+	}
+}
+
+vec2.sub = function(a, b) {
+	if (typeof b == "object") {
+		return new vec2(a.x - b.x, a.y - b.y);
+	} else {
+		return new vec2(a.x - b, a.y - b);
+	}
+}
+
+vec2.mul = function(a, b) {
+	if (typeof b == "object") {
+		return new vec2(a.x * b.x, a.y * b.y);
+	} else {
+		return new vec2(a.x * b, a.y * b);
+	}
+}
+
+vec2.div = function(a, b) {
+	if (typeof b == "object") {
+		return new vec2(a.x / b.x, a.y / b.y);
+	} else {
+		return new vec2(a.x / b, a.y / b);
+	}
+}
+
+vec2.relativewrap = function(a, x, y) {
+	x = (x != undefined) ? x : 1;
+	y = (y != undefined) ? y : x;
+	var halfx = x * 0.5;
+	var halfy = y * 0.5;
+	return new vec2(
+		wrap(a.x + halfx, x) - halfx,
+		wrap(a.x + halfy, y) - halfy
+	);
+}
+
+var fold2 = function(f) {
+	return function(a, b) {
+		if (typeof b == "object") {
+			return new vec2(f(a.x, b.x), f(a.y, b.y));
+		} else {
+			return new vec2(f(a.x, b), f(a.y, b));
+		}
+	}
+}
+
+vec2.pow = fold2(Math.pow);
+vec2.wrap = fold2(wrap);
+vec2.min = fold2(Math.min);
+vec2.max = fold2(Math.max);
+
+vec2.clip = function(a, lo, hi) {
+	return vec2.min(a, hi).max(lo);
+}
+vec2.lerp = function(a, v, f) {
+	return a.copy().sub(v).mul(-f).add(a);
+}
+
+vec2.equals = function(a, b) {
+	return a.x == b.x && a.y == b.y;
+}
+
+vec2.random = function(r) {
+	r = (r != undefined) ? r : 1;
+	var a = random() * pi * 2;
+	return new(cos(a), sin(a)) * r;
+}
+
+vec2.normalize = function(a) {
+	var r = a.length();
+	if (r > 0) {
+		return new vec2(a.x / r, a.y / r);
+	} else {
+		return vec2.random();
+	}
+	return a;
+}
+
+vec2.limit = function(a, m) {
+	var r2 = a.dot(a);
+	if (r2 > m*m) {
+		var d = 1 / sqrt(r2);
+		return new vec2(a.x * d, a.y * d);
+	}
+	return a.copy();
+}
+
+vec2.setmag = function(a, m) {
+	var d = m / a.length();
+	return new vec2(a.x * d, a.y * d);
+}
+
+vec2.setangle = function(self, a) {
+	var r = self.length();
+	return new vec2(r * cos(a), r * sin(a));
+}
+
+vec2.rotate = function(a, angle) {
+	var c = cos(angle);
+	var s = sin(angle);
+	var x = a.x, y = a.y;
+	return new vec2(x * c - y * s, y * c + x * s);
+}
+
+draw2D = {};
+
+draw2D.push = function() { 
+	ctx.save();
+	return draw2D; 
+}
+draw2D.pop = function() { 
+	ctx.restore(); 
+	return draw2D;
+}
+draw2D.translate = function(x, y) { 
+	ctx.translate(x, y); 
+	return draw2D;
+}
+draw2D.scale = function(x, y) { 
+	y = (y != undefined) ? y : x;
+	ctx.scale(x, y); 
+	return draw2D;
+}
+draw2D.rotate = function(a) { 
+	ctx.rotate(a); 
+	return draw2D;
+}
+
+draw2D.line = function(x1, y1, x2, y2) {
+	x1 = (x1 != undefined) ? x1 : 0;
+	y1 = (y1 != undefined) ? y1 : 0;
+	x2 = (x2 != undefined) ? x2 : 0;
+	y2 = (y2 != undefined) ? y2 : 0;
+	ctx.beginPath();
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
+	ctx.stroke();
+	return draw2D;
+}
+
+draw2D.rect = function(x, y, w, h) {
+	x = (x != undefined) ? x : 0;
+	y = (y != undefined) ? y : 0;
+	w = (w != undefined) ? w : 0;
+	h = (h != undefined) ? h : 0;
+	var w2 = w/2;
+	var h2 = h/2;
+	var x1 = x - w2;
+	var y1 = y - h2;
+	ctx.fillRect(x1, y1, w, h);
+	return draw2D;
+}
+
+draw2D.circle = function(x, y, d) {
+	x = (x != undefined) ? x : 0;
+	y = (y != undefined) ? y : 0;
+	var r = (d != undefined) ? d/2 : 0.5;
+	ctx.beginPath();
+	ctx.arc(x, y, r, 0, 2*Math.PI);
+	ctx.closePath();
+	ctx.fill();
+	return draw2D;
+}
+
+draw2D.arc = function(x, y, s, e, d) {
+	x = (x != undefined) ? x : 0;
+	y = (y != undefined) ? y : 0;
+	var r = (d != undefined) ? d/2 : 0.5;
+	ctx.beginPath();
+	ctx.arc(x, y, r, s, e);
+	ctx.closePath();
+	ctx.fill();
+	return draw2D;
+}
+
+draw2D.color = function(r, g, b, a) {
+	r = (r != undefined) ? r : 0.5;
+	g = (g != undefined) ? g : r;
+	b = (b != undefined) ? b : r;
+	a = (a != undefined) ? a : 1;
+	color = "rgba("+Math.floor(r*255.)+", "+Math.floor(g*255.)+", "+Math.floor(b*255.)+", "+a+")";
+	ctx.fillStyle = color;
+	ctx.strokeStyle = color;
 }
 },{"ndarray":2,"seedrandom":4,"zeros":5}],2:[function(require,module,exports){
 (function (Buffer){
