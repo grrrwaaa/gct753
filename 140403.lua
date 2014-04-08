@@ -31,7 +31,7 @@ local slowing_distance = 0.1
 
 function update_agent(a)
 
-	-- action selection
+	-- action selection: TODO!
 	-- target == target
 	
 	-- steering:
