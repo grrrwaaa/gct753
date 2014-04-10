@@ -1,4 +1,4 @@
-<!) {CTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -22,7 +22,6 @@ al.init();
 /// put your code here /////////////////////////////////////////////////////////
 
 var max_speed = 0.0025;
-var max_force = 0.001;
 
 var agents = [];
 
@@ -36,8 +35,16 @@ function reset() {
 		
 			dir: random() * Math.PI * 2,
 			spd: max_speed * (random() + 0.5),
+			
+			wander: 0,
+			viewangle: Math.PI * 0.75,
 		
-			size: 0.02 + 0.05 * random(),
+			max_force: 0.0005,
+			center_factor: 2,
+			align_factor: 30,
+			avoid_factor: 0.005,
+		
+			size: 0.02 + 0.02 * random(),
 			mass: 1,
 		
 			align: new vec2(),
@@ -71,6 +78,7 @@ function update_agent(a) {
 	var neighbors = [];
 	var center = new vec2();
 	var align = new vec2();
+	var avoid = new vec2();
 	// for (every agent
 	for (i = 0; i < agents.length; i++) {
 		var n = agents[i]; 
@@ -83,13 +91,20 @@ function update_agent(a) {
 			relative.add(0.5).wrap(1).add(-0.5);
 			relative.rotate(-a.dir);
 			var distance = relative.length();
+			var angle = relative.angle();
 			
-			if (distance < a.viewradius && relative.x > 0) {
+			if (distance < a.viewradius 
+				&& angle < a.viewangle
+				&& angle > -a.viewangle) {
 				
 				// add to center calculation:
 				center.add(relative);
 				// add to velocity average
 				align.add(n.vel);
+				// add avoidance:
+				avoid.add(
+					vec2.div(relative, -distance*distance)
+				);
 				
 				// add to list of neighbors
 				neighbors.push(n);
@@ -101,78 +116,87 @@ function update_agent(a) {
 	if (a.canseesomething) {
 		
 		// take the average:
-		center.div(neighbors.length);
+		center.div(neighbors.length)
+			  .mul(a.center_factor);
 		align.div(neighbors.length);
-		align.rotate(-a.dir);
+		align.rotate(-a.dir)
+			 .mul(a.align_factor);
+		avoid.mul(a.avoid_factor);
 		
-		// normalize it:
-		center.normalize();
-		align.normalize();
-			
-		var desired_velocity = vec2.add(center, align).mul(a.spd);
+		var desired_velocity = vec2.add(vec2.add(center, align), avoid);
 		
 		var steering = vec2.sub(desired_velocity, new vec2(a.spd, 0));
-		var steering_force = steering.limit(max_force);
-		
-		
+		var steering_force = steering.limit(a.max_force);
+		if (steering_force.x < 0) {
+			steering_force.x = 0;
+		}
+		if (steering_force.y > a.max_force/2) {
+			steering_force.y = a.max_force/2;
+		} else if (steering_force.y < -a.max_force/2) {
+			steering_force.y = -a.max_force/2;
+		}
 		
 		// locomotion
-		a.acceleration.set(steering_force).div(a.mass);
-	
-		// go back to global coordinate frame:
-		a.acceleration.rotate(a.dir);
+		a.acceleration.set(steering_force)
+					  .div(a.mass)
+					  .rotate(a.dir);
 	} else {
 		// can't see anyone...
-		a.acceleration.set(0, 0);
+		a.wander += (random() - 0.5) * 0.5;
+		a.acceleration = vec2.fromPolar(0.005, a.dir)
+						.sub(vec2.fromPolar(0.0025, a.wander));
 	}
 		
-	a.center.set(center).mul(0.1);
-	a.align.set(align).mul(0.1);
+	a.center.set(center);
+	a.align.set(align);
 }
+
+function draw_agent(a) {
+	draw2D.push();
+		draw2D.translate(a.pos.x, a.pos.y);
+		draw2D.rotate(a.dir);
+		
+		draw2D.color(1, 1, 1, 0.5)
+		draw2D.arc(0, 0, -a.viewangle, a.viewangle, a.viewradius)
+	
+		draw2D.color(1, 0, 0)
+		//draw2D.line(0, 0, a.align.x, a.align.y)
+	
+		draw2D.color(1, 1, 0)
+		//draw2D.line(0, 0, a.center.x, a.center.y)
+		
+		draw2D.scale(a.size, a.size);
+	
+		if (a.canseesomething) {
+			draw2D.color(1, 0.5, 1);
+		} else {
+			draw2D.color(0, 0.5, 1);
+		}
+		draw2D.circle(0, 0, 1);
+		draw2D.color(1, 1, 0);
+		draw2D.circle(0.3,  0.3, 1/3);
+		draw2D.circle(0.3, -0.3, 1/3);
+	
+	draw2D.pop();
+}	
+
+function update() {
+	for (var i = 0; i < agents.length; i++) {
+		update_agent(agents[i]);
+	}
+	for (var i = 0; i < agents.length; i++) {
+		move_agent(agents[i]);
+	}
+} 
 
 // how to render the scene
 function draw(ctx) {
 
 	for (var i = 0; i < agents.length; i++) {
 		var a = agents[i];
-		
-		draw2D.push();
-			draw2D.translate(a.pos.x, a.pos.y);
-			draw2D.rotate(a.dir);
-			
-			draw2D.color(1, 1, 1, 0.5)
-			draw2D.arc(0, 0, -Math.PI/2, Math.PI/2, a.viewradius)
-		
-			draw2D.color(1, 0, 0)
-			//draw2D.line(0, 0, a.align.x, a.align.y)
-		
-			draw2D.color(1, 1, 0)
-			//draw2D.line(0, 0, a.center.x, a.center.y)
-			
-			draw2D.scale(a.size, a.size);
-		
-			if (a.canseesomething) {
-				draw2D.color(1, 0.5, 1);
-			} else {
-				draw2D.color(0, 0.5, 1);
-			}
-			draw2D.circle(0, 0, 1);
-			draw2D.color(1, 1, 0);
-			draw2D.circle(0.3,  0.3, 1/3);
-			draw2D.circle(0.3, -0.3, 1/3);
-		
-		draw2D.pop();
+		draw_agent(a);
 	}
 }
-
-function update() {
-	for (var i = 0; i < agents.length; i++) {
-		move_agent(agents[i]);
-	}
-	for (var i = 0; i < agents.length; i++) {
-		update_agent(agents[i]);
-	}
-} 
 
 /// } of user code ///////////////////////////////////////////////////////////
 
