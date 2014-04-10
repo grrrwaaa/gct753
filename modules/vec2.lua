@@ -342,7 +342,7 @@ end
 -- @param f interpolation factor from self to v (0 = none, 1 = full)
 -- @return self
 function vec2:lerp(v, f)
-	return self:add(v:sub(self):mul(f))
+	return self:add(v:subnew(self):mul(f))
 end
 
 --- create a vector from the linear interpolation of two vectors:

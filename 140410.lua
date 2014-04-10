@@ -2,29 +2,44 @@ local draw2D = require "draw2D"
 local vec2 = require "vec2"
 
 win:setdim(400, 400)
-
 math.randomseed(os.time())
 
-local max_speed = 0.0025
-local max_force = 0.001
+local max_speed = 0.003
 
 local agents = {}
-for i = 1, 20 do
-	local a = {
-		-- spatial properties:
-		pos = vec2(math.random(), math.random()),
-		vel = vec2.fromPolar(max_speed, math.random() * math.pi * 2),
-		acceleration = vec2(),
+
+function reset()
+	agents = {}
+	for i = 1, 20 do
+		local a = {
+			-- spatial properties:
+			pos = vec2(math.random(), math.random()),
+			vel = vec2.fromPolar(max_speed, math.random() * math.pi * 2),
+			acceleration = vec2(),
+			
+			wander = 0,
+			viewangle = math.pi * (0.5 + math.random()*0.5),
+			
+			max_force = 0.0005,
+			center_factor = 2,
+			align_factor = 30,
+			avoid_factor = 0.005,
 		
-		spd = max_speed * (math.random() + 0.5),
-		dir = math.random() * math.pi * 2,
+			spd = max_speed * (math.random() + 0.5),
+			dir = math.random() * math.pi * 2,
 	
-		size = 0.02 + 0.05 * math.random(),
-		mass = 1,
-	}
-	a.viewradius = a.size * 4
-	agents[i] = a
+			size = 0.02 + 0.02 * math.random(),
+			mass = 1,
+			
+			align = vec2(),
+			center = vec2(),
+			canseesomething = false,
+		}
+		a.viewradius = a.size * 4
+		agents[i] = a
+	end
 end
+reset()
 
 function move_agent(a)
 	
@@ -47,6 +62,8 @@ function update_agent(a)
 	local neighbors = {}
 	local center = vec2()
 	local align = vec2()
+	local avoid = vec2()
+	
 	-- for every agent
 	for i, n in ipairs(agents) do
 		-- be careful about yourself
@@ -58,14 +75,18 @@ function update_agent(a)
 			relative:add(0.5):mod(1):add(-0.5)
 			relative:rotate(-a.dir)
 			local distance = relative:length()
+			local angle = relative:angle()
 			
 			if distance < a.viewradius 
-			and relative.x > 0 then
+			and angle < a.viewangle
+			and angle > -a.viewangle then
 				
 				-- add to center calculation:
 				center:add(relative)
 				-- add to velocity average
 				align:add(n.vel)
+				-- add avoidance:
+				avoid:add(-relative / (distance*distance))
 				
 				-- add to list of neighbors
 				neighbors[#neighbors+1] = n
@@ -77,18 +98,27 @@ function update_agent(a)
 	if a.canseesomething then
 		
 		-- take the average:
-		center:div(#neighbors)
+		center:div(#neighbors):mul(a.center_factor)
 		align:div(#neighbors)
-		align:rotate(-a.dir)
+		align:rotate(-a.dir):mul(a.align_factor)
 		
-		-- normalize it:
-		center:normalize()
-		align:normalize()
+		avoid:mul(a.avoid_factor)
 			
-		local desired_velocity = a.spd * (center + align)
+		local desired_velocity = center 
+							   + align
+							   + avoid
 		
 		local steering = (desired_velocity) - vec2(a.spd, 0)
-		local steering_force = steering:limit(max_force)
+		local steering_force = steering:limit(a.max_force)
+		if steering_force.x < 0 then
+			steering_force.x = 0
+		end
+		if steering_force.y > a.max_force/2 then
+			steering_force.y = a.max_force/2
+		elseif steering_force.y < -a.max_force/2 then
+			steering_force.y = -a.max_force/2
+		end
+		
 	
 		-- locomotion
 		a.acceleration:set(steering_force / a.mass)
@@ -96,12 +126,13 @@ function update_agent(a)
 		-- go back to global coordinate frame:
 		a.acceleration:rotate(a.dir)
 	else
-		-- can't see anyone...
-		a.acceleration:set(0, 0)
+		-- random walk:
+		a.wander = a.wander + (math.random()-0.5)*0.5
+		a.acceleration = vec2.fromPolar(0.005, a.dir) - vec2.fromPolar(0.0025, a.wander)
 	end
-		
-	a.center = center * 0.1
-	a.align = align * 0.1
+	
+	a.center = center
+	a.align = align
 end
 
 function draw_agent(a)
@@ -111,7 +142,7 @@ function draw_agent(a)
 		draw2D.rotate(a.dir)
 		
 		draw2D.color(1, 1, 1, 0.1)
-		draw2D.arc(0, 0, -math.pi/2, math.pi/2, a.viewradius)
+		draw2D.arc(0, 0, -a.viewangle, a.viewangle, a.viewradius)
 		
 		draw2D.color(1, 0, 0)
 		draw2D.line(0, 0, a.align.x, a.align.y)
@@ -135,15 +166,6 @@ end
 
 
 function update()
-	--[[
-	-- update target:
-	target.wander = target.wander + (math.random()-0.5)*0.5
-	local vel = vec2.fromPolar(0.005, target.dir) - vec2.fromPolar(0.0025, target.wander)
-	-- update target properties:
-	target.dir = vel:angle()
-	target.pos:add(vel):mod(1)
-	--]]
-	
 	--for i, a in ipairs(agents) do
 	for i = 1, #agents do
 		update_agent(agents[i])
