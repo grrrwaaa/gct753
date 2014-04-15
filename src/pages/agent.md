@@ -272,11 +272,12 @@ At the top of your code, there should be a long comment including:
 
 Please also comment all the important operations in the code. Please also try to use helpful variable names, e.g. ```width``` is more communicative than ```var3```.
 
-Send your final project as one (or more) Lua script(s) to my email address, on or before **Sunday 28th April**. 
+Send your final project as one (or more) Lua script(s) to the TA on or before **Sunday 27th April**. 
 
 Your assignment will be evaluted by these criteria:
 
-- **Technical completeness** (33%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented. Even if it doesn't work, how well it was conceived and implemented. 
-- **Aesthetic qualities** (33%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting. If it doesn't work as expected or produce interesting results, then the evaluation here will be on how well you can articulate what you had hoped for, what aspects of that you think are missing, why you think they are missing, what you can suggest to resolve it, etc.
-- **Novel contribution** (33%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key aspects here are the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
+- **Technical completeness** (30%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented. Even if it doesn't work, how well it was conceived and implemented. 
+- **Aesthetic qualities** (30%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting. If it doesn't work as expected or produce interesting results, then the evaluation here will be on how well you can articulate what you had hoped for, what aspects of that you think are missing, why you think they are missing, what you can suggest to resolve it, etc.
+- **Novel contribution** (30%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key aspects here are the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
+- **Effort** (10%). 
 
