@@ -18,13 +18,64 @@ al.init();
 
 /// put your code here /////////////////////////////////////////////////////////
 
-var p = vec2();
+var dim = 128;
+var sugar = new field2D(dim, dim);
+var sugar_old = new field2D(dim, dim);
+
+var agents = [];
+
+function reset() {
+	for (var i = 0; i < 20; i++) {
+		var ecoli = {
+			pos: new vec2(random(), random()),
+			dir: random() * Math.PI * 2,
+			twist: 0,
+	
+			previous_concentration: 0,
+		}
+		agents.push(ecoli);
+	}
+}
+reset();
+
+function update_agent(a) {
+	// sensor:
+	var c = sugar.sample(a.pos.x, a.pos.y);
+	
+	// action selection
+	if (c < a.previous_concentration) {
+		// tumbling behavior
+		a.twist = a.twist + (random() - 0.5)*0.5;
+		a.twist = a.twist * 0.9;
+		a.dir = a.dir + a.twist;
+	} else {
+		// not-tumbling behavior:
+		a.twist = 0;
+	}
+	a.previous_concentration = c;
+	
+	// locomotion
+	var spd = 0.01;
+	var vel = vec2.fromPolar(spd, a.dir);
+	a.pos.add(vel);
+	a.pos.wrap(1);
+}
+
+function draw_agent(a) {
+	draw2D.push()
+		draw2D.translate(a.pos.x, a.pos.y);
+		draw2D.rotate(a.dir);
+		draw2D.scale(0.03);
+		
+		draw2D.color(0.8, 0.3, 0);
+		draw2D.circle(0, 0, 1);
+		draw2D.rect(-0.5, 0, 1, 0.2);
+	draw2D.pop();
+}
 
 function mouse(e, b, x, y) {
-	if (e != "scroll") {
-		p.x = x; 
-		p.y = y;
-		//console.log(e, b, x, y);
+	if (e == "down" || e == "drag") {
+		sugar.splat(100, x, y);
 	}
 }
 
@@ -33,12 +84,23 @@ function key(e, k) {
 }
 
 function update() {
-	//game.diffuse(game, 1, 10);
+	var tmp = sugar;
+	sugar = sugar_old;
+	sugar_old = tmp;
+	sugar.diffuse(sugar_old, 0.1);
+	sugar.scale(0.99);
+	
+	for (var i = 0; i < agents.length; i++) {
+		update_agent(agents[i]);
+	}
 } 
 
 function draw() {
-	//game.draw()
-	draw2D.circle(p.x, p.y, 0.1);
+	sugar.draw();
+	
+	for (var i = 0; i < agents.length; i++) {
+		draw_agent(agents[i]);
+	}
 }
 
 /// end of user code ///////////////////////////////////////////////////////////
