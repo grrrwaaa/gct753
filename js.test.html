@@ -18,28 +18,27 @@ al.init();
 
 /// put your code here /////////////////////////////////////////////////////////
 
-var w = 256, h = 128;
-var game = new field2D(w, h);
+var p = vec2();
 
-console.log(game);
-
-function reset() {
-	game.set(function(x, y) {
-		return x/game.width;
-	});
+function mouse(e, b, x, y) {
+	if (e != "scroll") {
+		p.x = x; 
+		p.y = y;
+		//console.log(e, b, x, y);
+	}
 }
-reset();
 
-
-console.log(game.sample(0, 0));
-
+function key(e, k) {
+	console.log(e, k);
+}
 
 function update() {
-	game.diffuse(game, 1, 10);
+	//game.diffuse(game, 1, 10);
 } 
 
 function draw() {
-	game.draw()
+	//game.draw()
+	draw2D.circle(p.x, p.y, 0.1);
 }
 
 /// end of user code ///////////////////////////////////////////////////////////

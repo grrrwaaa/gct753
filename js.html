@@ -94,6 +94,26 @@ draw = <span class="keyword">function</span>(ctx) {
 update = <span class="keyword">function</span>(dt) {
     x = x + dt;
 }</code></pre>
+<h3>Interaction</h3>
+<p>Two additional callbacks exist to detect mouse and keyboard interaction respectively. </p>
+<pre><code class="lang-javascript">
+<span class="comment">// event can be "down" or "up" for clicks,</span>
+<span class="comment">// or "drag" when moving with a mouse button pressed,</span>
+<span class="comment">// or "move" when moving with no button pressed,</span>
+<span class="comment">// event is "enter" when the mouse enters the canvas, and "exit" when the mouse goes outside it</span>
+<span class="comment">// in all the above cases, </span>
+<span class="comment">// x and y are the mouse position from 0,0 (top left) to 1,1 (bottom right)</span>
+<span class="comment">// event is "scroll" when the mouse wheel is scrolled (in which case y gives the scroll delta)</span>
+<span class="comment">// button is the mouse button (for "down", "up" and "drag" events)</span>
+mouse = <span class="keyword">function</span>(event, button, x, y) {
+    console.log(event, button, x, y);
+}
+
+<span class="comment">// if event is "press", key is a single character string</span>
+<span class="comment">// if event is "down" or "up", key is a numeric code</span>
+key = <span class="keyword">function</span>(event, key) {
+    console.log(event, key);
+}</code></pre>
 <h2>field2D</h2>
 <p>We have a <code>field2D</code> type to represent grids of cells, where each cell holds a floating point number (typically but not necessarily in the range of zero to one). You can create a field like this:</p>
 <pre><code class="lang-javascript"><span class="keyword">var</span> field = <span class="keyword">new</span> field2D(width, height);</code></pre>

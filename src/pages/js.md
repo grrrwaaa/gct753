@@ -76,6 +76,31 @@ update = function(dt) {
 }
 ```
 
+### Interaction
+
+Two additional callbacks exist to detect mouse and keyboard interaction respectively. 
+
+```javascript
+
+// event can be "down" or "up" for clicks,
+// or "drag" when moving with a mouse button pressed,
+// or "move" when moving with no button pressed,
+// event is "enter" when the mouse enters the canvas, and "exit" when the mouse goes outside it
+// in all the above cases, 
+// x and y are the mouse position from 0,0 (top left) to 1,1 (bottom right)
+// event is "scroll" when the mouse wheel is scrolled (in which case y gives the scroll delta)
+// button is the mouse button (for "down", "up" and "drag" events)
+mouse = function(event, button, x, y) {
+	console.log(event, button, x, y);
+}
+
+// if event is "press", key is a single character string
+// if event is "down" or "up", key is a numeric code
+key = function(event, key) {
+	console.log(event, key);
+}
+```
+
 ## field2D
 
 We have a ```field2D``` type to represent grids of cells, where each cell holds a floating point number (typically but not necessarily in the range of zero to one). You can create a field like this:

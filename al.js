@@ -290,6 +290,7 @@ al.init = function (options) {
 	canvas.setAttribute("height", 512);
 	document.body.appendChild(canvas);
 	
+	
 	ctx = canvas.getContext('2d');
 	
 	// create an off-screen rendering context (should this be per-field?)
@@ -300,7 +301,109 @@ al.init = function (options) {
 	offscreen_image = offscreen_ctx.getImageData(0, 0, offscreen_canvas.width, offscreen_canvas.height);
 	offscreen_data = offscreen_image.data;
 	
+	var mousepos = function(event) {
+		
+		var canvas_rect = canvas.getBoundingClientRect();
+		return {
+			x: (event.clientX - canvas_rect.left) / canvas_rect.width, 
+			y: (event.clientY - canvas_rect.top) / canvas_rect.height 
+		};
+	}
+	
 	// add a bit of UI:
+	var mouse_is_down = false;
+	canvas.addEventListener("mousedown", function(event) {
+		mouse_is_down = true;
+		if (mouse && typeof mouse === "function") {
+			var canvas_rect = canvas.getBoundingClientRect();
+			mouse("down", event.button, (event.clientX - canvas_rect.left) / canvas_rect.width, (event.clientY - canvas_rect.top) / canvas_rect.height);
+			return false;
+		}
+	}, false);
+	canvas.addEventListener("mouseup", function(event) {
+		mouse_is_down = false;
+		if (mouse && typeof mouse === "function") {
+			var canvas_rect = canvas.getBoundingClientRect();
+			mouse("up", event.button, (event.clientX - canvas_rect.left) / canvas_rect.width, (event.clientY - canvas_rect.top) / canvas_rect.height);
+			return false;
+		}
+	}, false);
+	canvas.addEventListener("mouseover", function(event) {
+		mouse_is_down = true;
+		if (mouse && typeof mouse === "function") {
+			var canvas_rect = canvas.getBoundingClientRect();
+			mouse("enter", event.button, (event.clientX - canvas_rect.left) / canvas_rect.width, (event.clientY - canvas_rect.top) / canvas_rect.height);
+			return false;
+		}
+	}, false);
+	canvas.addEventListener("mouseout", function(event) {
+		mouse_is_down = false;
+		if (mouse && typeof mouse === "function") {
+			var canvas_rect = canvas.getBoundingClientRect();
+			mouse("exit", event.button, (event.clientX - canvas_rect.left) / canvas_rect.width, (event.clientY - canvas_rect.top) / canvas_rect.height);
+			return false;
+		}
+	}, false);
+	canvas.onmousemove = function(event) {
+		if (mouse && typeof mouse === "function") {
+			var canvas_rect = canvas.getBoundingClientRect();
+			mouse(mouse_is_down ? "drag" : "move", event.button, (event.clientX - canvas_rect.left) / canvas_rect.width, (event.clientY - canvas_rect.top) / canvas_rect.height);
+			return false;
+		}
+	}
+	canvas.addEventListener('mousewheel', function(event){
+		if (mouse && typeof mouse === "function") {
+			var delta = 0;
+			if (!event) /* For IE. */
+					event = window.event;
+			if (event.wheelDelta) { /* IE/Opera. */
+					delta = event.wheelDelta/120;
+			} else if (event.detail) { /** Mozilla case. */
+					/** In Mozilla, sign of delta is different than in IE.
+					 * Also, delta is multiple of 3.
+					 */
+					delta = -event.detail/3;
+			}
+			/** If delta is nonzero, handle it.
+			 * Basically, delta is now positive if wheel was scrolled up,
+			 * and negative, if wheel was scrolled down.
+			 */
+			if (delta) {
+				mouse("scroll", event.button, 0, delta);
+			}
+			/** Prevent default actions caused by mouse wheel.
+			 * That might be ugly, but we handle scrolls somehow
+			 * anyway, so don't bother here..
+			 */
+			if (event.preventDefault)
+					event.preventDefault();
+			event.returnValue = false;
+			return false;
+		}
+	}, false);
+	
+	window.addEventListener( "keydown", function(event) {
+		if (key && typeof key == "function") {
+			var k = event.keyCode;
+			key("down", k);
+			return true;
+		}
+	}, false);
+	window.addEventListener( "keyup", function(event) {
+		if (key && typeof key == "function") {
+			var k = event.keyCode;
+			key("up", k);
+			return true;
+		}
+	}, false);
+	window.addEventListener( "keypress", function(event) {
+		if (key && typeof key == "function") {
+			var k = event.keyCode;
+			k = String.fromCharCode(k); 
+			key("press", k);
+			return true;
+		}
+	}, false);
 	
 	var b = document.createElement('button');
 	b.innerHTML = 'start';
