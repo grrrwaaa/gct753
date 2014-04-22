@@ -1051,7 +1051,7 @@ vec2.equals = function(a, b) {
 vec2.random = function(r) {
 	r = (r != undefined) ? r : 1;
 	var a = random() * pi * 2;
-	return new(cos(a), sin(a)) * r;
+	return new vec2(cos(a) * r, sin(a) * r);
 }
 
 vec2.normalize = function(a) {

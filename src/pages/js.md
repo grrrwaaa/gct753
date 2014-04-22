@@ -13,6 +13,7 @@ title: JavaScript
 	- [Hodgepodge](js.hodgepodge.html)
 - Agent systems
 	- [Boids](js.boids.html)
+	- [Chemotaxis](js.chemotaxis.html)
 
 # Using JavaScript and al.js
 
