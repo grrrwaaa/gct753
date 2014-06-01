@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="http://grrrwaaa.github.io/gct753/al.min.js"></script>
+<!--<script src="al.js"></script>-->
+<style>
+body {
+	background: #eee;
+	width: 512px;
+	min-height: 100%;
+	margin: 50px auto 50px auto;
+}
+</style>
+</head>
+<body>
+<script>
+
+al.init();
+
+
+/// put your code here /////////////////////////////////////////////////////////
+
+
+
+var dim = 64;
+var f1 = new field2D(dim, dim);
+var f1_prev = new field2D(dim, dim);
+
+var constant_decay = 0.5;
+var carcass_energy = 50;
+
+var agents = [];
+
+function food_splat(spot) {
+	for (var j = 1; j < random(100); j++) {
+		var spat = vec2.random(random() * 0.1).add(spot);
+		f1.splat(random()*0.1, spat.x, spat.y);
+	}
+}
+
+function reset() {
+	// some background noise
+	//f1.set(function(x, y) { return random() * 0.05; });	
+	// some spots 
+	for (var i=0; i<20; i++) {
+		var spot = new vec2(random(), random());
+		food_splat(spot);
+	}
+	// then smooth it
+	f1.diffuse(f1, 0.5);
+	// then normalize
+	f1.normalize();
+	
+	// make some agents
+	agents = [];
+	for (var i = 1; i < 10; i++) {
+		var a = {
+			pos: new vec2(random(), random()),
+			dir: random() * Math.PI * 2,
+			size: 0.02,
+			
+			age: 0,
+			energy: 1,
+			
+			// sensors
+			
+			// DNA
+		};
+		
+		// add it:
+		agents.push(a);
+	}
+}
+reset();
+
+function update() {
+	if (f1.sum() < 200) {
+		for (var i = 1; i < random(8) + 4; i++) {
+			var spot = new vec2(random(), random());
+			food_splat(spot);
+		}
+		console.log(f1.sum());
+	}
+	
+	// update the field:
+	/*
+	for (var i = 0; i < 10; i++) {
+		var x1, y1 = random(dim), random(dim);
+		var x2 = x1 + random(3)-2;
+		var y2 = y1 + random(3)-2;
+		var v1 = f1.get(x1, y1);
+		var v2 = f1.get(x2, y2);
+		f1.set(v1, x2, y2);
+		f1.set(v2, x1, y1);
+	}
+	*/
+	
+	f1_prev.diffuse(f1, 0.0005);
+	// swap it:
+	var tmp = f1;
+	f1 = f1_prev;
+	f1_prev = tmp;
+
+	for (var i = agents.length-1; i >= 0; i--) { 
+		var a = agents[i];
+		
+		// update agent a
+		a.age = a.age + 1
+		
+		// sensing:
+		var f = f1.sample(a.pos.x, a.pos.y);
+		// make sure food is always positive or zero:
+		f = Math.max(f, 0);
+		
+		// eat the food:
+		f1.splat(-f, a.pos.x, a.pos.y);
+		
+		a.energy = a.energy + f * 0.9;
+		
+		a.size = a.size + f * 0.001;
+		
+		// decay factor:
+		a.energy = a.energy - constant_decay * a.size;
+		
+		
+		// steering:
+		var forward = 0.01 * random();
+		var crab = 0;
+		var turn = (random() - 0.5);
+		
+		// locomotion:
+		a.dir = a.dir + turn;
+		var vel = new vec2(forward, crab);
+		// rotate to world space:
+		vel.rotate(a.dir);
+		a.pos.add(vel).wrap(1);
+		
+		// who might die here now
+		//if a.age > agelimit then agents[a] = nil }
+		if (a.energy <= 0) {
+			f1.splat(a.size * carcass_energy, a.pos.x, a.pos.y);
+			agents.splice(i, 1);
+		}
+		
+		// or who might have a baby
+		// agents.push(baby);
+		
+	}
+}
+
+function draw()	{
+	// draw the field in green:
+	//draw2D.color(0, 1, 0);
+	f1.draw();
+	
+	for (var i = agents.length-1; i >= 0; i--) { 
+		var a = agents[i];
+		draw2D.push();
+			draw2D.translate(a.pos.x, a.pos.y);
+			draw2D.rotate(a.dir);
+			draw2D.scale(a.size, a.size);
+			
+			draw2D.color(1, 0.5, 1);
+			draw2D.rect(0, 0, 2, 0.5);
+			draw2D.color(1, 1, 0);
+			draw2D.circle(1, 0.5, 0.5);
+			draw2D.circle(1, -0.5, 0.5);
+		draw2D.pop();
+	}
+}
+
+function mouse(e, b, x, y) {
+	if (e == "down" || e == "drag") {
+		food_splat(new vec2(x, y));
+	}
+}
+
+function key(e, k) {
+	if (e == "down" && k == "r") {
+		reset();
+	}
+}
+
+/// end of user code ///////////////////////////////////////////////////////////
+
+al.start();
+</script>
+<a href="js.html">Documentation</a>
+</body>
+</html>

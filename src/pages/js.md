@@ -14,6 +14,9 @@ title: JavaScript
 - Agent systems
 	- [Boids](js.boids.html)
 	- [Chemotaxis](js.chemotaxis.html)
+- Evolutionary systems
+	- [Evolving images](js.evo_images.html)
+	- [Evolving agents](js.evo_agents.html)
 
 # Using JavaScript and al.js
 

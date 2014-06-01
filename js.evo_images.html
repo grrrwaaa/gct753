@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<!--<script src="http://grrrwaaa.github.io/gct753/al.min.js"></script>-->
+<script src="al.js"></script>
+<style>
+body {
+	background: #eee;
+	width: 512px;
+	min-height: 100%;
+	margin: 50px auto 50px auto;
+}
+</style>
+</head>
+<body>
+<script>
+
+al.init();
+
+
+/// put your code here /////////////////////////////////////////////////////////
+
+var population_size = 16;
+
+var dim = 128;
+
+var mutation_probability = 1/20;
+var jump_probability = 1/5;
+var gene_size = 20;
+
+// how many candidates displayed per row / column:
+var divisions = Math.floor(Math.sqrt(population_size));
+	
+
+var population = [];
+
+// build up a library of operators:
+function add(a, b) { return a + b; }
+function sub(a, b) { return a - b; }
+function mul(a, b) { return a * b; }
+function div(a, b) { return a / b; }
+function round(a, b) { return Math.ceil(a / b) * b; }
+min = Math.min;
+max = Math.max;
+abs = Math.abs;
+exp = Math.exp;
+log = Math.log;
+sin = Math.sin;
+atan2 = Math.atan2;
+cos = Math.cos;
+gt = function(a, b)  {
+	if (a > b) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+noise = function() { return random(); }
+mod = wrap;
+
+var bitmax = Math.pow(2, 32) - 1;
+function band(a, b) { return wrap(((Math.abs(a) * bitmax) & (Math.abs(b) * bitmax)) / bitmax, 1); }
+function bor(a, b) { return wrap(((Math.abs(a) * bitmax) | (Math.abs(b) * bitmax)) / bitmax, 1); }
+function bxor(a, b) { return wrap(((Math.abs(a) * bitmax) ^ (Math.abs(b) * bitmax)) / bitmax, 1); }
+
+// document operators:
+var operators = [
+	"add", "sub", "mul", "div", 
+	"abs", "mod", "min", "max", "exp", "log", "round",
+	"band", "bor", "bxor",
+	"sin", "cos", "atan2",
+	"gt",
+	"noise"
+];
+var num_operators = operators.length;
+
+// create a genome
+// a list of genes
+// n is number of genes
+// each gene is a list of 3 bases
+function geno_create(n) {
+	var geno = [];
+	for (var i = 0; i < n; i++) {
+		var gene = [];
+		for (var j = 0; j < 3; j++) {
+			gene[j] = random(num_operators);
+		}
+		geno[i] = gene;
+	}	
+	return geno;
+}
+
+function develop(candidate) {
+	var geno = candidate.geno;
+	var firstgene = geno[1];
+	
+	// start collecting the code fragments
+	var statements = [
+		// begin with a function definition:
+		"candidate.func = function(x, y) {",
+		// convert to normalized range (-1, 1):
+		"var r1 = (x/(dim-1)) * 2 - 1;", 
+		"var r2 = (y/(dim-1)) * 2 - 1;", 
+		
+		// first gene encodes constants:
+		"var r3 = " + firstgene[0] + ";",
+		"var r4 = " + firstgene[1] + ";",
+		"var r5 = " + firstgene[2] + ";",
+	];
+	
+	
+	// rest of genes are operators:
+	for (var i = 1; i < geno.length; i++) {
+		
+		// rid is the register index for this statement:
+		var rid = i + 5;
+	
+		
+		var gene = geno[i];
+		var op = operators[ gene[0] ];
+		var arg1 = gene[1];
+		var arg2 = gene[2];
+		
+		// conver to register names:
+		var result = "r" + rid;
+		var a1 = "r" + Math.max(1, rid - 1 - arg1);
+		var a2 = "r" + Math.min(rid - 1, arg2 + 1);
+		
+		// add the code:
+		statements.push(
+			"var " + result + " = " + op + "(" + a1 + ", " + a2 + ");"
+		);
+	}
+	
+	// construct the return statement:
+	var r = "r" + rid;
+	var g = "r" + (rid-1);
+	var b = "r" + (rid-2);
+	statements.push( "return { r: " + r + ", g: " + g + ", b: " + b + " };" );
+	
+	// and finish the function:
+	statements.push("}");
+	
+	// convert list of instructions into one big string of code
+	candidate.code = statements.join("\n")
+	//console.log(candidate.code)
+	
+	// convert generated code into a Lua function:
+	eval(candidate.code);
+	
+	// update the images
+	// for each pixel:
+	for (var y = 0; y < dim; y++) {
+		for (var x = 0; x < dim; x++) {	
+			
+			// call the generated function:
+			var color = candidate.func(x, y);
+			
+			// apply to each field:
+			candidate.red.set(color.r, x, y);
+			candidate.green.set(color.g, x, y);
+			candidate.blue.set(color.b, x, y);
+		}
+	}
+	
+	// normalize the images (questionable...)
+	candidate.red.normalize()
+	candidate.green.normalize()
+	candidate.blue.normalize()
+}
+
+function regenerate() {
+	
+	// sort population by fitness:
+	population.sort(function(a, b) {
+		if (a.fitness < b.fitness) {
+			return 1;
+		} else if (a.fitness > b.fitness) {
+			return -1;
+		} else {
+			return 0;
+		}
+	});
+
+	console.log("regenerate!");
+	console.log("best candidate:");
+	console.log(population[0].code);
+	
+	// generate a new population
+	var newpop = [];
+	// with variations on the most fit candidates
+	for (var i = 0; i < population.length; i++) {
+		var child = {
+			geno: [],
+			fitness: 0,
+			// just re-use the same fields as the previous generation
+			// (for memory efficiency)
+			red: population[i].red,
+			green: population[i].green,
+			blue: population[i].blue,
+		};
+		// pick a random parent:
+		var parent_id = random(i);
+		var parent = population[ parent_id ];
+		
+		// copy in the parent genes
+		for (var j=0; j < parent.geno.length; j++) {
+			var gene = parent.geno[j];
+			
+			// make a copy of the parent's gene:
+			var childgene = [ 
+				gene[0], gene[1], gene[2] 
+			];
+			
+			// each base has a small chance of mutation:
+			for (var k = 0; k < childgene.length; k++) {
+				if (random() < mutation_probability) {
+					childgene[k] = random(num_operators);
+				}
+			}
+			
+			// add to child's genome:
+			child.geno[j] = childgene;
+		}
+		
+		// also a small possibility of some genes jumping around:
+		if (random() < jump_probability) {
+			// pick two random genome locations:
+			var a = random(child.geno.length);
+			var b = random(child.geno.length);
+			// swap their genes:
+			var tmp = child.geno[a];
+			child.geno[a] = child.geno[b];
+			child.geno[b] = tmp;
+		}
+		
+		// now develop the code for this genome, and fill the fields:
+		develop( child );
+		
+		// add to the new population:
+		newpop[i] = child;
+	}
+	
+	// replace existing population:
+	population = newpop;
+}
+
+function reset() {
+	for (var i=0; i<population_size; i++) {
+		// create a new candidate:
+		var candidate = {
+			// has a genome:
+			geno: geno_create(gene_size),
+			fitness: 0,
+			// has 3 fields:
+			red: new field2D(dim, dim),
+			green: new field2D(dim, dim),
+			blue: new field2D(dim, dim),
+		};
+		
+		develop( candidate );
+		
+		// add to population:
+		population[i] = candidate;
+	}
+}
+reset();
+
+function update() {}
+
+function draw() {
+	var scale = 1/divisions;
+	
+	for (var i=0; i<population.length; i++) {
+		var candidate = population[i];	
+
+		// convert array index to column, row index:
+		var x = i % divisions;
+		var y = Math.floor(i / divisions);
+		
+		draw2D.color(1, 0, 0);
+		candidate.red.draw(x * scale, y * scale, scale, scale);
+	
+		draw2D.color(0, 1, 0);
+		candidate.green.draw(x * scale, y * scale, scale, scale);
+	
+		draw2D.color(0, 0, 1);
+		candidate.blue.draw(x * scale, y * scale, scale, scale);
+	}
+}
+
+function mouse(e, b, x, y) {
+	if (e == "down") {
+		// convert x, y into array index:
+		var col = Math.floor(x * divisions);
+		var row = Math.floor(y * divisions);
+		var index = col + row*divisions;
+	
+		// increase this candidate's fitness:
+		var candidate = population[index];
+		if (candidate != null) {
+			candidate.fitness++;
+			console.log("candidate", index, "fitness", candidate.fitness);
+		}
+	}
+}
+
+function key(e, k) {
+	if (e == "press" && k == "r") {
+		regenerate();
+	}
+}
+
+/// end of user code ///////////////////////////////////////////////////////////
+
+al.start();
+</script>
+<a href="js.html">Documentation</a>
+</body>
+</html>

@@ -13,6 +13,7 @@ ndarray = require("ndarray");
 //ndarray.distance = require("distance-transform");	// create a distance field from an array
 zeros = require("zeros");
 //codemirror = require("codemirror");
+Box2D = require("box2dweb");
 
 var seedrandom = require("seedrandom");
 
@@ -20,7 +21,7 @@ var rng = new Math.seedrandom();
 
 // return integer in 0..(n-1)
 random = function (n) {
-	if (n) {
+	if (n != undefined) {
 		return Math.floor(rng()*n);
 	} else {
 		return rng();
@@ -291,6 +292,17 @@ al.init = function (options) {
 	
 	
 	ctx = canvas.getContext('2d');
+	al.ctx = ctx;
+	al.canvas = canvas;
+	
+	al.color = {
+		r: 255,
+		g: 255,
+		b: 255,
+	};
+	
+	// this is as close as I can get to additive blending:
+	ctx.globalCompositeOperation = "lighter";
 	
 	// create an off-screen rendering context (should this be per-field?)
 	offscreen_canvas = document.createElement('canvas');
@@ -439,7 +451,13 @@ field2D = function (width, height) {
 	this.array = zeros(this.dim);
 }
 
-field2D.prototype.draw = function() {
+field2D.prototype.draw = function(x0, y0, w0, h0) {
+	
+	x0 = (x0 != undefined) ? x0 : 0;
+	y0 = (y0 != undefined) ? y0 : 0;
+	w0 = (w0 != undefined) ? w0 : 1;
+	h0 = (h0 != undefined) ? h0 : 1;
+	
 	var x, y, i = 0;
 	var w = offscreen_canvas.width, h = offscreen_canvas.height;
 	var W = this.array.shape[0], H = this.array.shape[1];
@@ -449,10 +467,10 @@ field2D.prototype.draw = function() {
 		var y1 = Math.floor(y * dy);
 		for (x = 0; x < w; x++, i += 4) {
 			var x1 = Math.floor(x * dx);
-			var r = this.array.get(x1, y1) * 255;
-			offscreen_data[i  ] = r;
-			offscreen_data[i+1] = r;
-			offscreen_data[i+2] = r;
+			var r = this.array.get(x1, y1);
+			offscreen_data[i  ] = r * al.color.r;
+			offscreen_data[i+1] = r * al.color.g;
+			offscreen_data[i+2] = r * al.color.b;
 			offscreen_data[i+3] = 255;
 		}
 	}
@@ -465,7 +483,7 @@ field2D.prototype.draw = function() {
 	*/
 	ctx.drawImage(offscreen_canvas,
 		0,0,offscreen_canvas.width,offscreen_canvas.height,
-		0,0,1,1
+		x0, y0, w0, h0
 	);
 	return this;
 }
@@ -1166,7 +1184,10 @@ draw2D.color = function(r, g, b, a) {
 	g = (g != undefined) ? g : r;
 	b = (b != undefined) ? b : r;
 	a = (a != undefined) ? a : 1;
-	color = "rgba("+Math.floor(r*255.)+", "+Math.floor(g*255.)+", "+Math.floor(b*255.)+", "+a+")";
+	al.color.r = Math.floor(r*255.);
+	al.color.g = Math.floor(g*255.);
+	al.color.b = Math.floor(b*255.);
+	color = "rgba("+al.color.r+", "+al.color.g+", "+al.color.b+", "+a+")";
 	ctx.fillStyle = color;
 	ctx.strokeStyle = color;
 }
