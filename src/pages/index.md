@@ -37,15 +37,64 @@ works, as demonstrated in a project portfolio.
 
 The course is designed to be suitable to students with different levels of technical expertise, but some prior programming experience is assumed.
 
-### Assignments & final project
+### Assignments
 
 Lab sessions and assignments will utilize a software engine provided by the instructor, compatible with OSX and possibly Linux or Windows. Using a specific engine allows us to concentrate on important conceptual issues without being distracted by platform and library variations and inconsistencies. The engine supports easy experimentation by students and rapid in-class authoring examples by the instructor. The principles learned can be easily translated to other languages and systems.
 
 Assignments must be completed individually. Collaboration is permitted for final projects, however each student must be able to clearly identify which parts of the project they were responsible for. 
 
-The final project may extend existing work from one (or more) of the assignments, but will be evaluated only according to the new contributions. It should integrate at least two of the kinds of systems we've looked at (cellular, agent, L-system) with some kind of interactivity (e.g. mouse, keyboard) and some kind of adaptation (e.g. evolution, learning). 
+### Final Project
 
-Students will give a brief (5-10 minute) presentation on their concepts on May 23rd.
+The final project should be a significant project using the themes of this course. It should integrate at least two of the kinds of systems we've looked at, along with some kind of interactivity (e.g. mouse, keyboard) and some kind of adaptation (e.g. evolution or learning). 
+
+The final project may extend existing work from one (or more) of the assignments, but will be evaluated only according to the new contributions. You may work in teams if desired, but each member must send me a statement making it clear how you divided up responsibilities so that I can grade appropriately.
+
+You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, variations etc. If you end up with more than one system that is interesting, you can submit them all. 
+
+Document your work using comments in the code. Note that in Lua, you can write long multi-line comments like this:
+
+```lua
+--[[
+This is a long comment
+that runs over
+several lines
+--]]
+```
+
+Or in JavaScript:
+
+```javascript
+/*
+This is a long comment
+that runs over
+several lines
+*/
+```
+
+At the top of your code, there should be a long comment including:
+
+- Your **name**
+- The **date**
+- The **title**
+- A **description** of the idea of the system, how it works (or why it doesn't), and why it is interesting, surprising, etc (or why it didn't meet your expectations). What kinds of long-term behaviors it supports. 
+- A description of any **interactions** it supports (what the mouse does, what key presses do)
+- A description of the **technical realization**. (Perhaps you tried a few different algorithms until it worked as expected?) If you were inspired by another system, mention it.
+- Ideas for possible **future extensions** of the project.
+
+Please also comment all the important operations in the code. Try to use helpful variable names, e.g. ```width``` is more communicative than ```var3```.
+
+Send your final project as one (or more) Lua script(s) to the TA on or before **Sunday 27th April**. 
+
+Your final project will be evaluted by these criteria:
+
+- **Technical completeness** (30%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented. Even if it doesn't work, how well it was conceived and implemented. 
+- **Aesthetic qualities** (30%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting. If it doesn't work as expected or produce interesting results, then the evaluation here will be on how well you can articulate what you had hoped for, what aspects of that you think are missing, why you think they are missing, what you can suggest to resolve it, etc.
+- **Novel contribution** (30%). This means creating something that we haven't built together in class, perhaps even something that has never been made before. The key aspects here are the creative qualities of the idea. Your ideas for future extensions will be evaluated too.
+- **Effort** (10%). 
+
+Please note that your final projects may be shared publicly on the course website.
+
+Send your final project to the TA on or before **Friday June 20th**. 
 
 ### Grading
 
@@ -53,13 +102,7 @@ Grading will be based on:
 
 - in-class participation (20%), 
 - assignments (40%), and 
-- final project presentation (40%). 
-
-Assignment and projects will be graded according to: 
-
-- technical proficiency (33%), 
-- aesthetic quality (33%), and 
-- novel contribution (33%).
+- final project (40%). 
 
 ### Materials
 

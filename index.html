@@ -51,23 +51,52 @@ works, as demonstrated in a project portfolio.</li>
 </ul>
 <h3>Prerequisites</h3>
 <p>The course is designed to be suitable to students with different levels of technical expertise, but some prior programming experience is assumed.</p>
-<h3>Assignments &amp; final project</h3>
+<h3>Assignments</h3>
 <p>Lab sessions and assignments will utilize a software engine provided by the instructor, compatible with OSX and possibly Linux or Windows. Using a specific engine allows us to concentrate on important conceptual issues without being distracted by platform and library variations and inconsistencies. The engine supports easy experimentation by students and rapid in-class authoring examples by the instructor. The principles learned can be easily translated to other languages and systems.</p>
 <p>Assignments must be completed individually. Collaboration is permitted for final projects, however each student must be able to clearly identify which parts of the project they were responsible for. </p>
-<p>The final project may extend existing work from one (or more) of the assignments, but will be evaluated only according to the new contributions. It should integrate at least two of the kinds of systems we&#39;ve looked at (cellular, agent, L-system) with some kind of interactivity (e.g. mouse, keyboard) and some kind of adaptation (e.g. evolution, learning). </p>
-<p>Students will give a brief (5-10 minute) presentation on their concepts on May 23rd.</p>
+<h3>Final Project</h3>
+<p>The final project should be a significant project using the themes of this course. It should integrate at least two of the kinds of systems we&#39;ve looked at, along with some kind of interactivity (e.g. mouse, keyboard) and some kind of adaptation (e.g. evolution or learning). </p>
+<p>The final project may extend existing work from one (or more) of the assignments, but will be evaluated only according to the new contributions. You may work in teams if desired, but each member must send me a statement making it clear how you divided up responsibilities so that I can grade appropriately.</p>
+<p>You might spend roughly a third of your time choosing what to try and designing, a third actually implementing it, and a third exploring it for interesting parameters, initial conditions, variations etc. If you end up with more than one system that is interesting, you can submit them all. </p>
+<p>Document your work using comments in the code. Note that in Lua, you can write long multi-line comments like this:</p>
+<pre><code class="lang-lua"><span class="comment">--[[
+This is a long comment
+that runs over
+several lines
+--]]</span></code></pre>
+<p>Or in JavaScript:</p>
+<pre><code class="lang-javascript"><span class="comment">/*
+This is a long comment
+that runs over
+several lines
+*/</span></code></pre>
+<p>At the top of your code, there should be a long comment including:</p>
+<ul>
+<li>Your <strong>name</strong></li>
+<li>The <strong>date</strong></li>
+<li>The <strong>title</strong></li>
+<li>A <strong>description</strong> of the idea of the system, how it works (or why it doesn&#39;t), and why it is interesting, surprising, etc (or why it didn&#39;t meet your expectations). What kinds of long-term behaviors it supports. </li>
+<li>A description of any <strong>interactions</strong> it supports (what the mouse does, what key presses do)</li>
+<li>A description of the <strong>technical realization</strong>. (Perhaps you tried a few different algorithms until it worked as expected?) If you were inspired by another system, mention it.</li>
+<li>Ideas for possible <strong>future extensions</strong> of the project.</li>
+</ul>
+<p>Please also comment all the important operations in the code. Try to use helpful variable names, e.g. <code>width</code> is more communicative than <code>var3</code>.</p>
+<p>Send your final project as one (or more) Lua script(s) to the TA on or before <strong>Sunday 27th April</strong>. </p>
+<p>Your final project will be evaluted by these criteria:</p>
+<ul>
+<li><strong>Technical completeness</strong> (30%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented. Even if it doesn&#39;t work, how well it was conceived and implemented. </li>
+<li><strong>Aesthetic qualities</strong> (30%). How interesting the appearances and behaviors are. Perhaps the system behaves differently for different initial conditions or variations in rules and parameters; spend some time finding good start conditions and include them as options in the program (e.g. triggered by pressing keys). Write down how to use them, and why you think they are interesting. If it doesn&#39;t work as expected or produce interesting results, then the evaluation here will be on how well you can articulate what you had hoped for, what aspects of that you think are missing, why you think they are missing, what you can suggest to resolve it, etc.</li>
+<li><strong>Novel contribution</strong> (30%). This means creating something that we haven&#39;t built together in class, perhaps even something that has never been made before. The key aspects here are the creative qualities of the idea. Your ideas for future extensions will be evaluated too.</li>
+<li><strong>Effort</strong> (10%). </li>
+</ul>
+<p>Please note that your final projects may be shared publicly on the course website.</p>
+<p>Send your final project to the TA on or before <strong>Friday June 20th</strong>. </p>
 <h3>Grading</h3>
 <p>Grading will be based on: </p>
 <ul>
 <li>in-class participation (20%), </li>
 <li>assignments (40%), and </li>
-<li>final project presentation (40%). </li>
-</ul>
-<p>Assignment and projects will be graded according to: </p>
-<ul>
-<li>technical proficiency (33%), </li>
-<li>aesthetic quality (33%), and </li>
-<li>novel contribution (33%).</li>
+<li>final project (40%). </li>
 </ul>
 <h3>Materials</h3>
 <p>A selection of key papers will be disseminated during the course. Two books are also recommended, from which many readings will be selected: </p>
