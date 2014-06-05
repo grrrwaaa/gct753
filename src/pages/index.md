@@ -45,7 +45,7 @@ Assignments must be completed individually. Collaboration is permitted for final
 
 ### Final Project
 
-The final project should be a significant project using the themes of this course. It should integrate at least two of the kinds of systems we've looked at, along with some kind of interactivity (e.g. mouse, keyboard) and some kind of adaptation (e.g. evolution or learning). 
+The final project should be a significant project using the themes of this course. It should integrate at least two of the kinds of systems we've looked at, along with some kind of interactivity (e.g. mouse, keyboard).
 
 The final project may extend existing work from one (or more) of the assignments, but will be evaluated only according to the new contributions. You may work in teams if desired, but each member must send me a statement making it clear how you divided up responsibilities so that I can grade appropriately.
 
