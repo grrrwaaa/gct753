@@ -83,8 +83,6 @@ At the top of your code, there should be a long comment including:
 
 Please also comment all the important operations in the code. Try to use helpful variable names, e.g. ```width``` is more communicative than ```var3```.
 
-Send your final project as one (or more) Lua script(s) to the TA on or before **Sunday 27th April**. 
-
 Your final project will be evaluted by these criteria:
 
 - **Technical completeness** (30%). If it works, how well it works (efficiency, accuracy). Also how clearly the code is structured and commented. Even if it doesn't work, how well it was conceived and implemented. 
