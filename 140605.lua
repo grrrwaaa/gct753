@@ -6,7 +6,7 @@ math.randomseed(os.time())
 
 win:setdim(256, 256)
 
-local dim = 32
+local dim = 64
 local f1 = field2D(dim, dim)
 local f1_prev = field2D(dim, dim)
 
@@ -65,7 +65,7 @@ function food_splat(spot)
 	for j = 1, math.random(100) do
 		local spat = spot + vec2.random(math.random() * 0.1)
 		-- very high density 
-		f1:splat(math.random()*0.0001*dim, spat.x, spat.y)
+		f1:splat(math.random()*0.001*dim, spat.x, spat.y)
 	end
 end
 
@@ -238,13 +238,12 @@ reset()
 function update()
 	
 	if f1:sum() < 200 then
-		print("adding")
 		for i = 1, math.random(8) + 4 do
 			local spot = vec2(math.random(), 
 			math.random())
 			food_splat(spot)
 		end
-		print(f1:sum())
+		print("added food", f1:sum())
 	end
 
 	-- update the field:
@@ -289,8 +288,8 @@ function update()
 		-- locomotion:
 		a.dir = a.dir + (a.turn - 0.5)
 		local vel = vec2(
-			a.forward * a.size * 0.3, 
-			(a.crab-0.5) * a.size * 0.1
+			a.forward * a.size * 0.2, 
+			(a.crab-0.5) * a.size * 0.05
 		)
 		-- rotate to world space:
 		vel:rotate(a.dir)
